@@ -55,9 +55,9 @@ namespace AssetWatch
             }
         }
 
-        public int FiatCurrencies
+        public List<string> FiatCurrencies
         {
-            get => default(int);
+            get => default(List<string>);
             set
             {
             }

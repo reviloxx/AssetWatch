@@ -3,12 +3,12 @@
   <Class Name="AssetWatch.ApiHandler">
     <Position X="10" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAAAAAEABAAAAIAABAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAEAABAEABAAAAIAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ApiHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.ApiInfo">
-    <Position X="10" Y="3.25" Width="2.5" />
+    <Position X="10" Y="3.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>ACAAAgAAAACQAAAAAAAAAAAAAgAAgAAAAAgAAAIAEAA=</HashCode>
       <FileName>ApiInfo.cs</FileName>
@@ -58,7 +58,7 @@
   <Class Name="AssetWatch.AssetTile">
     <Position X="0.5" Y="4.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAA=</HashCode>
       <FileName>AssetTile.cs</FileName>
     </TypeIdentifier>
   </Class>

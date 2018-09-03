@@ -16,15 +16,15 @@ namespace AssetWatch
             }
         }
 
-        public string ApiName
+        public ApiInfo Api
         {
-            get => string.Empty;
+            get => null;
             set
             {
             }
         }
 
-        public void Refresh()
+        public void Refresh(object sender, AssetInfo assetInfo)
         {
             throw new System.NotImplementedException();
         }

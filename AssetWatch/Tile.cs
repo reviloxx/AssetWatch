@@ -11,9 +11,9 @@ namespace AssetWatch
         private int hasUniqueWindowStyle;
         private int position;
 
-        public int FiatCurrency
+        public string FiatCurrency
         {
-            get => default(int);
+            get => default(string);
             set
             {
             }
