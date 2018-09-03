@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AssetWatch
 {
-    public class ApiLoader
+    public static class ApiLoader
     {
-        public void GetApisFromDisk()
+        public static List<IApi> GetApisFromDisk()
         {
             throw new System.NotImplementedException();
         }

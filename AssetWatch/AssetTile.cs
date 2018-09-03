@@ -8,17 +8,9 @@ namespace AssetWatch
     public class AssetTile : Tile
     {
 
-        public string AssetSymbol
+        public AssetInfo Asset
         {
-            get => string.Empty;
-            set
-            {
-            }
-        }
-
-        public string AssetName
-        {
-            get => string.Empty;
+            get => null;
             set
             {
             }

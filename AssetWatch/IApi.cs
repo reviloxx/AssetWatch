@@ -8,14 +8,14 @@ namespace AssetWatch
 {
     public interface IApi
     {
-        event EventHandler<List<AssetInfo>> OnApiReady;
-        event EventHandler<AssetInfo> OnAssetUpdated;
+        event EventHandler<List<AssetInfo>> OnAvailableAssetsReceived;
+        event EventHandler<AssetInfo> OnSingleAssetUpdated;
         event System.EventHandler OnApiError;
 
         ApiInfo GetApiInfo();
-        void SubscribeAsset();
+        void SubscribeAsset(AssetInfo assetInfo);
         void UnsubscribeAsset();
-        void GetAvailableAssets();
+        void RequestAvailableAssets();
         void SetRefreshInterval();
     }
 }

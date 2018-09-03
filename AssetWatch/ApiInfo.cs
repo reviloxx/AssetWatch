@@ -63,9 +63,9 @@ namespace AssetWatch
             }
         }
 
-        public int ApiName
+        public string ApiName
         {
-            get => default(int);
+            get => default(string);
             set
             {
             }

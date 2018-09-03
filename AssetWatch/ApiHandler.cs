@@ -7,19 +7,45 @@ namespace AssetWatch
 {
     public class ApiHandler
     {
-        private List<IApi> availableApis;
+        private Dictionary<IApi, List<AssetInfo>> availableApis;
 
-        public void GetAvailableApis()
+        private List<AssetTile> assetTilesToSubscribe;
+
+        public ApiHandler()
+        {
+            List<IApi> apis = ApiLoader.GetApisFromDisk();
+            apis.ForEach(api =>
+            {
+                this.availableApis.Add(api, null);
+                api.OnAvailableAssetsReceived += Api_OnAvailableAssetsReceived;
+                api.RequestAvailableAssets();
+            });
+        }
+
+        private void Api_OnAvailableAssetsReceived(object sender, List<AssetInfo> availableAssets)
+        {
+            IApi api = (IApi)sender;
+            this.availableApis[api] = availableAssets;
+
+            List<AssetTile> assetTilesForApi = (List<AssetTile>)this.assetTilesToSubscribe.Where(a => a.ApiName == api.GetApiInfo().ApiName);
+            assetTilesForApi.ForEach(assetTile =>
+            {
+                api.SubscribeAsset(assetTile.Asset);
+                this.assetTilesToSubscribe.Remove(assetTile);
+            });
+        }
+
+        public Dictionary<IApi, List<AssetInfo>> GetAvailableApis()
+        {
+            return this.availableApis;
+        }
+
+        public void SubscribeAssetTile(AssetTile assetTile)
         {
             throw new System.NotImplementedException();
         }
 
-        public void SubscribeAssetWindow()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void UnsubscribeAssetWindow()
+        public void UnsubscribeAssetTile(AssetTile assetTile)
         {
             throw new System.NotImplementedException();
         }
