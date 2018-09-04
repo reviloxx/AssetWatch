@@ -10,19 +10,30 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace AssetWatch
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PortfolioTile.xaml
     /// </summary>
-    public partial class MainWindow : Tile
+    public partial class PortfolioTile : Window
     {
-        public MainWindow()
+        private List<AssetTile> assetWindows;
+
+        public PortfolioTile()
         {
             InitializeComponent();
+        }               
+
+        public void AddAssetWindow()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void RemoveAssetWindow()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

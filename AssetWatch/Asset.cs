@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AssetWatch
 {
-    public class AssetInfo
+    public class Asset
     {
         public int SupplyAvailable
         {

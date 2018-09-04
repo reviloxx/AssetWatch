@@ -23,33 +23,33 @@ namespace AssetWatch
             }
         }
 
-        public int InfoTextRefreshInterval
+        public string InfoTextRefreshInterval
         {
-            get => default(int);
+            get => default(string);
             set
             {
             }
         }
 
-        public int InfoTextApi
+        public string InfoTextApi
         {
-            get => default(int);
+            get => default(string);
             set
             {
             }
         }
 
-        public int AssetUrl
+        public string AssetUrl
         {
-            get => default(int);
+            get => default(string);
             set
             {
             }
         }
 
-        public int AssetUrlName
+        public string AssetUrlName
         {
-            get => default(int);
+            get => default(string);
             set
             {
             }
@@ -71,7 +71,15 @@ namespace AssetWatch
             }
         }
 
-        public int ApiVersion
+        public string ApiVersion
+        {
+            get => default(string);
+            set
+            {
+            }
+        }
+
+        public int IsReady
         {
             get => default(int);
             set
