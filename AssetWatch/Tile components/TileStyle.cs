@@ -70,5 +70,21 @@ namespace AssetWatch
             {
             }
         }
+
+        public int IsUniqueTileStyle
+        {
+            get => default(int);
+            set
+            {
+            }
+        }
+
+        public int Position
+        {
+            get => default(int);
+            set
+            {
+            }
+        }
     }
 }

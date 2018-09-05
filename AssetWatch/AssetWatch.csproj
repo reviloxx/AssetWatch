@@ -55,6 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Tile components\AssetTileData.cs" />
+    <Compile Include="Tile components\PortfolioTileData.cs" />
     <Compile Include="Tile components\AssetTile.xaml.cs">
       <DependentUpon>AssetTile.xaml</DependentUpon>
     </Compile>

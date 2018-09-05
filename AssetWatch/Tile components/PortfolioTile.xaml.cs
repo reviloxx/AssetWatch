@@ -19,19 +19,24 @@ namespace AssetWatch
     /// </summary>
     public partial class PortfolioTile : Window
     {
-        private List<AssetTile> assetWindows;
+        private System.Collections.Generic.List<AssetWatch.AssetTileData> assetTiles;
 
         public PortfolioTile()
         {
             InitializeComponent();
         }               
 
-        public void AddAssetWindow()
+        public void AddAssetTile()
         {
             throw new System.NotImplementedException();
         }
 
-        public void RemoveAssetWindow()
+        public void RemoveAssetTile()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetTileStyle()
         {
             throw new System.NotImplementedException();
         }

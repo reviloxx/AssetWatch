@@ -19,70 +19,26 @@ namespace AssetWatch
     /// </summary>
     public partial class AssetTile : Window
     {
-        private int windowStyle;
-        private int hasUniqueWindowStyle;
-        private int position;
+        private int currentWorth;
 
-        public string FiatCurrency
+        public AssetTile()
         {
-            get => default(string);
-            set
-            {
-            }
+            InitializeComponent();
         }
 
-        public int CurrentWorth
+        public AssetTileData AssetTileData
         {
-            get => default(int);
-            set
-            {
-            }
+            get; set;
         }
 
-        public int InvestedSum
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
-
-        public int HoldingsCount
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
-
-        public void SetWindowStyle()
+        public void SetTileStyle()
         {
             throw new System.NotImplementedException();
-        }
-        public Asset Asset
-        {
-            get => null;
-            set
-            {
-            }
-        }
-
-        public ApiInfo Api
-        {
-            get => null;
-            set
-            {
-            }
         }
 
         public void Refresh(object sender, Asset assetInfo)
         {
             throw new System.NotImplementedException();
-        }
-
-        public AssetTile()
-        {
-            InitializeComponent();
         }
     }
 }

@@ -31,12 +31,12 @@ namespace ApiCoinmarketcapPublic
             };                
         }
 
-        public void RequestAvailableAssets()
+        public void RequestAvailableAssetsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public void SetRefreshInterval()
+        public void SetUpdateInterval()
         {
             throw new NotImplementedException();
         }
@@ -47,6 +47,11 @@ namespace ApiCoinmarketcapPublic
         }
 
         public void UnsubscribeAsset(Asset assetInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartAssetUpdater()
         {
             throw new NotImplementedException();
         }

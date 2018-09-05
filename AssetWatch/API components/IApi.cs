@@ -1,21 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AssetWatch;
 
 namespace AssetWatch
 {
+    /// <summary>
+    /// Defines the <see cref="IApi" />
+    /// </summary>
     public interface IApi
     {
+        /// <summary>
+        /// Is fired after the API has received it's available assets.
+        /// </summary>
         event EventHandler<List<Asset>> OnAvailableAssetsReceived;
+
+        /// <summary>
+        /// Is fired after the API has received new data for a single asset.
+        /// </summary>
         event EventHandler<Asset> OnSingleAssetUpdated;
+
+        /// <summary>
+        /// Is fired after something went wrong.
+        /// </summary>
         event EventHandler OnApiError;
 
+        /// <summary>
+        /// Provides information about the API.
+        /// </summary>
+        /// <returns>The <see cref="ApiInfo"/></returns>
         ApiInfo GetApiInfo();
+
+        /// <summary>
+        /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
+        /// </summary>
+        /// <param name="assetInfo">The assetInfo<see cref="Asset"/></param>
         void SubscribeAsset(Asset assetInfo);
+
+        /// <summary>
+        /// Unsubscribes an asset from the API which then will be no longer updated.
+        /// </summary>
+        /// <param name="assetInfo">The assetInfo<see cref="Asset"/></param>
         void UnsubscribeAsset(Asset assetInfo);
-        void RequestAvailableAssets();
-        void SetRefreshInterval();
+
+        /// <summary>
+        /// Requests the available assets of the API.
+        /// Should be called asynchronous.
+        /// Fires the OnAvailableAssetsReceived event if successful.
+        /// </summary>
+        void RequestAvailableAssetsAsync();
+
+        /// <summary>
+        /// Sets the update interval of the API.
+        /// </summary>
+        void SetUpdateInterval();
+        void StartAssetUpdater();
     }
 }

@@ -134,5 +134,13 @@ namespace AssetWatch
             {
             }
         }
+
+        public string FiatCurrency
+        {
+            get => default(string);
+            set
+            {
+            }
+        }
     }
 }

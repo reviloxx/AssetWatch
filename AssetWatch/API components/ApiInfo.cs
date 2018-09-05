@@ -1,90 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace AssetWatch
 {
+    /// <summary>
+    /// Defines the <see cref="ApiInfo" />
+    /// </summary>
     public class ApiInfo
     {
-        public int MinRefreshInterval
+        /// <summary>
+        /// Contains the minimum supported update interval of the API
+        /// </summary>
+        public int MinUpdateInterval
         {
-            get => default(int);
-            set
-            {
-            }
+            get; set;
         }
 
-        public int MaxRefreshInterval
+        /// <summary>
+        /// Contains the maximum supported update interval of the API
+        /// </summary>
+        public int MaxUpdateInterval
         {
-            get => default(int);
-            set
-            {
-            }
+            get; set;
         }
 
-        public string InfoTextRefreshInterval
+        /// <summary>
+        /// Contains an info text about the supported update intervals of the API
+        /// </summary>
+        public string UpdateIntervalInfoText
         {
-            get => default(string);
-            set
-            {
-            }
+            get; set;
         }
 
-        public string InfoTextApi
+        /// <summary>
+        /// Contains an info text about the API
+        /// </summary>
+        public string ApiInfoText
         {
-            get => default(string);
-            set
-            {
-            }
+            get; set;
         }
 
+        /// <summary>
+        /// Contains an Url to show the asset on a webpage
+        /// </summary>
         public string AssetUrl
         {
-            get => default(string);
-            set
-            {
-            }
+            get; set;
         }
 
+        /// <summary>
+        /// Contains the name of the Url to display
+        /// </summary>
         public string AssetUrlName
         {
-            get => default(string);
-            set
-            {
-            }
+            get; set;
         }
 
-        public List<string> FiatCurrencies
+        /// <summary>
+        /// Gets or sets the supported fiat currencies
+        /// </summary>
+        public List<string> SupportedFiatCurrencies
         {
-            get => default(List<string>);
-            set
-            {
-            }
+            get; set;
         }
 
+        /// <summary>
+        /// Gets or sets the API Name
+        /// </summary>
         public string ApiName
         {
-            get => default(string);
-            set
-            {
-            }
+            get; set;
         }
 
+        /// <summary>
+        /// Gets or sets the API Version
+        /// </summary>
         public string ApiVersion
         {
-            get => default(string);
-            set
-            {
-            }
+            get; set;
         }
 
-        public int IsReady
+        /// <summary>
+        /// Contains True if the API is ready 
+        /// </summary>
+        public bool IsReady
         {
-            get => default(int);
-            set
-            {
-            }
+            get; set;
         }
     }
 }
