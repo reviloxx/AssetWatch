@@ -23,11 +23,9 @@ namespace AssetWatch
         /// </summary>
         event EventHandler OnApiError;
 
-        /// <summary>
-        /// Provides information about the API.
-        /// </summary>
-        /// <returns>The <see cref="ApiInfo"/></returns>
-        ApiInfo GetApiInfo();
+        List<Asset> SubscribedAssets { get; }
+        
+        ApiInfo ApiInfo { get; }
 
         /// <summary>
         /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
@@ -51,7 +49,12 @@ namespace AssetWatch
         /// <summary>
         /// Sets the update interval of the API.
         /// </summary>
-        void SetUpdateInterval();
+        /// <param name="updateInterval">The update interval in seconds.</param>
+        void SetUpdateInterval(int updateInterval);
+
+        /// <summary>
+        /// Starts the asset update thread.
+        /// </summary>
         void StartAssetUpdater();
     }
 }

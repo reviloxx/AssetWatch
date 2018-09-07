@@ -21,6 +21,9 @@ namespace AssetWatch
     {
         private int currentWorth;
 
+        public event EventHandler<AssetTile> OnRemovingApiSubscription;
+        public event EventHandler<AssetTile> OnAddingApiSubscription;
+
         public AssetTile()
         {
             InitializeComponent();

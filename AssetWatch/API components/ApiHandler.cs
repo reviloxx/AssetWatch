@@ -15,24 +15,18 @@ namespace AssetWatch
         private List<AssetTile> assetTilesToSubscribe;
 
         /// <summary>
-        /// Contains all assetTiles which are currently subscribed to an API.
-        /// </summary>
-        private List<AssetTile> assetTilesSubscribed;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ApiHandler"/> class.
         /// </summary>
         public ApiHandler()
         {
             assetTilesToSubscribe = new List<AssetTile>();
-            assetTilesSubscribed = new List<AssetTile>();
 
             // look for valid API librarys and load them from the hdd
             List<IApi> apis = ApiLoader.GetApisFromDisk();
             apis.ForEach(api =>
             {
                 // skip this API if there is already another one with the same name in the dictionary
-                if (!AvailableApis.Any(a => a.Key.GetApiInfo().ApiName == api.GetApiInfo().ApiName))
+                if (!AvailableApis.Any(a => a.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
                 {
                     // add the API to the dictionary
                     AvailableApis.Add(api, null);
@@ -52,21 +46,26 @@ namespace AssetWatch
         /// <param name="availableAssets">The availableAssets<see cref="List{AssetInfo}"/></param>
         private void Api_OnAvailableAssetsReceived(object sender, List<Asset> availableAssets)
         {
-            // check which API sent it's available assets and put it in the dictionary
+            // check which API sent it's available assets and put them in the dictionary
             IApi api = (IApi)sender;
+            api.ApiInfo.IsReady = true;
             AvailableApis[api] = availableAssets;
 
             // subscribe assetTiles which were waiting for this API
-            List<AssetTile> assetTilesForApi = (List<AssetTile>)assetTilesToSubscribe.Where(a => a.AssetTileData.Api.ApiName == api.GetApiInfo().ApiName);
+            List<AssetTile> assetTilesForApi = (List<AssetTile>)assetTilesToSubscribe.Where(a => a.AssetTileData.Api.ApiName == api.ApiInfo.ApiName);
             assetTilesForApi.ForEach(assetTile =>
             {
                 // checks if the assetTile is allowed to subscribe to this API
                 CheckAssetTile(api, assetTile);
 
+                // if the same asset is not subscribet to this API yet, subscribe it
+                if (!api.SubscribedAssets.Exists(a => a.Id == assetTile.AssetTileData.Asset.Id && a.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
+                {
+                    api.SubscribeAsset(assetTile.AssetTileData.Asset);
+                }
+
                 // if everything is fine subscribe asset to the API
-                assetTilesSubscribed.Add(assetTile);
                 api.OnSingleAssetUpdated += assetTile.Refresh;
-                api.SubscribeAsset(assetTile.AssetTileData.Asset);
 
                 // remove this assetTile from the waiting list
                 assetTilesToSubscribe.Remove(assetTile);
@@ -81,7 +80,7 @@ namespace AssetWatch
         private void CheckAssetTile(IApi api, AssetTile assetTile)
         {
             // TODO: should never happen, but handle it instead of throwing an exception
-            if (!api.GetApiInfo().SupportedFiatCurrencies.Contains(assetTile.AssetTileData.Asset.FiatCurrency))
+            if (!api.ApiInfo.SupportedFiatCurrencies.Contains(assetTile.AssetTileData.Asset.ConvertCurrency))
             {
                 throw new Exception("Invalid fiat currency requested!");
             }
@@ -101,10 +100,10 @@ namespace AssetWatch
         public void SubscribeAssetTile(AssetTile assetTile)
         {
             // search the API to subscribe in the dictionary
-            IApi api = AvailableApis.FirstOrDefault(a => a.Key.GetApiInfo().ApiName == assetTile.AssetTileData.Api.ApiName).Key;
+            IApi api = AvailableApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.Api.ApiName).Key;
 
             // put the assetTile on the waiting list if the requested API is not available
-            if (api == null)
+            if (api == null || !api.ApiInfo.IsReady)
             {
                 assetTilesToSubscribe.Add(assetTile);
                 return;
@@ -113,26 +112,27 @@ namespace AssetWatch
             // checks if the assetTile is allowed to subscribe to this API
             CheckAssetTile(api, assetTile);
 
-            // if everything is fine subscribe asset to the API
-            assetTilesSubscribed.Add(assetTile);
-            api.OnSingleAssetUpdated += assetTile.Refresh;
-            api.SubscribeAsset(assetTile.AssetTileData.Asset);
+            // if the same asset is not subscribet to this API yet, subscribe it
+            if (!api.SubscribedAssets.Exists(a => a.Id == assetTile.AssetTileData.Asset.Id && a.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
+            {
+                api.SubscribeAsset(assetTile.AssetTileData.Asset);
+            }
+
+            // if everything is fine subscribe asset to the update event of the API
+            api.OnSingleAssetUpdated += assetTile.Refresh;            
         }
 
         /// <summary>
-        /// The UnsubscribeAssetTile
+        /// Unsub
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/></param>
         public void UnsubscribeAssetTile(AssetTile assetTile)
         {
             // search the API to unsubscribe in the dictionary
-            IApi api = AvailableApis.FirstOrDefault(a => a.Key.GetApiInfo().ApiName == assetTile.AssetTileData.Api.ApiName).Key;
-
-            assetTilesSubscribed.Remove(assetTile);
+            IApi api = AvailableApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.Api.ApiName).Key;            
 
             // unsubscribe the asset from the API if there is no other assetTile subscribed to this asset
-            if (!assetTilesSubscribed.Exists(a => a.AssetTileData.Api.ApiName == assetTile.AssetTileData.Api.ApiName
-                                                       && a.AssetTileData.Asset.Id == assetTile.AssetTileData.Asset.Id))
+            if (!api.SubscribedAssets.Exists(a => a.Id == assetTile.AssetTileData.Asset.Id && a.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
             {
                 api.UnsubscribeAsset(assetTile.AssetTileData.Asset);
             }

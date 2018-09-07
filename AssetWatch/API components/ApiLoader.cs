@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -9,7 +10,10 @@ namespace AssetWatch
     {
         public static List<IApi> GetApisFromDisk()
         {
-            throw new System.NotImplementedException();
+            string workingDirectory = Directory.GetCurrentDirectory();
+            string[] files = Directory.GetFiles(workingDirectory + @"\Apis\", "*.dll");
+
+            return null;
         }
     }
 }

@@ -135,7 +135,7 @@ namespace AssetWatch
             }
         }
 
-        public string FiatCurrency
+        public string ConvertCurrency
         {
             get => default(string);
             set

@@ -19,7 +19,7 @@ namespace AssetWatch
     /// </summary>
     public partial class PortfolioTile : Window
     {
-        private System.Collections.Generic.List<AssetWatch.AssetTileData> assetTiles;
+        private System.Collections.Generic.List<AssetWatch.AssetTileData> assignedAssetTiles;
 
         public PortfolioTile()
         {

@@ -81,6 +81,7 @@ namespace AssetWatch
 
         /// <summary>
         /// Contains True if the API is ready 
+        /// API is ready after it's available assets were received
         /// </summary>
         public bool IsReady
         {

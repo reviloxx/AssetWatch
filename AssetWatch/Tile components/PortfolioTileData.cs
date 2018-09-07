@@ -12,9 +12,12 @@ namespace AssetWatch
             get; set;
         }
 
-        public List<AssetTileData> AssetTiles
+        public int assignedAssetTileIds
         {
-            get; set;
+            get => default(int);
+            set
+            {
+            }
         }
     }
 }

@@ -22,7 +22,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.App" Collapsed="true">
-    <Position X="0.5" Y="7.75" Width="1.5" />
+    <Position X="0.5" Y="10.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>App.xaml.cs</FileName>
@@ -36,35 +36,35 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="2.25" Y="7.75" Width="1.5" />
+    <Position X="2.25" Y="10.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Window components\MainWindow.xaml.cs</FileName>
+      <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="AssetWatch.Properties.Resources" Collapsed="true">
-    <Position X="0.5" Y="8.5" Width="1.5" />
+    <Position X="0.5" Y="11.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.Properties.Settings" Collapsed="true">
-    <Position X="2.25" Y="8.5" Width="1.5" />
+    <Position X="2.25" Y="11.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.AssetTile">
-    <Position X="0.5" Y="0.5" Width="2" />
+    <Position X="0.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAABAQAQAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAABAAAAgAAAAAAAAAAAAAAEBAQAQAAAAAAA=</HashCode>
       <FileName>Tile components\AssetTile.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="AssetWatch.PortfolioTile">
-    <Position X="3" Y="0.5" Width="2" />
+    <Position X="3.25" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAIAAAQgAAAAAA=</HashCode>
       <FileName>Tile components\PortfolioTile.xaml.cs</FileName>
@@ -72,21 +72,21 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="AssetWatch.TileStyle">
-    <Position X="3" Y="4.5" Width="2" />
+    <Position X="3.25" Y="4.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>EAAAABEIAAAAgAAgAAAAAAAAAACAAgAAAAEAABAAAAA=</HashCode>
+      <HashCode>EAAAABEIAAAAgAAgABAAAAAAAACAAgAAAAEAABAAAAA=</HashCode>
       <FileName>Tile components\TileStyle.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.AssetTileData">
-    <Position X="0.5" Y="3.25" Width="2" />
+    <Position X="0.5" Y="4" Width="2" />
     <TypeIdentifier>
       <HashCode>AAACAABAAAAAAAAAAAAQAAAAAAAAAAAAAEAgAAAgAAA=</HashCode>
       <FileName>Tile components\AssetTileData.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.PortfolioTileData">
-    <Position X="3" Y="3" Width="2" />
+    <Position X="3.25" Y="3" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
       <FileName>Tile components\PortfolioTileData.cs</FileName>
