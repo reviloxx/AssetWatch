@@ -15,9 +15,11 @@ namespace AssetWatch
             }
         }
 
-        public int Id
+        public string ConvertCurrency { get; set; }
+
+        public string AssetId
         {
-            get => default(int);
+            get => default(string);
             set
             {
             }
@@ -130,14 +132,6 @@ namespace AssetWatch
         public int Volume24hUsd
         {
             get => default(int);
-            set
-            {
-            }
-        }
-
-        public string ConvertCurrency
-        {
-            get => default(string);
             set
             {
             }

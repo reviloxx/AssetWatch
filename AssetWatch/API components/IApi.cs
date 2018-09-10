@@ -31,13 +31,13 @@ namespace AssetWatch
         /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
         /// </summary>
         /// <param name="assetInfo">The assetInfo<see cref="Asset"/></param>
-        void SubscribeAsset(Asset assetInfo);
+        void SubscribeAsset(string assetName, string convertCurrency);
 
         /// <summary>
         /// Unsubscribes an asset from the API which then will be no longer updated.
         /// </summary>
         /// <param name="assetInfo">The assetInfo<see cref="Asset"/></param>
-        void UnsubscribeAsset(Asset assetInfo);
+        void UnsubscribeAsset(string assetName, string convertCurrency);
 
         /// <summary>
         /// Requests the available assets of the API.

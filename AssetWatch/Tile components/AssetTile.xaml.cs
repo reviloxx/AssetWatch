@@ -39,7 +39,7 @@ namespace AssetWatch
             throw new System.NotImplementedException();
         }
 
-        public void Refresh(object sender, Asset assetInfo)
+        public void UpdateAsset(object sender, Asset assetInfo)
         {
             throw new System.NotImplementedException();
         }

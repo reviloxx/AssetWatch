@@ -7,7 +7,7 @@ namespace AssetWatch
 {
     public class AssetTileData
     {
-        public ApiInfo Api
+        public string ApiName
         {
             get => null;
             set
@@ -15,13 +15,15 @@ namespace AssetWatch
             }
         }
 
-        public Asset Asset
+        public string AssetId
         {
             get => null;
             set
             {
             }
         }
+
+        public string ConvertCurrency { get; set; }
 
         public int HoldingsCount
         {
