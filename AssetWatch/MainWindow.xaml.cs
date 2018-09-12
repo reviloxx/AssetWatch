@@ -23,7 +23,6 @@ namespace AssetWatch
         public MainWindow()
         {
             InitializeComponent();
-            ApiLoader.GetApisFromDisk();
         }
     }
 }

@@ -46,7 +46,7 @@ namespace AssetWatch
             get; set;
         }
 
-        public int Id
+        public int AssetTileId
         {
             get => default(int);
             set

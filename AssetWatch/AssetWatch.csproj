@@ -55,8 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="API components\IApiHandler.cs" />
-    <Compile Include="API components\OnApiReadyEventArgs.cs" />
+    <Compile Include="API components\Interfaces\IApiHandler.cs" />
+    <Compile Include="API components\EventArgs\OnApiReadyEventArgs.cs" />
+    <Compile Include="API components\Interfaces\IApiLoader.cs" />
     <Compile Include="Tile components\AssetTileData.cs" />
     <Compile Include="Tile components\PortfolioTileData.cs" />
     <Compile Include="Tile components\AssetTile.xaml.cs">
@@ -76,13 +77,13 @@
     </Page>
     <Compile Include="API components\MultiApiHandler.cs" />
     <Compile Include="API components\ApiInfo.cs" />
-    <Compile Include="API components\ApiLoader.cs" />
+    <Compile Include="API components\DiskApiLoader.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Asset.cs" />
-    <Compile Include="API components\IApi.cs" />
+    <Compile Include="API components\Interfaces\IApi.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

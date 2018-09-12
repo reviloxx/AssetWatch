@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ApiCoinmarketcapPublic
 {
-    public class Api : IApi
+    public class Public : IApi
     {
         private List<Asset> subscribedAssets;
         private int updateInterval;
@@ -25,7 +25,7 @@ namespace ApiCoinmarketcapPublic
         public event EventHandler<Asset> OnSingleAssetUpdated;
         public event EventHandler OnApiError;
 
-        public Api()
+        public Public()
         {
             this.subscribedAssets = new List<Asset>();
         }
@@ -54,17 +54,17 @@ namespace ApiCoinmarketcapPublic
             this.updateInterval = updateInterval;
         }
 
-        public void SubscribeAsset(Asset asset)
+        public void StartAssetUpdater()
         {
             throw new NotImplementedException();
         }
 
-        public void UnsubscribeAsset(Asset asset)
+        public void SubscribeAsset(string assetName, string convertCurrency)
         {
-            this.subscribedAssets.Remove(asset);
+            throw new NotImplementedException();
         }
 
-        public void StartAssetUpdater()
+        public void UnsubscribeAsset(string assetName, string convertCurrency)
         {
             throw new NotImplementedException();
         }

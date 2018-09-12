@@ -8,7 +8,7 @@ namespace AssetWatch
     public class ApiInfo
     {
         /// <summary>
-        /// Contains the minimum supported update interval of the API
+        /// Contains the minimum supported update interval of the API.
         /// </summary>
         public int MinUpdateInterval
         {
@@ -16,7 +16,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Contains the maximum supported update interval of the API
+        /// Contains the maximum supported update interval of the API.
         /// </summary>
         public int MaxUpdateInterval
         {
@@ -24,7 +24,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Contains an info text about the supported update intervals of the API
+        /// Contains an info text about the supported update intervals of the API.
         /// </summary>
         public string UpdateIntervalInfoText
         {
@@ -32,7 +32,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Contains an info text about the API
+        /// Contains an info text about the API.
         /// </summary>
         public string ApiInfoText
         {
@@ -40,7 +40,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Contains an Url to show the asset on a webpage
+        /// Contains an Url to show the asset on a webpage.
         /// </summary>
         public string AssetUrl
         {
@@ -48,7 +48,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Contains the name of the Url to display
+        /// Contains the name of the Url to display.
         /// </summary>
         public string AssetUrlName
         {
@@ -56,7 +56,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Gets or sets the supported fiat currencies
+        /// Gets or sets the supported fiat currencies.
         /// </summary>
         public List<string> SupportedFiatCurrencies
         {
@@ -64,7 +64,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Gets or sets the API Name
+        /// Gets or sets the API Name.
         /// </summary>
         public string ApiName
         {
@@ -72,7 +72,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Gets or sets the API Version
+        /// Gets or sets the API Version.
         /// </summary>
         public string ApiVersion
         {

@@ -23,25 +23,32 @@ namespace AssetWatch
         /// </summary>
         event EventHandler OnApiError;
 
+        /// <summary>
+        /// Gets the assets which are currently subscribed to this API.
+        /// </summary>
         List<Asset> SubscribedAssets { get; }
-        
+
+        /// <summary>
+        /// Gets the ApiInfo which contains all neccessary information about the API.
+        /// </summary>
         ApiInfo ApiInfo { get; }
 
         /// <summary>
         /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
         /// </summary>
-        /// <param name="assetInfo">The assetInfo<see cref="Asset"/></param>
+        /// <param name="assetName">The assetName<see cref="string"/></param>
+        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
         void SubscribeAsset(string assetName, string convertCurrency);
 
         /// <summary>
         /// Unsubscribes an asset from the API which then will be no longer updated.
         /// </summary>
-        /// <param name="assetInfo">The assetInfo<see cref="Asset"/></param>
+        /// <param name="assetName">The assetName<see cref="string"/></param>
+        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
         void UnsubscribeAsset(string assetName, string convertCurrency);
 
         /// <summary>
         /// Requests the available assets of the API.
-        /// Should be called asynchronous.
         /// Fires the OnAvailableAssetsReceived event if successful.
         /// </summary>
         void RequestAvailableAssetsAsync();
