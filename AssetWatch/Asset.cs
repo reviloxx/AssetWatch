@@ -7,134 +7,38 @@ namespace AssetWatch
 {
     public class Asset
     {
-        public int SupplyAvailable
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string SupplyAvailable { get; set; }
 
         public string ConvertCurrency { get; set; }
 
-        public string AssetId
-        {
-            get => default(string);
-            set
-            {
-            }
-        }
+        public string AssetId { get; set; }
 
-        public int LastUpdated
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public DateTime LastUpdated { get; set; }
 
-        public int MarketCapConvert
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string MarketCapConvert { get; set; }
 
-        public int MarketCapUsd
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string MarketCapUsd { get; set; }
 
-        public int Name
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string Name { get; set; }
 
-        public int PercentChange1h
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string PercentChange1h { get; set; }
 
-        public int PercentChange24h
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string PercentChange24h { get; set; }
 
-        public int PercentChange7d
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string PercentChange7d { get; set; }
 
-        public int PriceConvert
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string PriceConvert { get; set; }
 
-        public int PriceUsd
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string PriceUsd { get; set; }
 
-        public int Rank
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string Rank { get; set; }
 
-        public int Symbol
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string Symbol { get; set; }
 
-        public int SupplyTotal
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string SupplyTotal { get; set; }
 
-        public int Volume24hConvert
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string Volume24hConvert { get; set; }
 
-        public int Volume24hUsd
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string Volume24hUsd { get; set; }
     }
 }

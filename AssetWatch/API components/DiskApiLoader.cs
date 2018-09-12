@@ -14,7 +14,7 @@ namespace AssetWatch
         /// <summary>
         /// Defines the directory which contains the assemblies to load.
         /// </summary>
-        private static string dir = Directory.GetCurrentDirectory() + @"\Apis\";
+        private static string directory = Directory.GetCurrentDirectory() + @"\Apis\";
 
         /// <summary>
         /// Loads all available types which implement the IApi interface.
@@ -24,7 +24,7 @@ namespace AssetWatch
         {
             Assembly ass;
             List<IApi> loadedApis = new List<IApi>();
-            string[] files = Directory.GetFiles(dir, "*.dll");
+            string[] files = Directory.GetFiles(directory, "*.dll");
 
             for (int i = 0; i < files.Length; i++)
             {

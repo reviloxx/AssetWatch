@@ -3,7 +3,7 @@
   <Class Name="AssetWatch.MultiApiHandler">
     <Position X="11.75" Y="3.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAIEAAAAAAYAAAABAgACAAAAAQABAAAAA=</HashCode>
+      <HashCode>AAAAAAAAICAAIEAAAAAAYAAAAAAgACAAAAAQABAAAAA=</HashCode>
       <FileName>API components\MultiApiHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -18,7 +18,7 @@
   <Class Name="AssetWatch.DiskApiLoader">
     <Position X="11.75" Y="7.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAEAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>API components\DiskApiLoader.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -40,7 +40,7 @@
   <Class Name="AssetWatch.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="2.25" Y="10.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -95,7 +95,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.OnApiReadyEventArgs">
-    <Position X="11.75" Y="9" Width="2.5" />
+    <Position X="11.75" Y="9.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAA=</HashCode>
       <FileName>API components\EventArgs\OnApiReadyEventArgs.cs</FileName>
@@ -111,12 +111,12 @@
   <Interface Name="AssetWatch.IApiHandler">
     <Position X="9" Y="4.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAAAAAAAAAIAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAICAAAAAAAAAAIAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
       <FileName>API components\Interfaces\IApiHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="AssetWatch.IApiLoader">
-    <Position X="9" Y="6.25" Width="2.5" />
+    <Position X="9" Y="6.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>API components\Interfaces\IApiLoader.cs</FileName>

@@ -32,14 +32,12 @@ namespace AssetWatch
         {
             subscribedAssetTiles = new List<AssetTile>();
             readyApis = new Dictionary<IApi, List<Asset>>();
-
-            LoadApis();
         }
 
         /// <summary>
         /// Loads all available APIs by using an IApiLoader, sobscribes to it's events and requests it's available assets.
         /// </summary>
-        private void LoadApis()
+        public void Start()
         {
             IApiLoader apiLoader = new DiskApiLoader();
 

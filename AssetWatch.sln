@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetWatch", "AssetWatch\AssetWatch.csproj", "{0485FA4B-FF87-4722-948E-96D45A0D4B1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCoinmarketcap", "ApiCoinmarketcapPublic\ApiCoinmarketcap.csproj", "{4E21B687-906E-4874-836E-5C0F9DBE9163}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCoinmarketcap", "ApiCoinmarketcap\ApiCoinmarketcap.csproj", "{4E21B687-906E-4874-836E-5C0F9DBE9163}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

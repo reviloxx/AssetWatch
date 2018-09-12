@@ -23,6 +23,14 @@ namespace AssetWatch
         public MainWindow()
         {
             InitializeComponent();
+            IApiHandler apiHandler = new MultiApiHandler();
+            apiHandler.OnApiReady += ApiHandler_OnApiReady;
+            apiHandler.Start();
+        }
+
+        private void ApiHandler_OnApiReady(object sender, OnApiReadyEventArgs e)
+        {
+            
         }
     }
 }

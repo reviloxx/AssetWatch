@@ -13,6 +13,8 @@ namespace AssetWatch
         /// </summary>
         event EventHandler<OnApiReadyEventArgs> OnApiReady;
 
+        void Start();
+
         /// <summary>
         /// Subscribes an asset tile to the API handler.
         /// A subscribed asset tile gets informed everytime it's asset is updated by calling the asset tile's "UpdateAsset" function.
