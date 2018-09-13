@@ -25,14 +25,7 @@ namespace AssetWatch
 
         public string ConvertCurrency { get; set; }
 
-        public int HoldingsCount
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
-
+        public double HoldingsCount { get; set; }
         public int InvestedSum
         {
             get => default(int);

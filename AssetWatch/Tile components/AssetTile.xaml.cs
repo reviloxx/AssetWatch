@@ -19,7 +19,8 @@ namespace AssetWatch
     /// </summary>
     public partial class AssetTile : Window
     {
-        private int currentWorth;
+        private double currentWorth;
+        private Asset asset;
 
         public event EventHandler<AssetTile> OnRemovingApiSubscription;
         public event EventHandler<AssetTile> OnAddingApiSubscription;
@@ -39,9 +40,10 @@ namespace AssetWatch
             throw new System.NotImplementedException();
         }
 
-        public void UpdateAsset(object sender, Asset assetInfo)
+        public void UpdateAsset(object sender, Asset asset)
         {
-            throw new System.NotImplementedException();
+            this.asset = asset;
+            this.currentWorth = double.Parse(this.asset.PriceConvert) * this.AssetTileData.HoldingsCount;
         }
     }
 }

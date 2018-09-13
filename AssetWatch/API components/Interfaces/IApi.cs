@@ -29,10 +29,15 @@ namespace AssetWatch
         List<Asset> SubscribedAssets { get; }
 
         /// <summary>
+        /// Gets the serializable ApiData which contains the current update interval of the API.
+        /// </summary>
+        ApiData ApiData { get; }
+
+        /// <summary>
         /// Gets the ApiInfo which contains all neccessary information about the API.
         /// </summary>
         ApiInfo ApiInfo { get; }
-
+                
         /// <summary>
         /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
         /// </summary>

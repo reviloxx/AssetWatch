@@ -2,64 +2,126 @@
 using NoobsMuc.Coinmarketcap.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ApiCoinmarketcap
 {
+    /// <summary>
+    /// Defines the <see cref="Public" />
+    /// </summary>
     public class Public : IApi
     {
+        /// <summary>
+        /// Defines the availableAssets
+        /// </summary>
         private List<Asset> availableAssets;
+
+        /// <summary>
+        /// Defines the subscribedAssets
+        /// </summary>
         private List<Asset> subscribedAssets;
+
+        /// <summary>
+        /// The AssetRequestDelegate
+        /// </summary>
         private delegate void AssetRequestDelegate();
+
+        /// <summary>
+        /// Defines the assetRequestDelegate
+        /// </summary>
         private AssetRequestDelegate assetRequestDelegate;
+
+        /// <summary>
+        /// Defines the assetUpdateWorker
+        /// </summary>
         private Thread assetUpdateWorker;
+
+        /// <summary>
+        /// Defines the updateInterval
+        /// </summary>
         private int updateInterval;
 
+        /// <summary>
+        /// Gets the SubscribedAssets
+        /// </summary>
         public List<Asset> SubscribedAssets
         {
             get
             {
-                return this.subscribedAssets;
+                return subscribedAssets;
             }
             private set { }
         }
 
+        /// <summary>
+        /// Defines the OnAvailableAssetsReceived
+        /// </summary>
         public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
+
+        /// <summary>
+        /// Defines the OnSingleAssetUpdated
+        /// </summary>
         public event EventHandler<Asset> OnSingleAssetUpdated;
+
+        /// <summary>
+        /// Defines the OnApiError
+        /// </summary>
         public event EventHandler OnApiError;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Public"/> class.
+        /// </summary>
         public Public()
         {
-            this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
-            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.availableAssets = new List<Asset>();
-            this.subscribedAssets = new List<Asset>();
+            assetRequestDelegate = new AssetRequestDelegate(GetAvailableAssets);
+            assetUpdateWorker = new Thread(AssetUpdateWorker);
+            availableAssets = new List<Asset>();
+            subscribedAssets = new List<Asset>();
         }
 
+        /// <summary>
+        /// Gets the ApiInfo
+        /// </summary>
         public ApiInfo ApiInfo
         {
             get
             {
                 return new ApiInfo
                 {
+                    ApiInfoText = "Warnung: Die öffentliche Coinmaketcap API wird am 4.12.2018 deaktiviert.",
                     ApiName = "Coinmarketcap.com (public)",
                     ApiVersion = "1.0",
-                    AssetUrl = "",
+                    AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen",
+                    MaxUpdateInterval = 3600,
+                    MinUpdateInterval = 300,
+                    SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
+                        "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
+                        "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
+                    UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
                 };
-            }           
-        }
-        
-        public void RequestAvailableAssetsAsync()
-        {
-            this.assetRequestDelegate.BeginInvoke(null, null);
+            }
         }
 
+        /// <summary>
+        /// Gets the RessourcesLeft24h
+        /// </summary>
+        public int CallsLeft24h { get { return -1; } }
+
+        public ApiData ApiData => throw new NotImplementedException();
+
+        /// <summary>
+        /// The RequestAvailableAssetsAsync
+        /// </summary>
+        public void RequestAvailableAssetsAsync()
+        {
+            assetRequestDelegate.BeginInvoke(null, null);
+        }
+
+        /// <summary>
+        /// The GetAvailableAssets
+        /// </summary>
         private void GetAvailableAssets()
         {
             bool connected = false;
@@ -88,7 +150,7 @@ namespace ApiCoinmarketcap
 
             currencies.ForEach(currency =>
             {
-                this.availableAssets.Add(new Asset()
+                availableAssets.Add(new Asset()
                 {
                     SupplyAvailable = currency.AvailableSupply,
                     AssetId = currency.Id,
@@ -107,38 +169,60 @@ namespace ApiCoinmarketcap
                     Volume24hUsd = currency.Volume24hUsd
                 });
             });
-            
-            this.FireOnAvailableAssetsReceived();
+
+            FireOnAvailableAssetsReceived();
         }
 
+        /// <summary>
+        /// The FireOnAvailableAssetsReceived
+        /// </summary>
         private void FireOnAvailableAssetsReceived()
         {
-            this.OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
+            OnAvailableAssetsReceived?.Invoke(this, availableAssets);
         }
 
+        /// <summary>
+        /// The AssetUpdateWorker
+        /// </summary>
         private void AssetUpdateWorker()
         {
-            
         }
 
+        /// <summary>
+        /// The SetUpdateInterval
+        /// </summary>
+        /// <param name="updateInterval">The updateInterval<see cref="int"/></param>
         public void SetUpdateInterval(int updateInterval)
         {
             this.updateInterval = updateInterval;
         }
 
+        /// <summary>
+        /// The StartAssetUpdater
+        /// </summary>
         public void StartAssetUpdater()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// The SubscribeAsset
+        /// </summary>
+        /// <param name="assetName">The assetName<see cref="string"/></param>
+        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
         public void SubscribeAsset(string assetName, string convertCurrency)
         {
-            throw new NotImplementedException();
+            this.SubscribedAssets.Add(new Asset() { Name = assetName, ConvertCurrency = convertCurrency });
         }
 
+        /// <summary>
+        /// The UnsubscribeAsset
+        /// </summary>
+        /// <param name="assetName">The assetName<see cref="string"/></param>
+        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
         public void UnsubscribeAsset(string assetName, string convertCurrency)
         {
-            throw new NotImplementedException();
+            this.SubscribedAssets.RemoveAll(sub => sub.Name == assetName && sub.ConvertCurrency == convertCurrency);
         }
     }
 }

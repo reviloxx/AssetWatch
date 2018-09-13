@@ -56,9 +56,9 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Gets or sets the supported fiat currencies.
+        /// Gets or sets the supported convert currencies.
         /// </summary>
-        public List<string> SupportedFiatCurrencies
+        public List<string> SupportedConvertCurrencies
         {
             get; set;
         }
