@@ -20,12 +20,24 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
+        private IApiHandler apiHandler;
+
+        private IApiLoader apiLoader;
+
         public MainWindow()
         {
             InitializeComponent();
-            IApiHandler apiHandler = new MultiApiHandler();
+            this.apiHandler = new MultiApiHandler();
+            this.apiLoader = new DiskApiLoader();
+
+            apiHandler.OnApiLoaded += ApiHandler_OnApiLoaded;
             apiHandler.OnApiReady += ApiHandler_OnApiReady;
-            apiHandler.Start();
+            this.apiHandler.LoadApis(this.apiLoader);
+        }
+
+        private void ApiHandler_OnApiLoaded(object sender, IApi api)
+        {
+            this.apiHandler.EnableApi(api);
         }
 
         private void ApiHandler_OnApiReady(object sender, OnApiReadyEventArgs e)

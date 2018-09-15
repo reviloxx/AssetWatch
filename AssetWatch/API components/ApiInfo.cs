@@ -78,5 +78,7 @@ namespace AssetWatch
         {
             get; set;
         }
+
+        public bool ApiKeyRequired { get; set; }
     }
 }

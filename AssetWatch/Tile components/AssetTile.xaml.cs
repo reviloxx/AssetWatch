@@ -20,7 +20,8 @@ namespace AssetWatch
     public partial class AssetTile : Window
     {
         private double currentWorth;
-        private Asset asset;
+
+        public Asset TileAsset { get; private set; }
 
         public event EventHandler<AssetTile> OnRemovingApiSubscription;
         public event EventHandler<AssetTile> OnAddingApiSubscription;
@@ -42,8 +43,8 @@ namespace AssetWatch
 
         public void UpdateAsset(object sender, Asset asset)
         {
-            this.asset = asset;
-            this.currentWorth = double.Parse(this.asset.PriceConvert) * this.AssetTileData.HoldingsCount;
+            this.TileAsset = asset;
+            this.currentWorth = double.Parse(this.TileAsset.PriceConvert) * this.AssetTileData.HoldingsCount;
         }
     }
 }

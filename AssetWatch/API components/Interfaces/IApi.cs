@@ -43,14 +43,14 @@ namespace AssetWatch
         /// </summary>
         /// <param name="assetName">The assetName<see cref="string"/></param>
         /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
-        void SubscribeAsset(string assetName, string convertCurrency);
+        void SubscribeAsset(Asset asset);
 
         /// <summary>
         /// Unsubscribes an asset from the API which then will be no longer updated.
         /// </summary>
         /// <param name="assetName">The assetName<see cref="string"/></param>
         /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
-        void UnsubscribeAsset(string assetName, string convertCurrency);
+        void UnsubscribeAsset(Asset asset);
 
         /// <summary>
         /// Requests the available assets of the API.

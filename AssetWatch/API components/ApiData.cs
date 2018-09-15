@@ -7,36 +7,24 @@ namespace AssetWatch
 {
     public class ApiData
     {
-        public int ApiName
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string ApiName { get; set; }
 
-        public int UpdateInterval
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public int UpdateInterval { get; set; }
 
-        public int ApiKey
-        {
-            get => default(int);
-            set
-            {
-            }
-        }
+        public string ApiKey { get; set; }
 
         /// <summary>
         /// Gets the number of API calls which are left today.
         /// Negative value for ininite calls.
         /// </summary>
-        public int CallsLeft24h { get; set; }
+        public int CallsLeft24h { get; set; }        
 
-        public DateTime SaveTime { get; set; }
+        public int CallsLeft1mo { get; set; }
+
+        public DateTime CallCount24hStartTime { get; set; }
+
+        public DateTime CallCount1moStartTime { get; set; }
+
+        public bool IsEnabled { get; set; }
     }
 }

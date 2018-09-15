@@ -15,6 +15,11 @@ namespace AssetWatch
         private List<AssetTile> subscribedAssetTiles;
 
         /// <summary>
+        /// Contains all APIs which have been loaded with an IApiLoader.
+        /// </summary>
+        private List<IApi> loadedApis;
+
+        /// <summary>
         /// Contains all APIs which are ready to use.
         /// </summary>
         private Dictionary<IApi, List<Asset>> readyApis;
@@ -24,6 +29,8 @@ namespace AssetWatch
         /// The event args contain the API which is ready and it's available assets.
         /// </summary>
         public event EventHandler<OnApiReadyEventArgs> OnApiReady;
+        public event EventHandler<IApi> OnApiLoaded;
+        public event EventHandler<IApi> OnApiDisabled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
@@ -37,23 +44,37 @@ namespace AssetWatch
         /// <summary>
         /// Loads all available APIs by using an IApiLoader, sobscribes to it's events and requests it's available assets.
         /// </summary>
-        public void Start()
+        public void LoadApis(IApiLoader apiLoader)
         {
-            IApiLoader apiLoader = new DiskApiLoader();
-
             // look for valid API librarys, load them from the disk and remove duplicates
-            List<IApi> apis = apiLoader.GetApis()
+            this.loadedApis = apiLoader.GetApis()
                 .GroupBy(api => api.ApiInfo.ApiName)
                 .Select(g => g.First())
                 .ToList();
 
-            apis.ForEach(api =>
+            this.loadedApis.ForEach(api =>
             {
-                // subscribe to the API events and request the available assets
-                api.OnAvailableAssetsReceived += Api_OnAvailableAssetsReceived;
-                api.OnApiError += Api_OnApiError;
-                api.RequestAvailableAssetsAsync();
+                // TODO: load API data from disk and assign it to this API
+                // check if the API needs an API key and if there is one in the API data
+                this.FireOnApiLoaded(api);               
             });
+        }
+
+        public void EnableApi(IApi api)
+        {
+            api.OnAvailableAssetsReceived += Api_OnAvailableAssetsReceived;
+            api.OnApiError += Api_OnApiError;
+            api.RequestAvailableAssetsAsync();
+        }
+
+        public void DisableApi(IApi api)
+        {
+
+        }
+
+        private void FireOnApiLoaded(IApi api)
+        {
+            this.OnApiLoaded?.Invoke(this, api);
         }
 
         /// <summary>
@@ -62,7 +83,7 @@ namespace AssetWatch
         /// <param name="eventArgs">The eventArgs<see cref="OnApiReadyEventArgs"/> contain the API which is ready and it's available assets.</param>
         private void FireOnApiReady(OnApiReadyEventArgs eventArgs)
         {
-            OnApiReady?.Invoke(this, eventArgs);
+            this.OnApiReady?.Invoke(this, eventArgs);
         }
 
         /// <summary>
@@ -75,9 +96,9 @@ namespace AssetWatch
             // check which API sent it's available assets and put them in the dictionary
             IApi api = (IApi)sender;
             api.OnSingleAssetUpdated += Api_OnSingleAssetUpdated;
-            readyApis.Add(api, availableAssets);
+            this.readyApis.Add(api, availableAssets);
 
-            FireOnApiReady(new OnApiReadyEventArgs { Api = api, Assets = availableAssets });
+            this.FireOnApiReady(new OnApiReadyEventArgs { Api = api, Assets = availableAssets });
         }
 
         /// <summary>
@@ -117,7 +138,7 @@ namespace AssetWatch
             // if the same asset is not subscribet to this API yet, subscribe it
             if (!api.SubscribedAssets.Exists(a => a.AssetId == assetTile.AssetTileData.AssetId && a.ConvertCurrency == assetTile.AssetTileData.ConvertCurrency))
             {
-                api.SubscribeAsset(assetTile.AssetTileData.AssetId, assetTile.AssetTileData.ConvertCurrency);
+                api.SubscribeAsset(assetTile.TileAsset);
             }
 
             subscribedAssetTiles.Add(assetTile);
@@ -136,7 +157,7 @@ namespace AssetWatch
             // unsubscribe the asset from the API if there is no other assetTile subscribed to this asset
             if (!api.SubscribedAssets.Exists(a => a.AssetId == assetTile.AssetTileData.AssetId && a.ConvertCurrency == assetTile.AssetTileData.ConvertCurrency))
             {
-                api.UnsubscribeAsset(assetTile.AssetTileData.AssetId, assetTile.AssetTileData.ConvertCurrency);
+                api.UnsubscribeAsset(assetTile.TileAsset);
             }
 
             subscribedAssetTiles.Remove(assetTile);

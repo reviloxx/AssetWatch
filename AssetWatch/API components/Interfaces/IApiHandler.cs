@@ -12,8 +12,10 @@ namespace AssetWatch
         /// The event args contain the API which is ready and it's available assets.
         /// </summary>
         event EventHandler<OnApiReadyEventArgs> OnApiReady;
+        event EventHandler<IApi> OnApiLoaded;
+        event EventHandler<IApi> OnApiDisabled;
 
-        void Start();
+        void LoadApis(IApiLoader apiLoader);
 
         /// <summary>
         /// Subscribes an asset tile to the API handler.
@@ -28,5 +30,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/></param>
         void UnsubscribeAssetTile(AssetTile assetTile);
+        void EnableApi(IApi api);
+        void DisableApi(IApi api);
     }
 }

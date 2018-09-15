@@ -8,9 +8,9 @@ using System.Threading;
 namespace ApiCoinmarketcap
 {
     /// <summary>
-    /// Defines the <see cref="Public" />
+    /// Defines the <see cref="Client" />
     /// </summary>
-    public class Public : IApi
+    public class Client : IApi
     {
         /// <summary>
         /// Defines the availableAssets
@@ -70,9 +70,9 @@ namespace ApiCoinmarketcap
         public event EventHandler OnApiError;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Public"/> class.
+        /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
-        public Public()
+        public Client()
         {
             assetRequestDelegate = new AssetRequestDelegate(GetAvailableAssets);
             assetUpdateWorker = new Thread(AssetUpdateWorker);
@@ -90,6 +90,7 @@ namespace ApiCoinmarketcap
                 return new ApiInfo
                 {
                     ApiInfoText = "Warnung: Die öffentliche Coinmaketcap API wird am 4.12.2018 deaktiviert.",
+                    ApiKeyRequired = false,
                     ApiName = "Coinmarketcap.com (public)",
                     ApiVersion = "1.0",
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
@@ -105,10 +106,16 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Gets the RessourcesLeft24h
+        /// Gets the CallsLeft24h
         /// </summary>
-        public int CallsLeft24h { get { return -1; } }
+        public int CallsLeft24h
+        {
+            get { return -1; }
+        }
 
+        /// <summary>
+        /// Gets the ApiData
+        /// </summary>
         public ApiData ApiData => throw new NotImplementedException();
 
         /// <summary>
@@ -208,21 +215,19 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// The SubscribeAsset
         /// </summary>
-        /// <param name="assetName">The assetName<see cref="string"/></param>
-        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
-        public void SubscribeAsset(string assetName, string convertCurrency)
+        /// <param name="asset">The asset<see cref="Asset"/></param>
+        public void SubscribeAsset(Asset asset)
         {
-            this.SubscribedAssets.Add(new Asset() { Name = assetName, ConvertCurrency = convertCurrency });
+            SubscribedAssets.Add(asset);
         }
 
         /// <summary>
         /// The UnsubscribeAsset
         /// </summary>
-        /// <param name="assetName">The assetName<see cref="string"/></param>
-        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
-        public void UnsubscribeAsset(string assetName, string convertCurrency)
+        /// <param name="asset">The asset<see cref="Asset"/></param>
+        public void UnsubscribeAsset(Asset asset)
         {
-            this.SubscribedAssets.RemoveAll(sub => sub.Name == assetName && sub.ConvertCurrency == convertCurrency);
+            SubscribedAssets.RemoveAll(sub => sub.AssetId == asset.AssetId && sub.ConvertCurrency == asset.ConvertCurrency);
         }
     }
 }

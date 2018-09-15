@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4E21B687-906E-4874-836E-5C0F9DBE9163}</ProjectGuid>
+    <ProjectGuid>{DBCCBC27-887F-42D6-A3BA-1DAFCA05A74C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ApiCoinmarketcap</RootNamespace>
-    <AssemblyName>ApiCoinmarketcap</AssemblyName>
+    <RootNamespace>ApiCoinmarketcapPro</RootNamespace>
+    <AssemblyName>ApiCoinmarketcapPro</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,21 +31,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FubarCoder.RestSharp.Portable.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=be81bb0f53eab22f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarCoder.RestSharp.Portable.Core.4.0.8\lib\net45\FubarCoder.RestSharp.Portable.Core.dll</HintPath>
+    <Reference Include="CoinMarketCapPro, Version=1.0.3.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoinMarketCapPro.1.0.3.4\lib\netstandard2.0\CoinMarketCapPro.dll</HintPath>
     </Reference>
-    <Reference Include="FubarCoder.RestSharp.Portable.HttpClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=be81bb0f53eab22f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarCoder.RestSharp.Portable.HttpClient.4.0.8\lib\net45\FubarCoder.RestSharp.Portable.HttpClient.dll</HintPath>
+    <Reference Include="Flurl, Version=2.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.2.7.1\lib\net40\Flurl.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Flurl.Http, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Flurl.Http.2.3.2\lib\net46\Flurl.Http.dll</HintPath>
     </Reference>
-    <Reference Include="NoobsMuc.Coinmarketcap.Client, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NoobsMuc.Coinmarketcap.Client.1.0.2\lib\net461\NoobsMuc.Coinmarketcap.Client.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,14 +57,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AssetWatch\AssetWatch.csproj">
-      <Project>{0485fa4b-ff87-4722-948e-96d45a0d4b1b}</Project>
-      <Name>AssetWatch</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AssetWatch\AssetWatch.csproj">
+      <Project>{0485FA4B-FF87-4722-948E-96D45A0D4B1B}</Project>
+      <Name>AssetWatch</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
