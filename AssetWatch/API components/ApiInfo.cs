@@ -80,5 +80,15 @@ namespace AssetWatch
         }
 
         public bool ApiKeyRequired { get; set; }
+
+        public string GetApiKeyUrl { get; set; }
+
+        public AssetType AssetType { get; set; }
+    }
+
+    public enum AssetType
+    {
+        Cryptocurrencies,
+        Stocks
     }
 }

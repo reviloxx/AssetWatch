@@ -3,6 +3,7 @@ using CoinMarketCapPro;
 using CoinMarketCapPro.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 
@@ -17,6 +18,13 @@ namespace ApiCoinmarketcapPro
         /// Defines the availableAssets
         /// </summary>
         private List<Asset> availableAssets;
+
+        /// <summary>
+        /// Gets the SubscribedAssets
+        /// </summary>
+        private List<Asset> subscribedAssets;
+
+        private List<string> subscribedConvertCurrencies;
 
         /// <summary>
         /// The AssetRequestDelegate
@@ -44,9 +52,14 @@ namespace ApiCoinmarketcapPro
         private static ApiSchema apiSchema = ApiSchema.Sandbox;
 
         /// <summary>
-        /// Gets the SubscribedAssets
+        /// Defines the assetUpdateWorker
         /// </summary>
-        public List<Asset> SubscribedAssets { get; private set; }
+        private Thread assetUpdateWorker;
+
+        private int updateInterval;
+
+        private bool assetUpdaterRunning;
+        
 
         /// <summary>
         /// Gets the ApiData
@@ -62,7 +75,20 @@ namespace ApiCoinmarketcapPro
             {
                 return new ApiInfo
                 {
-                    // TODO
+                    ApiInfoText = "",
+                    ApiKeyRequired = true,
+                    ApiName = "Coinmarketcap Pro",
+                    ApiVersion = "1.0",
+                    AssetType = AssetType.Cryptocurrencies,
+                    AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
+                    AssetUrlName = "Auf Coinmarketcap.com anzeigen",
+                    GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
+                    MaxUpdateInterval = 3600,
+                    MinUpdateInterval = 300,
+                    SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
+                        "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
+                        "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
+                    UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
                 };
             }
         }
@@ -80,16 +106,20 @@ namespace ApiCoinmarketcapPro
         /// <summary>
         /// Defines the OnApiError
         /// </summary>
-        public event EventHandler OnApiError;
+        public event EventHandler<OnApiErrorEventArgs> OnApiError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
         public Client()
         {
-            availableAssets = new List<Asset>();
-            client = new CoinMarketCapClient(apiSchema, apiKey);
-            assetRequestDelegate = new AssetRequestDelegate(GetAvailableAssets);
+            this.availableAssets = new List<Asset>();
+            this.subscribedAssets = new List<Asset>();
+            this.subscribedConvertCurrencies = new List<string>();
+            this.client = new CoinMarketCapClient(apiSchema, apiKey);
+            this.assetRequestDelegate = new AssetRequestDelegate(GetAvailableAssets);
+            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
+            this.ApiData = new ApiData();
         }
 
         /// <summary>
@@ -163,15 +193,70 @@ namespace ApiCoinmarketcapPro
         /// <param name="updateInterval">The updateInterval<see cref="int"/></param>
         public void SetUpdateInterval(int updateInterval)
         {
-            throw new NotImplementedException();
+            this.updateInterval = updateInterval;
         }
 
         /// <summary>
         /// The StartAssetUpdater
         /// </summary>
-        public void StartAssetUpdater()
+        private void StartAssetUpdater()
+        {
+            this.assetUpdaterRunning = true;
+            this.assetUpdateWorker.Start();
+        }
+
+        /// <summary>
+        /// The StartAssetUpdater
+        /// </summary>
+        public void StopAssetUpdater()
+        {
+            this.assetUpdaterRunning = false;
+        }
+
+        /// <summary>
+        /// The AssetUpdateWorker
+        /// </summary>
+        private async void AssetUpdateWorker()
+        {
+            while (this.assetUpdaterRunning)
+            {
+                int startId = this.subscribedAssets.Min(sub => int.Parse(sub.AssetId));
+                int endId = this.subscribedAssets.Max(sub => int.Parse(sub.AssetId));
+
+                try
+                {
+                    var a = await this.client.GetCurrencyListingsAsync(startId, endId, this.subscribedConvertCurrencies);
+                    if (a.Status.ErrorCode != 0)
+                    {
+                        // TODO: handle API error codes
+                    }
+
+                    this.subscribedAssets.ForEach(ass =>
+                    {
+                        var assetUpdate = a.Data.First(upd => upd.Id.ToString() == ass.AssetId);
+                        ass.PriceConvert = assetUpdate.Quote[ass.ConvertCurrency].Price.ToString();
+                        this.FireOnSingleAssetUpdated(ass);
+                    });
+                }
+                catch(Exception e)
+                {
+                    this.FireOnApiError(e.Message);
+                    this.assetUpdaterRunning = false;
+                    return;
+                }
+                
+                Thread.Sleep(this.updateInterval * 1000);
+            }
+        }
+
+        private void FireOnApiError(string message)
         {
             throw new NotImplementedException();
+        }
+
+        private void FireOnSingleAssetUpdated(Asset asset)
+        {
+            this.OnSingleAssetUpdated?.Invoke(this, asset);
         }
 
         /// <summary>
@@ -180,7 +265,21 @@ namespace ApiCoinmarketcapPro
         /// <param name="asset">The asset<see cref="Asset"/></param>
         public void SubscribeAsset(Asset asset)
         {
-            throw new NotImplementedException();
+            if (!this.subscribedAssets.Exists(sub => sub.AssetId == asset.AssetId))
+            {
+                this.subscribedAssets.Add(asset);
+            }
+
+            if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
+            {
+                this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);
+            }
+
+            // Start the asset updater if there are subscribed assets and the API is enabled and it is not running yet
+            if (this.subscribedAssets.Count > 0 && this.ApiData.IsEnabled && !this.assetUpdaterRunning)
+            {
+                this.StartAssetUpdater();
+            }
         }
 
         /// <summary>
@@ -189,7 +288,24 @@ namespace ApiCoinmarketcapPro
         /// <param name="asset">The asset<see cref="Asset"/></param>
         public void UnsubscribeAsset(Asset asset)
         {
-            throw new NotImplementedException();
+            
+        }
+
+        public void EnableApi()
+        {
+            this.ApiData.IsEnabled = true;
+
+            // Start the asset updater if there are subscribed assets and it is not running yet
+            if (this.subscribedAssets.Count > 0 && !this.assetUpdaterRunning)
+            {
+                this.StartAssetUpdater();
+            }
+        }
+
+        public void DisableApi()
+        {
+            this.ApiData.IsEnabled = false;
+            this.assetUpdaterRunning = false;
         }
     }
 }

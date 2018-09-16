@@ -37,12 +37,37 @@ namespace AssetWatch
 
         private void ApiHandler_OnApiLoaded(object sender, IApi api)
         {
-            this.apiHandler.EnableApi(api);
+            api.SetUpdateInterval(10);
+            api.EnableApi();
+            api.RequestAvailableAssetsAsync();
         }
 
         private void ApiHandler_OnApiReady(object sender, OnApiReadyEventArgs e)
         {
-            
+            // simulate subscribing asset tile
+            this.Dispatcher.Invoke(() =>
+            {
+                Asset ass = new Asset
+                {
+                    AssetId = e.Assets[0].AssetId,
+                    ConvertCurrency = "EUR",
+                    Name = "Bitcoin"
+                };
+
+                AssetTileData asstiledat = new AssetTileData
+                {
+                    ApiName = "Coinmarketcap Pro"
+                };
+
+                AssetTile asstile = new AssetTile
+                {
+                    Asset = ass,
+                    AssetTileData = asstiledat
+                };
+
+                this.apiHandler.SubscribeAssetTile(asstile);
+            });
+           
         }
     }
 }

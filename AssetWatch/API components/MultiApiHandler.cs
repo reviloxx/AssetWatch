@@ -30,7 +30,7 @@ namespace AssetWatch
         /// </summary>
         public event EventHandler<OnApiReadyEventArgs> OnApiReady;
         public event EventHandler<IApi> OnApiLoaded;
-        public event EventHandler<IApi> OnApiDisabled;
+        public event EventHandler<OnApiErrorEventArgs> OnApiError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
@@ -56,20 +56,10 @@ namespace AssetWatch
             {
                 // TODO: load API data from disk and assign it to this API
                 // check if the API needs an API key and if there is one in the API data
+                api.OnAvailableAssetsReceived += Api_OnAvailableAssetsReceived;
+                api.OnApiError += Api_OnApiError;
                 this.FireOnApiLoaded(api);               
             });
-        }
-
-        public void EnableApi(IApi api)
-        {
-            api.OnAvailableAssetsReceived += Api_OnAvailableAssetsReceived;
-            api.OnApiError += Api_OnApiError;
-            api.RequestAvailableAssetsAsync();
-        }
-
-        public void DisableApi(IApi api)
-        {
-
         }
 
         private void FireOnApiLoaded(IApi api)
@@ -106,7 +96,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="EventArgs"/></param>
-        private void Api_OnApiError(object sender, EventArgs e)
+        private void Api_OnApiError(object sender, OnApiErrorEventArgs e)
         {
             throw new NotImplementedException();
         }
@@ -120,7 +110,7 @@ namespace AssetWatch
         private void Api_OnSingleAssetUpdated(object sender, Asset updatedAsset)
         {
             IApi api = (IApi)sender;
-            List<AssetTile> toNotify = subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName && at.AssetTileData.AssetId == updatedAsset.AssetId);
+            List<AssetTile> toNotify = subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName && at.Asset.AssetId == updatedAsset.AssetId);
 
             toNotify.ForEach(a => a.UpdateAsset(this, updatedAsset));
         }
@@ -134,12 +124,7 @@ namespace AssetWatch
         {
             // search the API to subscribe in the dictionary
             IApi api = readyApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.ApiName).Key;
-
-            // if the same asset is not subscribet to this API yet, subscribe it
-            if (!api.SubscribedAssets.Exists(a => a.AssetId == assetTile.AssetTileData.AssetId && a.ConvertCurrency == assetTile.AssetTileData.ConvertCurrency))
-            {
-                api.SubscribeAsset(assetTile.TileAsset);
-            }
+            api.SubscribeAsset(assetTile.Asset);
 
             subscribedAssetTiles.Add(assetTile);
         }
@@ -151,15 +136,6 @@ namespace AssetWatch
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/></param>
         public void UnsubscribeAssetTile(AssetTile assetTile)
         {
-            // search the API to unsubscribe in the dictionary
-            IApi api = readyApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.ApiName).Key;
-
-            // unsubscribe the asset from the API if there is no other assetTile subscribed to this asset
-            if (!api.SubscribedAssets.Exists(a => a.AssetId == assetTile.AssetTileData.AssetId && a.ConvertCurrency == assetTile.AssetTileData.ConvertCurrency))
-            {
-                api.UnsubscribeAsset(assetTile.TileAsset);
-            }
-
             subscribedAssetTiles.Remove(assetTile);
         }
     }

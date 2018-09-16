@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="AssetWatch.MultiApiHandler">
-    <Position X="11.25" Y="3.75" Width="2.5" />
+    <Position X="11.25" Y="3.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAIEAAAAAAZEAAABAgICAAAADQABAAAAA=</HashCode>
+      <HashCode>AAAAAAAAIAAAIEAAAAAAZAAQABAgIGAAAAAQABAAAAA=</HashCode>
       <FileName>API components\MultiApiHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="AssetWatch.ApiInfo">
-    <Position X="8.5" Y="4.25" Width="2.5" />
+    <Position X="8.5" Y="4.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ACAAAgIAAAAAAAAAAAIAAAAAAAAAAACAAAAAACIQEIA=</HashCode>
+      <HashCode>ACAAAgIAAAAAQAAAAQIAAAAAAAAAAACAAAAAACIQEIA=</HashCode>
       <FileName>API components\ApiInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -40,7 +40,7 @@
   <Class Name="AssetWatch.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="2.25" Y="10.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAABAEAAAAAAAAAAACAAAAAAAAAEA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -60,7 +60,7 @@
   <Class Name="AssetWatch.AssetTile">
     <Position X="0.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAggAIAAAAAAAAAAAAEBAQAQAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAggAAAAAAAAAAAAAAEBAQAwAAAAAAA=</HashCode>
       <FileName>Tile components\AssetTile.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -108,17 +108,24 @@
       <FileName>API components\ApiData.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="AssetWatch.OnApiErrorEventArgs">
+    <Position X="17" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>API components\EventArgs\OnApiErrorEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="AssetWatch.IApi">
     <Position X="8.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAQABAAAAAEQAgAAAAAAAAAACAAAAEAAAAAASABAAgA=</HashCode>
+      <HashCode>AAQABAAAAAEQAgAAAAAAAAAACAAAAEAAAADASAAAAAA=</HashCode>
       <FileName>API components\Interfaces\IApi.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="AssetWatch.IApiHandler">
     <Position X="11.25" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAAAAAAAAAIEAAABAgIAAAAADAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAIAAAABAgIEAAAAAAAAAAAAA=</HashCode>
       <FileName>API components\Interfaces\IApiHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -129,5 +136,19 @@
       <FileName>API components\Interfaces\IApiLoader.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Enum Name="AssetWatch.ErrorType">
+    <Position X="17" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAACAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>API components\EventArgs\OnApiErrorEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AssetWatch.AssetType">
+    <Position X="8.5" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>API components\ApiInfo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

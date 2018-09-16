@@ -21,7 +21,7 @@ namespace AssetWatch
     {
         private double currentWorth;
 
-        public Asset TileAsset { get; private set; }
+        public Asset Asset { get; set; }
 
         public event EventHandler<AssetTile> OnRemovingApiSubscription;
         public event EventHandler<AssetTile> OnAddingApiSubscription;
@@ -42,9 +42,9 @@ namespace AssetWatch
         }
 
         public void UpdateAsset(object sender, Asset asset)
-        {
-            this.TileAsset = asset;
-            this.currentWorth = double.Parse(this.TileAsset.PriceConvert) * this.AssetTileData.HoldingsCount;
+        {           
+            this.Asset = asset;
+            this.currentWorth = double.Parse(this.Asset.PriceConvert) * this.AssetTileData.HoldingsCount;
         }
     }
 }

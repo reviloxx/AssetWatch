@@ -13,7 +13,7 @@ namespace AssetWatch
         /// </summary>
         event EventHandler<OnApiReadyEventArgs> OnApiReady;
         event EventHandler<IApi> OnApiLoaded;
-        event EventHandler<IApi> OnApiDisabled;
+        event EventHandler<OnApiErrorEventArgs> OnApiError;
 
         void LoadApis(IApiLoader apiLoader);
 
@@ -29,8 +29,6 @@ namespace AssetWatch
         /// An unsubscribed asset tile will no longer receive updates of it's asset.
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/></param>
-        void UnsubscribeAssetTile(AssetTile assetTile);
-        void EnableApi(IApi api);
-        void DisableApi(IApi api);
+        void UnsubscribeAssetTile(AssetTile assetTile);        
     }
 }
