@@ -1,0 +1,44 @@
+﻿<Window x:Class="AssetWatch.MainSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AssetWatch"
+        mc:Ignorable="d"
+        Title="Einstellungen" Height="400" Width="800"
+        ResizeMode="NoResize"
+        >
+    <TabControl>
+        <TabItem Header="API Einstellungen">
+            <Grid Background="WhiteSmoke">
+                <ListView 
+            x:Name="listView_loadedApis"
+            ItemsSource="{Binding Path=LoadedApis}" 
+            SelectionChanged="listView_loadedApis_SelectionChanged"
+            SelectionMode="Single"
+            HorizontalAlignment="Left" Height="249" Margin="37,43,0,0" VerticalAlignment="Top" Width="472">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="API Name" DisplayMemberBinding="{Binding Path=ApiInfo.ApiName}" Width="150"/>
+                            <GridViewColumn Header="Client Version" DisplayMemberBinding="{Binding Path=ApiInfo.ApiClientVersion}" Width="80"/>
+                            <GridViewColumn Header="Asset Typ" DisplayMemberBinding="{Binding Path=ApiInfo.AssetType}" Width="120"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button x:Name="button_ApiSettings" Click="button_ApiSettings_Click" IsEnabled="False" 
+                Margin="479,309,0,0" VerticalAlignment="Top" Height="19" HorizontalAlignment="Left" Width="30">
+                    <Image Source="Icons\settings_black.png" Width="15"/>
+                </Button>
+                <Button x:Name="button_EnableApi" Content="API aktivieren" Click="button_EnableApi_Click" IsEnabled="False" 
+                Margin="37,309,0,0" Background="LightSeaGreen" HorizontalAlignment="Left" Width="95" Height="19" VerticalAlignment="Top"/>
+                <Button x:Name="button_disableApi" Content="API deaktivieren" Click="button_disableApi_Click" IsEnabled="False" HorizontalAlignment="Left" 
+                Margin="137,309,0,0" VerticalAlignment="Top" Width="95" Background="IndianRed"/>
+                <TextBlock x:Name="textBlock_API_Info" HorizontalAlignment="Left" 
+                   Margin="530,72,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="220" Width="233"/>
+                <Label Content="Verfügbare APIs" HorizontalAlignment="Left" Margin="37,11,0,0" VerticalAlignment="Top" Width="270" Height="26"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>
+
+

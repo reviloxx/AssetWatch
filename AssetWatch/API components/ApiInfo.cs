@@ -74,7 +74,7 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets the API Version.
         /// </summary>
-        public string ApiVersion
+        public string ApiClientVersion
         {
             get; set;
         }

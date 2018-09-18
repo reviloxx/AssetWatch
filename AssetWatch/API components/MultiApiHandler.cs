@@ -138,5 +138,25 @@ namespace AssetWatch
         {
             subscribedAssetTiles.Remove(assetTile);
         }
+
+        public void EnableApi(IApi api)
+        {
+            api.EnableApi();
+
+            if (!this.readyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
+            {
+                api.RequestAvailableAssetsAsync();
+            }
+        }
+
+        public void DisableApi(IApi api)
+        {
+            api.DisableApi();
+        }
+
+        public void SetUpdateInterval(IApi api, int seconds)
+        {
+            api.SetUpdateInterval(seconds);
+        }
     }
 }

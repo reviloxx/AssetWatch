@@ -5,8 +5,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssetWatch"
         mc:Ignorable="d"
-        Title="AssetTile" Height="450" Width="800">
+        ShowInTaskbar="False" Height="200" Width="200" WindowStyle="None" AllowsTransparency="True"  ResizeMode="NoResize" MouseUp="Window_MouseUp"  SnapsToDevicePixels="True" Background="#FF090909">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock x:Name="textBlock_AssetAmount" TextWrapping="Wrap" RenderTransformOrigin="0.292,-1.053" Grid.Column="2" TextAlignment="Right" Grid.Row="2" FontSize="16" Margin="17,4.6,10,5" Grid.ColumnSpan="2" Foreground="White"/>
+        <TextBlock x:Name="textBlock_AssetSymbol" Grid.Row="2" Grid.ColumnSpan="3" FontSize="16" Margin="10,4.6,37.6,5" Foreground="White" />
+        <TextBlock x:Name="textBlock_AssetPrice" Grid.Column="2" TextWrapping="Wrap"  Grid.Row="3" TextAlignment="Right" FontSize="16" Margin="17,5,10,4.6" Grid.ColumnSpan="2" Foreground="White"/>
+        <TextBlock x:Name="label_AssetPrice" Grid.Row="3" FontSize="16" Margin="10,5,37.6,4.6" Foreground="White" Grid.ColumnSpan="3" />
+        <TextBlock x:Name="textBlock_Worth" Grid.Column="2" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="4" FontSize="16" Margin="17,5.4,10,5.4" Grid.ColumnSpan="2" Foreground="White"/>
+        <TextBlock x:Name="label_Worth"  Grid.Row="4" Grid.ColumnSpan="3" FontSize="16" Margin="10,5.4,37.6,5.4" Foreground="White"/>
+        <TextBlock x:Name="textBlock_last_Refresh" Grid.Column="2" TextWrapping="Wrap" TextAlignment="Right" FontSize="14" Margin="0,0.2,10,3.4" Grid.Row="1" Foreground="White" HorizontalAlignment="Right" Width="51" Grid.ColumnSpan="2" />
+        <Button x:Name="button_Info" Visibility="Hidden" MouseEnter="button_MouseEnter" MouseLeave="button_MouseLeave" BorderThickness="0" Background="#00000000"  Grid.Row="6" Grid.Column="0" FontSize="16" Margin="5,1.8,4.6,0" Grid.ColumnSpan="1" Click="button_Info_Click" >
+            <Image x:Name="info_Image" Source="..\Icons\info_white.png" Width="20" />
+        </Button>
+        <Button x:Name="button_Settings" MouseEnter="button_MouseEnter" MouseLeave="button_MouseLeave" BorderThickness="0" Click="button_Settings_Click" Grid.Row="6" Grid.Column="2"  FontSize="16" Background="#00000000" Margin="5,1.8,4.6,0"  >
+            <Image x:Name="settings_Image" Source="..\Icons\settings_white.png" Width="20"/>
+        </Button>
+        <Button x:Name="button_Calc" Visibility="Hidden" MouseEnter="button_MouseEnter" MouseLeave="button_MouseLeave" BorderThickness="0" Background="#00000000"  Click="button_Calc_Click" Grid.Row="6" Grid.Column="1" FontSize="16" Margin="5.4,1.8,5,0" Grid.ColumnSpan="1" >
+            <Image x:Name="calculator_Image" Source="..\Icons\calculator_white.png" Width="22" />
+        </Button>
+        <Button x:Name="button_Close" MouseEnter="button_MouseEnter" MouseLeave="button_MouseLeave" BorderThickness="0" Click="button_Close_Click" Grid.Row="6" Grid.Column="3"  FontSize="16" Background="#00000000" Margin="5.4,1.8,5,0"  >
+            <Image x:Name="close_Image" Source="..\Icons\remove-icon-white.png" Height="20" Width="20"/>
+        </Button>
+        <TextBlock x:Name="label_WalletName" Grid.Row="1" FontSize="16" FontWeight="Bold" Margin="10,0.2,66,3.4" Grid.ColumnSpan="4" Foreground="White"  />
+        <TextBlock x:Name="textBlock_Win" Foreground="White" Margin="0,0.6,0,0" Grid.Row="5" TextWrapping="Wrap" Grid.ColumnSpan="4" TextAlignment="Center" VerticalAlignment="Top" FontSize="14"/>
     </Grid>
 </Window>

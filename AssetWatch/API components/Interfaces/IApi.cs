@@ -32,19 +32,17 @@ namespace AssetWatch
         /// Gets the ApiInfo which contains all neccessary information about the API.
         /// </summary>
         ApiInfo ApiInfo { get; }
-                
+
         /// <summary>
         /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
         /// </summary>
-        /// <param name="assetName">The assetName<see cref="string"/></param>
-        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
+        /// <param name="asset">The asset<see cref="Asset"/></param>
         void SubscribeAsset(Asset asset);
 
         /// <summary>
         /// Unsubscribes an asset from the API which then will be no longer updated.
         /// </summary>
-        /// <param name="assetName">The assetName<see cref="string"/></param>
-        /// <param name="convertCurrency">The convertCurrency<see cref="string"/></param>
+        /// <param name="asset">The asset<see cref="Asset"/></param>
         void UnsubscribeAsset(Asset asset);
 
         /// <summary>
@@ -59,8 +57,14 @@ namespace AssetWatch
         /// <param name="updateInterval">The update interval in seconds.</param>
         void SetUpdateInterval(int updateInterval);
 
+        /// <summary>
+        /// The EnableApi
+        /// </summary>
         void EnableApi();
 
+        /// <summary>
+        /// The DisableApi
+        /// </summary>
         void DisableApi();
     }
 }

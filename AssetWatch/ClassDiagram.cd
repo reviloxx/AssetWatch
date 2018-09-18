@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="AssetWatch.MultiApiHandler">
-    <Position X="11.25" Y="3.25" Width="2.5" />
+    <Position X="11.25" Y="3.75" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAIEAAAAAAZAAQABAgIGAAAAAQABAAAAA=</HashCode>
+      <HashCode>AAAAAAAAIAAAIEAAAAAAZAAQCBAgIGAAAADQABAAAAA=</HashCode>
       <FileName>API components\MultiApiHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -37,10 +37,10 @@
       <FileName>Asset.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="AssetWatch.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="2.25" Y="10.75" Width="1.5" />
+  <Class Name="AssetWatch.MainWindow" BaseTypeListCollapsed="true">
+    <Position X="2.25" Y="10.75" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAABAEAAAAAAAAAAACAAAAAAAAAEA=</HashCode>
+      <HashCode>AAAAAAAAAAAEAAAAABAEBAAAAAAAAAACAAAAAAAAAEA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -52,7 +52,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.Properties.Settings" Collapsed="true">
-    <Position X="2.25" Y="11.5" Width="1.5" />
+    <Position X="0.5" Y="12.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
@@ -60,7 +60,7 @@
   <Class Name="AssetWatch.AssetTile">
     <Position X="0.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAggAAAAAAAAAAAAAAEBAQAwAAAAAAA=</HashCode>
+      <HashCode>AAAAAAABAAAABEggAAAAAAEAAAABAAEBAQAwACAAAAA=</HashCode>
       <FileName>Tile components\AssetTile.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -81,7 +81,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.AssetTileData">
-    <Position X="0.5" Y="4" Width="2.25" />
+    <Position X="0.5" Y="5.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ACAAAABgAAAAAIAAAAAQAAAAAgAAAAAAAEAAAAAAAAA=</HashCode>
       <FileName>Tile components\AssetTileData.cs</FileName>
@@ -115,6 +115,21 @@
       <FileName>API components\EventArgs\OnApiErrorEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="AssetWatch.MainSettingsWindow">
+    <Position X="5.25" Y="10.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAEBAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>MainSettingsWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="AssetWatch.MainSettingsWindowViewModel">
+    <Position X="7.5" Y="10.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MainSettingsWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="AssetWatch.IApi">
     <Position X="8.5" Y="0.5" Width="2.5" />
     <TypeIdentifier>
@@ -125,7 +140,7 @@
   <Interface Name="AssetWatch.IApiHandler">
     <Position X="11.25" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAAAAAAAAAIAAAABAgIEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAIAAACBAgIEAAAADAAAAAAAA=</HashCode>
       <FileName>API components\Interfaces\IApiHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>

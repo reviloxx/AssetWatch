@@ -84,6 +84,12 @@
     <Compile Include="API components\EventArgs\OnApiReadyEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiLoader.cs" />
     <Compile Include="API components\ApiData.cs" />
+    <Compile Include="APISettingsWindow.xaml.cs">
+      <DependentUpon>APISettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainSettingsWindow.xaml.cs">
+      <DependentUpon>MainSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tile components\AssetTileData.cs" />
     <Compile Include="Tile components\PortfolioTileData.cs" />
     <Compile Include="Tile components\AssetTile.xaml.cs">
@@ -93,6 +99,14 @@
       <DependentUpon>PortfolioTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tile components\TileStyle.cs" />
+    <Page Include="APISettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tile components\AssetTile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -147,8 +161,18 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Window components\" />
+    <Resource Include="Icons\calculator_black.png" />
+    <Resource Include="Icons\calculator_white.png" />
+    <Resource Include="Icons\doublearrow.png" />
+    <Resource Include="Icons\info_black.png" />
+    <Resource Include="Icons\info_white.png" />
+    <Resource Include="Icons\refresh.png" />
+    <Resource Include="Icons\remove-icon-black.png" />
+    <Resource Include="Icons\remove-icon-white.png" />
+    <Resource Include="Icons\settings_black.png" />
+    <Resource Include="Icons\settings_white.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

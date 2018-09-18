@@ -24,11 +24,22 @@ namespace AssetWatch
 
         private IApiLoader apiLoader;
 
+        private TileStyle globalTileStyle;
+
+        private List<IApi> loadedApis;
+
         public MainWindow()
         {
             InitializeComponent();
             this.apiHandler = new MultiApiHandler();
             this.apiLoader = new DiskApiLoader();
+            this.globalTileStyle = new TileStyle();
+            this.loadedApis = new List<IApi>();
+
+            MainSettingsWindow sWindow = new MainSettingsWindow(this.apiHandler, this.loadedApis, this.globalTileStyle);
+            sWindow.Show();
+
+            // TODO: load saved data from disk
 
             apiHandler.OnApiLoaded += ApiHandler_OnApiLoaded;
             apiHandler.OnApiReady += ApiHandler_OnApiReady;
@@ -37,9 +48,8 @@ namespace AssetWatch
 
         private void ApiHandler_OnApiLoaded(object sender, IApi api)
         {
-            api.SetUpdateInterval(10);
-            api.EnableApi();
-            api.RequestAvailableAssetsAsync();
+            // TODO: apply loaded save data to API
+            this.loadedApis.Add(api);
         }
 
         private void ApiHandler_OnApiReady(object sender, OnApiReadyEventArgs e)
@@ -65,6 +75,7 @@ namespace AssetWatch
                     AssetTileData = asstiledat
                 };
 
+                asstile.Show();
                 this.apiHandler.SubscribeAssetTile(asstile);
             });
            

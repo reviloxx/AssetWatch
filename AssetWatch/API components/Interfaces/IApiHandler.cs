@@ -17,6 +17,12 @@ namespace AssetWatch
 
         void LoadApis(IApiLoader apiLoader);
 
+        void EnableApi(IApi api);
+
+        void DisableApi(IApi api);
+
+        void SetUpdateInterval(IApi api, int seconds);
+
         /// <summary>
         /// Subscribes an asset tile to the API handler.
         /// A subscribed asset tile gets informed everytime it's asset is updated by calling the asset tile's "UpdateAsset" function.
