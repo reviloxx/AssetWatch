@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="APISettingsWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="textbox_API_key" HorizontalAlignment="Left" Height="23" Margin="25,30,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="649"/>
+        <TextBox x:Name="textbox_API_key" HorizontalAlignment="Left" Height="23" Margin="25,30,0,0" TextWrapping="Wrap" Text="29bc6cc3-7219-42f6-af87-f0147e9ee089" VerticalAlignment="Top" Width="649"/>
         <Button x:Name="button_SaveExit" Content="OK" Click="button_SaveExit_Click" HorizontalAlignment="Left" Margin="85,342,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>

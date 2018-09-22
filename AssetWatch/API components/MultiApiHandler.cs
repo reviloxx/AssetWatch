@@ -29,21 +29,38 @@ namespace AssetWatch
         /// The event args contain the API which is ready and it's available assets.
         /// </summary>
         public event EventHandler<OnApiReadyEventArgs> OnApiReady;
+
+        /// <summary>
+        /// Is fired after an assembly which contains an IApi object was loaded.
+        /// The event args contain the loaded API.
+        /// </summary>
         public event EventHandler<IApi> OnApiLoaded;
+
+        /// <summary>
+        /// Is fired when any error occurs within the IApi.
+        /// The event args contain the error type and a error message.
+        /// </summary>
         public event EventHandler<OnApiErrorEventArgs> OnApiError;
+
+        /// <summary>
+        /// Is fired after an API was disabled.
+        /// The event args contain the disabled API.
+        /// </summary>
+        public event EventHandler<IApi> OnApiDisabled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
         /// </summary>
         public MultiApiHandler()
         {
-            subscribedAssetTiles = new List<AssetTile>();
-            readyApis = new Dictionary<IApi, List<Asset>>();
+            this.subscribedAssetTiles = new List<AssetTile>();
+            this.readyApis = new Dictionary<IApi, List<Asset>>();
         }
 
         /// <summary>
         /// Loads all available APIs by using an IApiLoader, sobscribes to it's events and requests it's available assets.
         /// </summary>
+        /// <param name="apiLoader">The apiLoader<see cref="IApiLoader"/></param>
         public void LoadApis(IApiLoader apiLoader)
         {
             // look for valid API librarys, load them from the disk and remove duplicates
@@ -55,37 +72,89 @@ namespace AssetWatch
             this.loadedApis.ForEach(api =>
             {
                 // TODO: load API data from disk and assign it to this API
-                // check if the API needs an API key and if there is one in the API data
-                api.OnAvailableAssetsReceived += Api_OnAvailableAssetsReceived;
-                api.OnApiError += Api_OnApiError;
-                this.FireOnApiLoaded(api);               
+                api.OnAvailableAssetsReceived += this.Api_OnAvailableAssetsReceived;
+                api.OnApiError += this.Api_OnApiError;
+                this.FireOnApiLoaded(api);
             });
         }
 
-        private void FireOnApiLoaded(IApi api)
+        /// <summary>
+        /// Subscribes an asset tile to the api handler and it's asset to the right API.
+        /// </summary>
+        /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to subscribe.</param>
+        public void SubscribeAssetTile(AssetTile assetTile)
         {
-            this.OnApiLoaded?.Invoke(this, api);
+            // search the API to subscribe in the dictionary
+            IApi api = this.readyApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.ApiName).Key;
+            api.SubscribeAsset(assetTile.AssetTileData.Asset);
+
+            this.subscribedAssetTiles.Add(assetTile);
         }
 
         /// <summary>
-        /// Fires the OnApiReady event.
+        /// Unsubscribes an asset tile from the api handler.
         /// </summary>
-        /// <param name="eventArgs">The eventArgs<see cref="OnApiReadyEventArgs"/> contain the API which is ready and it's available assets.</param>
-        private void FireOnApiReady(OnApiReadyEventArgs eventArgs)
+        /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe</param>
+        public void UnsubscribeAssetTile(AssetTile assetTile)
         {
-            this.OnApiReady?.Invoke(this, eventArgs);
+            this.subscribedAssetTiles.Remove(assetTile);
+        }
+
+        /// <summary>
+        /// Enables the API and requests it's available assets if neccessary.
+        /// </summary>
+        /// <param name="api">The api<see cref="IApi"/></param>
+        public void EnableApi(IApi api)
+        {
+            api.Enable();
+
+            // if this API has not received it's available assets yet, request it
+            if (!this.readyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
+            {
+                api.RequestAvailableAssetsAsync();
+            }
+            else
+            {
+                throw new Exception("should not happen");
+            }
+        }
+
+        /// <summary>
+        /// Disables the API.
+        /// </summary>
+        /// <param name="api">The api<see cref="IApi"/></param>
+        public void DisableApi(IApi api)
+        {
+            if (this.readyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
+            {
+                this.readyApis.Remove(api);
+            }
+
+            this.FireOnApiDisabled(api);
+
+            api.Disable();
+        }
+
+        /// <summary>
+        /// The SetUpdateInterval sets a new update interval for updating all subscribed assets of an API.
+        /// </summary>
+        /// <param name="api">The api<see cref="IApi"/> to set the update interval.</param>
+        /// <param name="seconds">The seconds<see cref="int"/> defines the new update interval.</param>
+        public void SetUpdateInterval(IApi api, int seconds)
+        {
+            api.SetUpdateInterval(seconds);
         }
 
         /// <summary>
         /// Is called after an API has received it's available assets.
         /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="sender">The sender<see cref="object"/> contains the API which has received it's available assets.</param>
         /// <param name="availableAssets">The availableAssets<see cref="List{AssetInfo}"/></param>
         private void Api_OnAvailableAssetsReceived(object sender, List<Asset> availableAssets)
         {
             // check which API sent it's available assets and put them in the dictionary
             IApi api = (IApi)sender;
-            api.OnSingleAssetUpdated += Api_OnSingleAssetUpdated;
+            api.OnSingleAssetUpdated += this.Api_OnSingleAssetUpdated;
             this.readyApis.Add(api, availableAssets);
 
             this.FireOnApiReady(new OnApiReadyEventArgs { Api = api, Assets = availableAssets });
@@ -94,69 +163,62 @@ namespace AssetWatch
         /// <summary>
         /// Is called if something went wrong with the API.
         /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="e">The e<see cref="EventArgs"/></param>
+        /// <param name="sender">The sender<see cref="object"/> contains the API where the error occured.</param>
+        /// <param name="e">The e<see cref="EventArgs"/> contain an error type and an error message.</param>
         private void Api_OnApiError(object sender, OnApiErrorEventArgs e)
         {
-            throw new NotImplementedException();
+            this.FireOnApiError(sender, e);
         }
 
         /// <summary>
         /// Is called after an asset has received an update.
         /// Updates all asset tiles which are waiting for updates from this API, for this asset.
         /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="updatedAsset">The updatedAsset<see cref="Asset"/></param>
+        /// <param name="sender">The sender<see cref="object"/> contains the API which has received an asset update.</param>
+        /// <param name="updatedAsset">The updatedAsset<see cref="Asset"/> contains the updated asset.</param>
         private void Api_OnSingleAssetUpdated(object sender, Asset updatedAsset)
         {
             IApi api = (IApi)sender;
-            List<AssetTile> toNotify = subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName && at.Asset.AssetId == updatedAsset.AssetId);
+            List<AssetTile> toNotify = this.subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName && at.AssetTileData.Asset.AssetId == updatedAsset.AssetId);
 
             toNotify.ForEach(a => a.UpdateAsset(this, updatedAsset));
         }
 
         /// <summary>
-        /// Subscribes an asset tile to the api handler.
-        /// Subscribes the asset to the API if it is not subscribed yet.
+        /// Fires the OnApiReady event.
         /// </summary>
-        /// <param name="assetTile">The assetTile<see cref="AssetTile"/>The AssetTile to subscribe.</param>
-        public void SubscribeAssetTile(AssetTile assetTile)
+        /// <param name="eventArgs">The eventArgs<see cref="OnApiReadyEventArgs"/> contain the API which is ready and it's available assets.</param>
+        private void FireOnApiReady(OnApiReadyEventArgs eventArgs)
         {
-            // search the API to subscribe in the dictionary
-            IApi api = readyApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.ApiName).Key;
-            api.SubscribeAsset(assetTile.Asset);
-
-            subscribedAssetTiles.Add(assetTile);
+            OnApiReady?.Invoke(this, eventArgs);
         }
 
         /// <summary>
-        /// Unsubscribes an asset tile from the api handler.
-        /// Unsubscribes the asset from the API if there is no other asset tile waiting for updates of the same asset.
+        /// Fires the OnApiLoaded event.
         /// </summary>
-        /// <param name="assetTile">The assetTile<see cref="AssetTile"/></param>
-        public void UnsubscribeAssetTile(AssetTile assetTile)
+        /// <param name="loadedApi">The api<see cref="IApi"/> which was loaded.</param>
+        private void FireOnApiLoaded(IApi loadedApi)
         {
-            subscribedAssetTiles.Remove(assetTile);
+            OnApiLoaded?.Invoke(this, loadedApi);
         }
 
-        public void EnableApi(IApi api)
+        /// <summary>
+        /// Fires the OnApiError event.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/> contains the API where the error occured.</param>
+        /// <param name="e">The e<see cref="OnApiErrorEventArgs"/> contain an error type and an error message.</param>
+        private void FireOnApiError(object sender, OnApiErrorEventArgs e)
         {
-            api.EnableApi();
-
-            if (!this.readyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
-            {
-                api.RequestAvailableAssetsAsync();
-            }
+            OnApiError?.Invoke(sender, e);
         }
 
-        public void DisableApi(IApi api)
+        /// <summary>
+        /// Fires the OnApiDisabled event.
+        /// </summary>
+        /// <param name="disabledApi">The disabledApi<see cref="IApi"/></param>
+        private void FireOnApiDisabled(IApi disabledApi)
         {
-            api.DisableApi();
-        }
-
-        public void SetUpdateInterval(IApi api, int seconds)
-        {
-            api.SetUpdateInterval(seconds);
+            this.OnApiDisabled?.Invoke(this, disabledApi);
         }
     }
 }

@@ -28,18 +28,39 @@ namespace AssetWatch
 
             for (int i = 0; i < files.Length; i++)
             {
-                ass = Assembly.LoadFile(files[i]);
-                ass.GetExportedTypes().ToList().ForEach(type =>
+                try
                 {
-                    if (type.GetInterfaces().Contains(typeof(IApi)))
+                    ass = Assembly.LoadFile(files[i]);
+                    ass.GetExportedTypes().ToList().ForEach(type =>
                     {
-                        IApi api = (IApi)Activator.CreateInstance(type);
-                        loadedApis.Add(api);
-                    }
-                });
+                        if (type.GetInterfaces().Contains(typeof(IApi)))
+                        {
+                            IApi api = (IApi)Activator.CreateInstance(type);
+                            loadedApis.Add(api);
+                        }
+                    });
+                }
+                catch (Exception e)
+                {
+                    FireOnApiLoaderError(e.Message);
+                }
             }
 
             return loadedApis;
         }
+
+        /// <summary>
+        /// Fires the OnApiLoaderError event.
+        /// </summary>
+        /// <param name="message">The message<see cref="string"/> contains a message with information about the occured error.</param>
+        private void FireOnApiLoaderError(string message)
+        {
+            OnApiLoaderError?.Invoke(this, message);
+        }
+
+        /// <summary>
+        /// Defines the OnApiLoaderError event.
+        /// </summary>
+        public event EventHandler<string> OnApiLoaderError;
     }
 }

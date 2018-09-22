@@ -1,0 +1,16 @@
+﻿<Window x:Class="AssetWatch.AssetTileSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AssetWatch"
+        mc:Ignorable="d"
+        Title="AssetTileSettingsWindow" Height="450" Width="800">
+    <Grid>
+        <ComboBox x:Name="comboBox_Apis" ItemsSource="{Binding ReadyApis}" DisplayMemberPath="Key.ApiInfo.ApiName" SelectionChanged="comboBox_Apis_SelectionChanged" HorizontalAlignment="Left" Margin="170,79,0,0" VerticalAlignment="Top" Width="247" IsEditable="True"/>
+        <ComboBox x:Name="comboBox_ConvertCurrencies" HorizontalAlignment="Left" Margin="297,121,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="comboBox_Assets" DisplayMemberPath="Symbol" HorizontalAlignment="Left" Margin="297,168,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="button_Ok" Content="OK" HorizontalAlignment="Left" Margin="121,322,0,0" VerticalAlignment="Top" Width="75" Click="button_Ok_Click"/>
+
+    </Grid>
+</Window>

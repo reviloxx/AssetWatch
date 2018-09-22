@@ -25,12 +25,13 @@ namespace AssetWatch
             InitializeComponent();
             this.api = api;
             textbox_API_key.IsEnabled = api.ApiInfo.ApiKeyRequired;
-            textbox_API_key.Text = api.ApiData.ApiKey;
+            //textbox_API_key.Text = api.ApiData.ApiKey;
         }
 
         private void button_SaveExit_Click(object sender, RoutedEventArgs e)
         {
             this.api.ApiData.ApiKey = textbox_API_key.Text;
+            this.Close();
         }
     }
 }

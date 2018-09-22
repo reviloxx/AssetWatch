@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssetWatch"
         mc:Ignorable="d"
-        ShowInTaskbar="False" Height="200" Width="200" WindowStyle="None" AllowsTransparency="True"  ResizeMode="NoResize" MouseUp="Window_MouseUp"  SnapsToDevicePixels="True" Background="#FF090909">
+        ShowInTaskbar="False" Height="200" Width="200" WindowStyle="None" AllowsTransparency="True"  ResizeMode="NoResize" MouseUp="window_MouseUp"  SnapsToDevicePixels="True" Background="#FF090909">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>

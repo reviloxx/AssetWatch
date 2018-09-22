@@ -80,14 +80,18 @@ namespace AssetWatch
 
         private void button_ApiSettings_Click(object sender, RoutedEventArgs e)
         {
-            APISettingsWindow asw = new APISettingsWindow((IApi)listView_loadedApis.SelectedItem);            
-            asw.ShowDialog();                      
+            APISettingsWindow asw = new APISettingsWindow((IApi)listView_loadedApis.SelectedItem);
+            int selectedIndex = listView_loadedApis.SelectedIndex;
+            asw.ShowDialog();
+            listView_loadedApis.SelectedIndex = -1;
+            listView_loadedApis.SelectedIndex = selectedIndex;
         }
 
         private void listView_loadedApis_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count < 1)
             {
+                button_ApiSettings.IsEnabled = false;
                 return;
             }
 

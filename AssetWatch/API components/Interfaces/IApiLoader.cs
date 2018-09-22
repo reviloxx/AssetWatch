@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AssetWatch
 {
@@ -10,7 +11,12 @@ namespace AssetWatch
         /// <summary>
         /// Gets all available APIs.
         /// </summary>
-        /// <returns>The <see cref="List{IApi}"/> contains all available APIs.</returns>
+        /// <returns>The <see cref="List{IApi}"/> contains all loaded APIs.</returns>
         List<IApi> GetApis();
+
+        /// <summary>
+        /// Is fired when any error occurs within the API loader.
+        /// </summary>
+        event EventHandler<string> OnApiLoaderError;
     }
 }

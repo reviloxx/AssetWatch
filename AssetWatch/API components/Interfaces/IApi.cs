@@ -58,13 +58,13 @@ namespace AssetWatch
         void SetUpdateInterval(int updateInterval);
 
         /// <summary>
-        /// The EnableApi
+        /// Enables the API and starts the asset update thread if there are any subscribed assets.
         /// </summary>
-        void EnableApi();
+        void Enable();
 
         /// <summary>
-        /// The DisableApi
+        /// Disables the API and suspends the asset update thread.
         /// </summary>
-        void DisableApi();
+        void Disable();
     }
 }

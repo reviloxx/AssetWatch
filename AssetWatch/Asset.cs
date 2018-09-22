@@ -5,6 +5,7 @@ using System.Text;
 
 namespace AssetWatch
 {
+    [Serializable]
     public class Asset
     {
         public string SupplyAvailable { get; set; }

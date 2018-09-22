@@ -55,12 +55,17 @@
       <HintPath>..\packages\FubarCoder.RestSharp.Portable.HttpClient.4.0.8\lib\net45\FubarCoder.RestSharp.Portable.HttpClient.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -87,10 +92,18 @@
     <Compile Include="APISettingsWindow.xaml.cs">
       <DependentUpon>APISettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ITileHandler.cs" />
     <Compile Include="MainSettingsWindow.xaml.cs">
       <DependentUpon>MainSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StickyWindow\IFormAdapter.cs" />
+    <Compile Include="StickyWindow\StickyWindow.cs" />
+    <Compile Include="StickyWindow\WinFormAdapter.cs" />
+    <Compile Include="StickyWindow\WpfFormAdapter.cs" />
     <Compile Include="Tile components\AssetTileData.cs" />
+    <Compile Include="Tile components\AssetTileSettingsWindow.xaml.cs">
+      <DependentUpon>AssetTileSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tile components\PortfolioTileData.cs" />
     <Compile Include="Tile components\AssetTile.xaml.cs">
       <DependentUpon>AssetTile.xaml</DependentUpon>
@@ -128,6 +141,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Tile components\AssetTileSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Tile components\PortfolioTile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,7 +178,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Icons\aw.ico" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\calculator_black.png" />
     <Resource Include="Icons\calculator_white.png" />

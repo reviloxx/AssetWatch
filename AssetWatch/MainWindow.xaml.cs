@@ -20,30 +20,33 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
-        private IApiHandler apiHandler;
+        private static IApiHandler apiHandler = new MultiApiHandler();
 
-        private IApiLoader apiLoader;
+        private static IApiLoader apiLoader = new DiskApiLoader();
 
         private TileStyle globalTileStyle;
 
         private List<IApi> loadedApis;
 
+        private Dictionary<IApi, List<Asset>> readyApis;
+
+        private List<AssetTile> assetTiles;
+
         public MainWindow()
         {
             InitializeComponent();
-            this.apiHandler = new MultiApiHandler();
-            this.apiLoader = new DiskApiLoader();
             this.globalTileStyle = new TileStyle();
             this.loadedApis = new List<IApi>();
-
-            MainSettingsWindow sWindow = new MainSettingsWindow(this.apiHandler, this.loadedApis, this.globalTileStyle);
-            sWindow.Show();
+            this.readyApis = new Dictionary<IApi, List<Asset>>();
+            this.assetTiles = new List<AssetTile>();              
 
             // TODO: load saved data from disk
 
             apiHandler.OnApiLoaded += ApiHandler_OnApiLoaded;
             apiHandler.OnApiReady += ApiHandler_OnApiReady;
-            this.apiHandler.LoadApis(this.apiLoader);
+            apiHandler.OnApiError += ApiHandler_OnApiError;
+            apiHandler.OnApiDisabled += this.ApiHandler_OnApiDisabled;
+            apiHandler.LoadApis(apiLoader);
         }
 
         private void ApiHandler_OnApiLoaded(object sender, IApi api)
@@ -51,34 +54,53 @@ namespace AssetWatch
             // TODO: apply loaded save data to API
             this.loadedApis.Add(api);
         }
-
         private void ApiHandler_OnApiReady(object sender, OnApiReadyEventArgs e)
         {
-            // simulate subscribing asset tile
+            this.readyApis.Add(e.Api, e.Assets);         
+        }
+
+        private void ApiHandler_OnApiError(object sender, OnApiErrorEventArgs e)
+        {
+            IApi api = (IApi)sender;
+            MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void ApiHandler_OnApiDisabled(object sender, IApi e)
+        {
+            this.readyApis.Remove(e);
+        }           
+
+        private void Asstile_OnAssetUnselected(object sender, EventArgs e)
+        {
+            apiHandler.UnsubscribeAssetTile((AssetTile)sender);
+        }
+
+        private void Asstile_OnAssetSelected(object sender, EventArgs e)
+        {
+            apiHandler.SubscribeAssetTile((AssetTile)sender);
+        }
+
+        private void menuItem_Settings_Click(object sender, RoutedEventArgs e)
+        {
+            MainSettingsWindow sWindow = new MainSettingsWindow(apiHandler, this.loadedApis, this.globalTileStyle);
+            sWindow.Show();
+        }
+
+        private void menuItem_AddAssetTile_Click(object sender, RoutedEventArgs e)
+        {
             this.Dispatcher.Invoke(() =>
             {
-                Asset ass = new Asset
-                {
-                    AssetId = e.Assets[0].AssetId,
-                    ConvertCurrency = "EUR",
-                    Name = "Bitcoin"
-                };
-
-                AssetTileData asstiledat = new AssetTileData
-                {
-                    ApiName = "Coinmarketcap Pro"
-                };
-
-                AssetTile asstile = new AssetTile
-                {
-                    Asset = ass,
-                    AssetTileData = asstiledat
-                };
-
+                AssetTile asstile = new AssetTile(this.readyApis);
+                asstile.OnAssetSelected += Asstile_OnAssetSelected;
+                asstile.OnAssetUnselected += Asstile_OnAssetUnselected;
+                this.assetTiles.Add(asstile);
                 asstile.Show();
-                this.apiHandler.SubscribeAssetTile(asstile);
-            });
-           
+            });            
+        }
+
+        private void menuItem_Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
