@@ -22,20 +22,17 @@ namespace AssetWatch
     {
         private IApiHandler apiHandler;
 
-        private List<IApi> loadedApis;
-
         private TileStyle globalTileStyle;
 
-        public MainSettingsWindow(IApiHandler apiHandler, List<IApi> loadedApis, TileStyle globalTileStyle)
+        public MainSettingsWindow(IApiHandler apiHandler, TileStyle globalTileStyle)
         {
             InitializeComponent();
             this.apiHandler = apiHandler;
-            this.loadedApis = loadedApis;
             this.globalTileStyle = globalTileStyle;
 
             DataContext = new MainSettingsWindowViewModel
             {
-                LoadedApis = this.loadedApis,
+                LoadedApis = this.apiHandler.LoadedApis,
                 GlobalTileStyle = this.globalTileStyle
             };
         }
@@ -58,6 +55,7 @@ namespace AssetWatch
             }
 
             this.apiHandler.EnableApi(selectedApi);
+            this.apiHandler.StartAssetUpdater(selectedApi);
             listView_loadedApis.SelectedIndex = -1;
             listView_loadedApis.SelectedIndex = selectedIndex;
         }

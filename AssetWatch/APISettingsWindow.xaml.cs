@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,15 @@ namespace AssetWatch
         {
             InitializeComponent();
             this.api = api;
-            textbox_API_key.IsEnabled = api.ApiInfo.ApiKeyRequired;
+            textbox_API_key.IsEnabled = api.ApiInfo.ApiKeyRequired && !api.ApiData.IsEnabled;
+
+            if (api.ApiInfo.ApiKeyRequired)
+            {
+                hyperlink_getAPIKey.NavigateUri = new Uri(api.ApiInfo.GetApiKeyUrl);
+                textBlock_getAPIKEy.Visibility = Visibility.Visible;
+            }
+
+            textBlock_updateIntervalInfo.Text = api.ApiInfo.UpdateIntervalInfoText;
             //textbox_API_key.Text = api.ApiData.ApiKey;
         }
 
@@ -32,6 +41,12 @@ namespace AssetWatch
         {
             this.api.ApiData.ApiKey = textbox_API_key.Text;
             this.Close();
+        }
+
+        private void hyperlink_getAPIKey_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

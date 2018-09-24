@@ -14,15 +14,9 @@ namespace AssetWatch
         /// </summary>
         private List<AssetTile> subscribedAssetTiles;
 
-        /// <summary>
-        /// Contains all APIs which have been loaded with an IApiLoader.
-        /// </summary>
-        private List<IApi> loadedApis;
+        public List<IApi> LoadedApis { get; private set; }
 
-        /// <summary>
-        /// Contains all APIs which are ready to use.
-        /// </summary>
-        private Dictionary<IApi, List<Asset>> readyApis;
+        public Dictionary<IApi, List<Asset>> ReadyApis { get; }
 
         /// <summary>
         /// Is fired when a handled API is ready to use.
@@ -54,7 +48,7 @@ namespace AssetWatch
         public MultiApiHandler()
         {
             this.subscribedAssetTiles = new List<AssetTile>();
-            this.readyApis = new Dictionary<IApi, List<Asset>>();
+            this.ReadyApis = new Dictionary<IApi, List<Asset>>();
         }
 
         /// <summary>
@@ -64,12 +58,12 @@ namespace AssetWatch
         public void LoadApis(IApiLoader apiLoader)
         {
             // look for valid API librarys, load them from the disk and remove duplicates
-            this.loadedApis = apiLoader.GetApis()
+            this.LoadedApis = apiLoader.GetApis()
                 .GroupBy(api => api.ApiInfo.ApiName)
                 .Select(g => g.First())
                 .ToList();
 
-            this.loadedApis.ForEach(api =>
+            this.LoadedApis.ForEach(api =>
             {
                 // TODO: load API data from disk and assign it to this API
                 api.OnAvailableAssetsReceived += this.Api_OnAvailableAssetsReceived;
@@ -85,9 +79,8 @@ namespace AssetWatch
         public void SubscribeAssetTile(AssetTile assetTile)
         {
             // search the API to subscribe in the dictionary
-            IApi api = this.readyApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.ApiName).Key;
-            api.SubscribeAsset(assetTile.AssetTileData.Asset);
-
+            IApi api = this.ReadyApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.ApiName).Key;
+            api.SubscribeAssetToUpdater(assetTile.AssetTileData.Asset);
             this.subscribedAssetTiles.Add(assetTile);
         }
 
@@ -109,14 +102,14 @@ namespace AssetWatch
             api.Enable();
 
             // if this API has not received it's available assets yet, request it
-            if (!this.readyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
+            if (!this.ReadyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
             {
                 api.RequestAvailableAssetsAsync();
             }
             else
             {
                 throw new Exception("should not happen");
-            }
+            }            
         }
 
         /// <summary>
@@ -125,14 +118,19 @@ namespace AssetWatch
         /// <param name="api">The api<see cref="IApi"/></param>
         public void DisableApi(IApi api)
         {
-            if (this.readyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
+            if (this.ReadyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
             {
-                this.readyApis.Remove(api);
+                this.ReadyApis.Remove(api);
             }
 
             this.FireOnApiDisabled(api);
 
             api.Disable();
+        }
+
+        public void StartAssetUpdater(IApi api)
+        {
+            api.StartAssetUpdater();
         }
 
         /// <summary>
@@ -155,7 +153,7 @@ namespace AssetWatch
             // check which API sent it's available assets and put them in the dictionary
             IApi api = (IApi)sender;
             api.OnSingleAssetUpdated += this.Api_OnSingleAssetUpdated;
-            this.readyApis.Add(api, availableAssets);
+            this.ReadyApis.Add(api, availableAssets);
 
             this.FireOnApiReady(new OnApiReadyEventArgs { Api = api, Assets = availableAssets });
         }
@@ -179,7 +177,9 @@ namespace AssetWatch
         private void Api_OnSingleAssetUpdated(object sender, Asset updatedAsset)
         {
             IApi api = (IApi)sender;
-            List<AssetTile> toNotify = this.subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName && at.AssetTileData.Asset.AssetId == updatedAsset.AssetId);
+            List<AssetTile> toNotify = this.subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName && 
+                                                                                at.AssetTileData.Asset.AssetId == updatedAsset.AssetId &&
+                                                                                at.AssetTileData.Asset.ConvertCurrency == updatedAsset.ConvertCurrency);
 
             toNotify.ForEach(a => a.UpdateAsset(this, updatedAsset));
         }

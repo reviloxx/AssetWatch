@@ -7,5 +7,6 @@ namespace AssetWatch
 {
     public interface ITileHandler
     {
+        void AddAssetTile();
     }
 }

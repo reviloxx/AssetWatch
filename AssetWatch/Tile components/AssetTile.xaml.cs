@@ -53,6 +53,7 @@ namespace AssetWatch
             this.currentWorth = double.Parse(this.AssetTileData.Asset.PriceConvert) * this.AssetTileData.HoldingsCount;
             this.Dispatcher.Invoke(() =>
             {
+                this.button_Calc.Visibility = Visibility.Visible;
                 this.label_AssetPrice.Text = asset.ConvertCurrency + "/" + asset.Symbol;
                 this.textBlock_AssetPrice.Text = asset.PriceConvert;
                 this.label_Worth.Text = asset.ConvertCurrency;
@@ -111,7 +112,8 @@ namespace AssetWatch
 
         private void button_Calc_Click(object sender, RoutedEventArgs e)
         {
-
+            CalculatorWindow calc = new CalculatorWindow(this.AssetTileData.Asset);
+            calc.ShowDialog();
         }
 
         private void window_MouseUp(object sender, MouseButtonEventArgs e)

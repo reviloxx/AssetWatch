@@ -33,23 +33,27 @@ namespace AssetWatch
         /// </summary>
         ApiInfo ApiInfo { get; }
 
+        void StartAssetUpdater();
+
         /// <summary>
         /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        void SubscribeAsset(Asset asset);
+        void SubscribeAssetToUpdater(Asset asset);
 
         /// <summary>
         /// Unsubscribes an asset from the API which then will be no longer updated.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        void UnsubscribeAsset(Asset asset);
+        void UnsubscribeAssetFromUpdater(Asset asset);
 
         /// <summary>
         /// Requests the available assets of the API.
         /// Fires the OnAvailableAssetsReceived event if successful.
         /// </summary>
         void RequestAvailableAssetsAsync();
+
+        //void RequestSingleAssetUpdateAsync(Asset asset);
 
         /// <summary>
         /// Sets the update interval of the API.

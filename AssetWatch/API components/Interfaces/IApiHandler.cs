@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AssetWatch
 {
@@ -11,7 +12,7 @@ namespace AssetWatch
         /// Is fired when a handled API is ready to use.
         /// The event args contain the API which is ready and it's available assets.
         /// </summary>
-        event EventHandler<OnApiReadyEventArgs> OnApiReady;
+        event EventHandler<OnApiReadyEventArgs> OnApiReady; // TODO: maybe unneccessary
 
         /// <summary>
         /// Is fired after an assembly which contains an IApi object was loaded.
@@ -29,7 +30,7 @@ namespace AssetWatch
         /// Is fired after an API was disabled.
         /// The event args contain the disabled API.
         /// </summary>
-        event EventHandler<IApi> OnApiDisabled;
+        event EventHandler<IApi> OnApiDisabled; // TODO: maybe unneccessary
 
         /// <summary>
         /// Loads IApi objects by using an IApiLoader instance.
@@ -48,6 +49,8 @@ namespace AssetWatch
         /// </summary>
         /// <param name="api">The api<see cref="IApi"/> to disable.</param>
         void DisableApi(IApi api);
+
+        void StartAssetUpdater(IApi api);
 
         /// <summary>
         /// The SetUpdateInterval sets a new update interval for updating all subscribed assets of an API.
@@ -69,5 +72,9 @@ namespace AssetWatch
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe.</param>
         void UnsubscribeAssetTile(AssetTile assetTile);
+
+        List<IApi> LoadedApis { get; }
+
+        Dictionary<IApi, List<Asset>> ReadyApis { get; }
     }
 }

@@ -9,7 +9,11 @@
         ResizeMode="NoResize"
         >
     <TabControl>
-        <TabItem Header="API Einstellungen">
+        <TabItem Header="Allgemein">
+            <Grid Background="WhiteSmoke">
+            </Grid>
+        </TabItem>        
+        <TabItem Header="APIs">
             <Grid Background="WhiteSmoke">
                 <ListView 
             x:Name="listView_loadedApis"
@@ -37,6 +41,10 @@
                 <Label Content="Verfügbare APIs" HorizontalAlignment="Left" Margin="37,11,0,0" VerticalAlignment="Top" Width="270" Height="26"/>
                 <Frame BorderBrush="#FF7F9DB9" BorderThickness="0.7" Margin="0,43,37,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Right" Width="221"/>
                 <Label Content="API Info" HorizontalAlignment="Right" Margin="0,11,25,0" VerticalAlignment="Top" Width="233" Height="26"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Asset Fenster">
+            <Grid Background="WhiteSmoke">
             </Grid>
         </TabItem>
     </TabControl>
