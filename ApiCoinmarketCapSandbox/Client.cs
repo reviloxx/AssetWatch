@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 
-namespace ApiCoinmarketcapPro
+namespace ApiCoinmarketcapSandbox
 {
     /// <summary>
     /// Defines the <see cref="Client" />
@@ -17,7 +17,7 @@ namespace ApiCoinmarketcapPro
         /// <summary>
         /// Defines the apiSchema
         /// </summary>
-        private static ApiSchema apiSchema = ApiSchema.Pro;
+        private static ApiSchema apiSchema = ApiSchema.Sandbox;
 
         /// <summary>
         /// Defines the availableAssets
@@ -47,7 +47,7 @@ namespace ApiCoinmarketcapPro
         /// <summary>
         /// Defines the client
         /// </summary>
-        private CoinMarketCapClient client;               
+        private CoinMarketCapClient client;
 
         /// <summary>
         /// Defines the assetUpdateWorker
@@ -68,14 +68,13 @@ namespace ApiCoinmarketcapPro
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Diese API bietet alle 5 Minuten aktuelle Daten über die wichtigsten Kryptowährungen.",
+                    ApiInfoText = "Diese API stellt veraltete Testdaten ohne Abruf-Limit zur Verfügung.",
                     ApiKeyRequired = true,
-                    ApiName = "Coinmarketcap Pro",
+                    ApiName = "Coinmarketcap Sandbox",
                     ApiClientVersion = "1.0",
                     Market = Market.Cryptocurrencies,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen",
-                    GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
                     MaxUpdateInterval = 3600,
                     MinUpdateInterval = 300,
                     SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
@@ -143,7 +142,7 @@ namespace ApiCoinmarketcapPro
         {
             this.ApiData.IsEnabled = false;
             this.StopAssetUpdater();
-        }        
+        }
 
         /// <summary>
         /// The RequestAvailableAssetsAsync
@@ -311,7 +310,7 @@ namespace ApiCoinmarketcapPro
                 this.assetUpdateWorker.Abort();
             }
             catch (Exception) { }
-        }             
+        }
 
         /// <summary>
         /// The AssetUpdateWorker
@@ -323,7 +322,7 @@ namespace ApiCoinmarketcapPro
                 this.RequestAssetUpdates(this.subscribedAssets);
                 Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
-        }        
+        }
 
         private async void RequestAssetUpdates(List<Asset> assets)
         {
@@ -378,7 +377,7 @@ namespace ApiCoinmarketcapPro
                 return;
             }
 
-        }      
+        }
 
         /// <summary>
         /// The FireOnApiError
@@ -396,6 +395,6 @@ namespace ApiCoinmarketcapPro
         private void FireOnSingleAssetUpdated(Asset asset)
         {
             OnSingleAssetUpdated?.Invoke(this, asset);
-        }             
+        }
     }
 }

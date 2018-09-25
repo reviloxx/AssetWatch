@@ -26,7 +26,7 @@ namespace AssetWatch
         /// <summary>
         /// Gets the serializable ApiData which contains the current update interval of the API.
         /// </summary>
-        ApiData ApiData { get; }
+        ApiData ApiData { get; set; }
 
         /// <summary>
         /// Gets the ApiInfo which contains all neccessary information about the API.

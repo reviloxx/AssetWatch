@@ -20,34 +20,32 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
-        private static IApiHandler apiHandler = new MultiApiHandler();
+        private static IApiHandler apiHandler = new MultiApiHandler();        
 
-        private static IApiLoader apiLoader = new DiskApiLoader();
+        private static IFileHandler fileHandler = new StandardFileHandler();
 
         private ITileHandler tileHandler;
 
-        private TileStyle globalTileStyle;        
+        private AppData appData;
 
         public MainWindow()
         {
             InitializeComponent();
-                        
-            this.globalTileStyle = new TileStyle();
-
-            // TODO: load saved data from disk         
-            
-            apiHandler.LoadApis(apiLoader);
-            this.tileHandler = new MultiTileHandler(apiHandler, this.globalTileStyle);
+            this.appData = fileHandler.LoadAppData();                          
+            this.tileHandler = new MultiTileHandler(apiHandler,  this.appData);
+            this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;
         }
+        
 
         private void MainSettingsWindow_OnGlobalTileColorChanged(object sender, EventArgs e)
         {
-            this.tileHandler.ActivateGlobalTileStyle();
+            this.tileHandler.RefreshTileStyles();
         }
 
         private void menuItem_Settings_Click(object sender, RoutedEventArgs e)
         {
-            MainSettingsWindow mainSettingsWindow = new MainSettingsWindow(apiHandler, this.globalTileStyle);
+            MainSettingsWindow mainSettingsWindow = new MainSettingsWindow(apiHandler, this.appData.TileHandlerData.GlobalTileStyle);
+            mainSettingsWindow.Closed += this.OnAppDataChanged;
             mainSettingsWindow.OnGlobalTileStyleChanged += this.MainSettingsWindow_OnGlobalTileColorChanged;
             mainSettingsWindow.Show();
         }
@@ -58,8 +56,13 @@ namespace AssetWatch
         }
 
         private void menuItem_Exit_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             Environment.Exit(0);
+        }
+
+        private void OnAppDataChanged(object sender, EventArgs e)
+        {
+            fileHandler.SaveAppData(this.appData);
         }
     }
 }

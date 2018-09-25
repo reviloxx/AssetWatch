@@ -112,6 +112,9 @@
     <Compile Include="APISettingsWindow.xaml.cs">
       <DependentUpon>APISettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="System IO\AppData.cs" />
+    <Compile Include="System IO\IFileHandler.cs" />
+    <Compile Include="System IO\StandardFileHandler.cs" />
     <Compile Include="Tile components\MultiTileHandler.cs" />
     <Compile Include="Tile components\Interfaces\ITileHandler.cs" />
     <Compile Include="MainSettingsWindow.xaml.cs">

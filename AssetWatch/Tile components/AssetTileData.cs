@@ -8,6 +8,7 @@ namespace AssetWatch
     [Serializable]
     public class AssetTileData
     {
+        public string AssetTileName { get; set; }
         /// <summary>
         /// Gets or sets the name of the used API.
         /// </summary>

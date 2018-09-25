@@ -39,6 +39,7 @@ namespace AssetWatch
             {
                 // TODO: load API data from disk and assign it to this API
                 api.OnAvailableAssetsReceived += this.Api_OnAvailableAssetsReceived;
+                api.OnSingleAssetUpdated += this.Api_OnSingleAssetUpdated;
                 api.OnApiError += this.Api_OnApiError;
                 this.FireOnApiLoaded(api);
             });
@@ -51,7 +52,7 @@ namespace AssetWatch
         public void SubscribeAssetTile(AssetTile assetTile)
         {
             // search the API to subscribe in the dictionary
-            IApi api = this.ReadyApis.FirstOrDefault(a => a.Key.ApiInfo.ApiName == assetTile.AssetTileData.ApiName).Key;
+            IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
             api.SubscribeAssetToUpdater(assetTile.AssetTileData.Asset);
             this.subscribedAssetTiles.Add(assetTile);
         }
@@ -123,8 +124,7 @@ namespace AssetWatch
         private void Api_OnAvailableAssetsReceived(object sender, List<Asset> availableAssets)
         {
             // check which API sent it's available assets and put them in the dictionary
-            IApi api = (IApi)sender;
-            api.OnSingleAssetUpdated += this.Api_OnSingleAssetUpdated;
+            IApi api = (IApi)sender;            
             this.ReadyApis.Add(api, availableAssets);
 
             this.FireOnApiReady(new OnApiReadyEventArgs { Api = api, Assets = availableAssets });

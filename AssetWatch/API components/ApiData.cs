@@ -5,6 +5,7 @@ namespace AssetWatch
     /// <summary>
     /// Defines the <see cref="ApiData" />
     /// </summary>
+    [Serializable]
     public class ApiData
     {
         /// <summary>

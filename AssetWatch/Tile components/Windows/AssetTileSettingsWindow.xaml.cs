@@ -29,12 +29,55 @@ namespace AssetWatch
 
         public AssetTileSettingsWindow(Dictionary<IApi, List<Asset>> readyApis, AssetTileData assetTileData)
         {
+            InitializeComponent();
             this.readyApis = readyApis;
             this.assetTileData = assetTileData;
 
             this.DataContext = new AssetTileSettingsWindowViewModel { ReadyApis = this.readyApis };
+            this.InitializeTextBoxes();
+            this.InitializeComboBoxes();
+        }
 
-            InitializeComponent();
+        private void InitializeTextBoxes()
+        {
+            textBox_HoldingsCount.Text = this.assetTileData.HoldingsCount.ToString();
+            textBox_InvestedSum.Text = this.assetTileData.InvestedSum.ToString();
+        }
+
+        private void InitializeComboBoxes()
+        {
+            IApi api;
+
+            if (this.readyApis.Any(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName))
+            {
+                api = this.readyApis.First(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName).Key;
+                comboBox_Apis.SelectedItem = this.readyApis.First(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName);                
+            }
+            else
+            {
+                MessageBox.Show("API " + this.assetTileData.ApiName + " nicht verfügbar!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (api.ApiInfo.SupportedConvertCurrencies.Contains(this.assetTileData.Asset.ConvertCurrency))
+            {
+                comboBox_ConvertCurrencies.SelectedItem = this.assetTileData.Asset.ConvertCurrency;
+            }
+            else
+            {
+                MessageBox.Show("Währung " + this.assetTileData.Asset.ConvertCurrency + " nicht verfügbar!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (this.readyApis[api].Any(ass => ass.Symbol == this.assetTileData.Asset.Symbol))
+            {
+                comboBox_Assets.SelectedItem = this.readyApis[api].First(a => a.Symbol == this.assetTileData.Asset.Symbol);
+            }
+            else
+            {
+                MessageBox.Show("Asset " + this.assetTileData.Asset.Symbol + " nicht verfügbar!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         private void comboBox_Apis_SelectionChanged(object sender, SelectionChangedEventArgs e)

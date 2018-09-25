@@ -14,31 +14,16 @@ namespace AssetWatch
         /// </summary>
         private IApiHandler apiHandler;
 
-        /// <summary>
-        /// Defines the globalTileStyle
-        /// </summary>
-        private TileStyle globalTileStyle;
+        private static IApiLoader apiLoader = new DiskApiLoader();
 
         /// <summary>
         /// Defines the handledAssetTiles
         /// </summary>
         private List<AssetTile> handledAssetTiles;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MultiTileHandler"/> class.
-        /// </summary>
-        /// <param name="apiHandler">The apiHandler<see cref="IApiHandler"/></param>
-        /// <param name="globalTileStyle">The globalTileStyle<see cref="TileStyle"/></param>
-        public MultiTileHandler(IApiHandler apiHandler, TileStyle globalTileStyle)
-        {
-            this.apiHandler = apiHandler;
-            this.globalTileStyle = globalTileStyle;
-            this.handledAssetTiles = new List<AssetTile>();
-            this.TileHandlerData = new TileHandlerData();
+        private List<AssetTile> assetTilesToSubscribe;
 
-            apiHandler.OnApiLoaded += this.ApiHandler_OnApiLoaded;
-            apiHandler.OnApiError += this.ApiHandler_OnApiError;
-        }
+        private AppData appData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTileHandler"/> class.
@@ -46,15 +31,18 @@ namespace AssetWatch
         /// <param name="apiHandler">The apiHandler<see cref="IApiHandler"/></param>
         /// <param name="globalTileStyle">The globalTileStyle<see cref="TileStyle"/></param>
         /// <param name="tileHandlerData">The tileHandlerData<see cref="TileHandlerData"/></param>
-        public MultiTileHandler(IApiHandler apiHandler, TileStyle globalTileStyle, TileHandlerData tileHandlerData)
+        public MultiTileHandler(IApiHandler apiHandler, AppData appData)
         {
             this.apiHandler = apiHandler;
-            this.globalTileStyle = globalTileStyle;
             this.handledAssetTiles = new List<AssetTile>();
-            this.TileHandlerData = tileHandlerData;
+            this.assetTilesToSubscribe = new List<AssetTile>();
+            this.appData = appData;
+
+            this.OpenLoadedAssetTiles();
 
             apiHandler.OnApiLoaded += this.ApiHandler_OnApiLoaded;
             apiHandler.OnApiError += this.ApiHandler_OnApiError;
+            apiHandler.LoadApis(apiLoader);
         }
 
         /// <summary>
@@ -62,22 +50,57 @@ namespace AssetWatch
         /// </summary>
         public void OpenNewAssetTile()
         {
-            AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, this.globalTileStyle);
+            AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, new AssetTileData(), this.appData.TileHandlerData.GlobalTileStyle);
+            asstile.Closed += this.Asstile_Closed;
             asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
             asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
+            asstile.OnAppDataChanged += this.Asstile_OnAppDataChanged;
             this.handledAssetTiles.Add(asstile);
+            this.appData.AssetTileDataSet.Add(asstile.AssetTileData);
+            this.FireOnAppDataChanged();
             asstile.Show();
+        }
+
+        private void Asstile_Closed(object sender, EventArgs e)
+        {
+            AssetTile closedAssetTile = (AssetTile)sender;
+
+            this.apiHandler.UnsubscribeAssetTile(closedAssetTile);
+            this.handledAssetTiles.Remove(closedAssetTile);
+            this.appData.AssetTileDataSet.Remove(closedAssetTile.AssetTileData);
+
+            this.FireOnAppDataChanged();
         }
 
         /// <summary>
         /// The ActivateGlobalTileStyle
         /// </summary>
-        public void ActivateGlobalTileStyle()
+        public void RefreshTileStyles()
         {
             this.handledAssetTiles.ForEach(ass =>
             {
                 ass.RefreshTileStyle();
             });
+        }
+
+        private void OpenLoadedAssetTiles()
+        {
+            this.appData.AssetTileDataSet.ForEach(assetTileData =>
+            {
+                AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, assetTileData, this.appData.TileHandlerData.GlobalTileStyle);
+                asstile.Closed += this.Asstile_Closed;
+                asstile.OnAppDataChanged += this.Asstile_OnAppDataChanged1;
+                asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
+                asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
+                this.handledAssetTiles.Add(asstile);
+                this.assetTilesToSubscribe.Add(asstile);
+                asstile.Show();
+            });
+        }
+
+        private void Asstile_OnAppDataChanged1(object sender, EventArgs e)
+        {
+            this.FireOnAppDataChanged();
         }
 
         /// <summary>
@@ -87,9 +110,35 @@ namespace AssetWatch
         /// <param name="api">The api<see cref="IApi"/></param>
         private void ApiHandler_OnApiLoaded(object sender, IApi api)
         {
-            // TODO: apply loaded save data to API
+            // Apply loaded save data to API
+            if (this.appData.ApiDataSet.Exists(apiData => apiData.ApiName == api.ApiData.ApiName))
+            {
+                api.ApiData = this.appData.ApiDataSet.Find(apiData => apiData.ApiName == api.ApiData.ApiName);                
+            }
+            else
+            {
+                this.appData.ApiDataSet.Add(api.ApiData);
+                this.FireOnAppDataChanged();
+            }
 
-            this.apiHandler.StartAssetUpdater(api);
+            List<AssetTile> toRemove = new List<AssetTile>();
+
+            this.assetTilesToSubscribe.ForEach(assToSub =>
+            {
+                if (assToSub.AssetTileData.ApiName == api.ApiInfo.ApiName)
+                {
+                    this.apiHandler.SubscribeAssetTile(assToSub);
+                    toRemove.Add(assToSub);
+                }
+            });
+
+            toRemove.ForEach(rm => this.assetTilesToSubscribe.Remove(rm));
+
+            if (api.ApiData.IsEnabled)
+            {
+                this.apiHandler.EnableApi(api);
+                this.apiHandler.StartAssetUpdater(api);
+            }            
         }
 
         /// <summary>
@@ -101,6 +150,11 @@ namespace AssetWatch
         {
             IApi api = (IApi)sender;
             MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void Asstile_OnAppDataChanged(object sender, EventArgs e)
+        {
+            this.FireOnAppDataChanged();
         }
 
         /// <summary>
@@ -123,9 +177,11 @@ namespace AssetWatch
             this.apiHandler.UnsubscribeAssetTile((AssetTile)sender);
         }
 
-        /// <summary>
-        /// Gets or sets the TileHandlerData
-        /// </summary>
-        public TileHandlerData TileHandlerData { get; set; }
+        private void FireOnAppDataChanged()
+        {
+            this.OnAppDataChanged?.Invoke(this, null);
+        }
+
+        public event EventHandler OnAppDataChanged;
     }
 }

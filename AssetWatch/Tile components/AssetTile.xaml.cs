@@ -43,36 +43,17 @@ namespace AssetWatch
         /// </summary>
         /// <param name="readyApis">The readyApis<see cref="Dictionary{IApi, List{Asset}}"/></param>
         /// <param name="globalTileStyle">The globalTileStyle<see cref="TileStyle"/></param>
-        public AssetTile(Dictionary<IApi, List<Asset>> readyApis, TileStyle globalTileStyle)
-        {
-            this.readyApis = readyApis;
-            this.globalTileStyle = globalTileStyle;
-            this.AssetTileData = new AssetTileData();
-            this.Loaded += this.walletWindow_Loaded;
-            this.InitializeComponent();
-            this.RefreshTileStyle();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AssetTile"/> class.
-        /// </summary>
-        /// <param name="readyApis">The readyApis<see cref="Dictionary{IApi, List{Asset}}"/></param>
-        /// <param name="globalTileStyle">The globalTileStyle<see cref="TileStyle"/></param>
-        /// <param name="assetTileData">The assetTileData<see cref="AssetTileData"/></param>
-        public AssetTile(Dictionary<IApi, List<Asset>> readyApis, TileStyle globalTileStyle, AssetTileData assetTileData)
+        public AssetTile(Dictionary<IApi, List<Asset>> readyApis, AssetTileData assetTileData, TileStyle globalTileStyle)
         {
             this.readyApis = readyApis;
             this.globalTileStyle = globalTileStyle;
             this.AssetTileData = assetTileData;
             this.Loaded += this.walletWindow_Loaded;
-            this.RefreshTileStyle();
             this.InitializeComponent();
-        }
-
-        /// <summary>
-        /// Gets or sets the AssetTileData
-        /// </summary>
-        public AssetTileData AssetTileData { get; set; }
+            this.Left = this.AssetTileData.TilePosition.FromLeft;
+            this.Top = this.AssetTileData.TilePosition.FromTop;
+            this.RefreshTileStyle();
+        }        
 
         /// <summary>
         /// The UpdateAsset
@@ -242,6 +223,7 @@ namespace AssetWatch
             AssetTileSettingsWindow assetTileSettingsWindow = new AssetTileSettingsWindow(this.readyApis, this.AssetTileData);
             assetTileSettingsWindow.OnAssetChanged += this.assetTileSettingsWindow_OnAssetChanged;
             assetTileSettingsWindow.ShowDialog();
+            this.FireOnAppDataChanged();
         }
 
         /// <summary>
@@ -251,13 +233,25 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="Asset"/></param>
         private void assetTileSettingsWindow_OnAssetChanged(object sender, Asset e)
         {
-            if (this.AssetTileData.Asset != null)
+            // fire the events if the asset has changed
+            if (e.AssetId != this.AssetTileData.Asset.AssetId || e.ConvertCurrency != this.AssetTileData.Asset.ConvertCurrency)
             {
-                this.FireOnAssetUnselected();
+                if (this.AssetTileData.Asset != null)
+                {
+                    this.FireOnAssetUnselected();
+                }
+
+                this.AssetTileData.Asset = e;
+                this.FireOnAssetSelected();
             }
 
-            this.AssetTileData.Asset = e;
-            this.FireOnAssetSelected();
+            this.Dispatcher.Invoke(() =>
+            {
+                this.RefreshTileStyle();
+                this.textBlock_Worth.Text = this.currentWorth.ToString();
+                this.textBlock_AssetAmount.Text = this.AssetTileData.HoldingsCount.ToString();
+                this.textBlock_Win.Text = string.Format("{0:F4}", this.profitLoss);
+            });
         }
 
         /// <summary>
@@ -267,6 +261,12 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void button_Close_Click(object sender, RoutedEventArgs e)
         {
+            MessageBoxResult result = MessageBox.Show("Asset löschen?", this.AssetTileData.AssetTileName, MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.OK)
+            {
+                this.Close();
+            }                
         }
 
         /// <summary>
@@ -287,6 +287,9 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="MouseButtonEventArgs"/></param>
         private void window_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            this.AssetTileData.TilePosition.FromLeft = this.Left;
+            this.AssetTileData.TilePosition.FromTop = this.Top;
+            this.FireOnAppDataChanged();
         }
 
         /// <summary>
@@ -304,6 +307,18 @@ namespace AssetWatch
         {
             this.OnAssetSelected?.Invoke(this, null);
         }
+
+        private void FireOnAppDataChanged()
+        {
+            this.OnAppDataChanged?.Invoke(this, null);
+        }
+
+        /// <summary>
+        /// Gets or sets the AssetTileData
+        /// </summary>
+        public AssetTileData AssetTileData { get; private set; }
+
+        public event EventHandler OnAppDataChanged;
 
         /// <summary>
         /// Defines the OnAssetSelected

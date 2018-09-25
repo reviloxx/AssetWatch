@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetWatch", "AssetWatch\As
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCoinmarketcapPro", "ApiCoinmarketcapPro\ApiCoinmarketcapPro.csproj", "{DBCCBC27-887F-42D6-A3BA-1DAFCA05A74C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCoinmarketCapSandbox", "ApiCoinmarketCapSandbox\ApiCoinmarketCapSandbox.csproj", "{858BAD1C-8E0F-4C62-92B3-974A6E9850E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DBCCBC27-887F-42D6-A3BA-1DAFCA05A74C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBCCBC27-887F-42D6-A3BA-1DAFCA05A74C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBCCBC27-887F-42D6-A3BA-1DAFCA05A74C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{858BAD1C-8E0F-4C62-92B3-974A6E9850E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858BAD1C-8E0F-4C62-92B3-974A6E9850E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858BAD1C-8E0F-4C62-92B3-974A6E9850E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858BAD1C-8E0F-4C62-92B3-974A6E9850E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
