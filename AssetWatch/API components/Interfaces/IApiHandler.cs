@@ -12,7 +12,7 @@ namespace AssetWatch
         /// Is fired when a handled API is ready to use.
         /// The event args contain the API which is ready and it's available assets.
         /// </summary>
-        event EventHandler<OnApiReadyEventArgs> OnApiReady; // TODO: maybe unneccessary
+        event EventHandler<OnApiReadyEventArgs> OnApiReady;// TODO: maybe unneccessary
 
         /// <summary>
         /// Is fired after an assembly which contains an IApi object was loaded.
@@ -30,7 +30,7 @@ namespace AssetWatch
         /// Is fired after an API was disabled.
         /// The event args contain the disabled API.
         /// </summary>
-        event EventHandler<IApi> OnApiDisabled; // TODO: maybe unneccessary
+        event EventHandler<IApi> OnApiDisabled;// TODO: maybe unneccessary
 
         /// <summary>
         /// Loads IApi objects by using an IApiLoader instance.
@@ -41,15 +41,19 @@ namespace AssetWatch
         /// <summary>
         /// Enables the API.
         /// </summary>
-        /// <param name="api">The api<see cref="IApi"/> to enable.</param>
+        /// <param name="api">The API<see cref="IApi"/> to enable.</param>
         void EnableApi(IApi api);
 
         /// <summary>
         /// Disables the API.
         /// </summary>
-        /// <param name="api">The api<see cref="IApi"/> to disable.</param>
+        /// <param name="api">The API<see cref="IApi"/> to disable.</param>
         void DisableApi(IApi api);
 
+        /// <summary>
+        /// Starts the asset update thread of a specific API.
+        /// </summary>
+        /// <param name="api">The API to start the asset update thread.<see cref="IApi"/></param>
         void StartAssetUpdater(IApi api);
 
         /// <summary>
@@ -73,8 +77,14 @@ namespace AssetWatch
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe.</param>
         void UnsubscribeAssetTile(AssetTile assetTile);
 
+        /// <summary>
+        /// Gets a list of APIs which were loaded from assemblies.
+        /// </summary>
         List<IApi> LoadedApis { get; }
 
+        /// <summary>
+        /// Gets a dictionary of ready APIs and their available assets.
+        /// </summary>
         Dictionary<IApi, List<Asset>> ReadyApis { get; }
     }
 }

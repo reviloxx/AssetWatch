@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssetWatch"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Einstellungen" Height="400" Width="688.844"
         ResizeMode="NoResize"
@@ -11,8 +12,32 @@
     <TabControl>
         <TabItem Header="Allgemein">
             <Grid Background="WhiteSmoke">
+                <Label Content="Farben" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <Rectangle  HorizontalAlignment="Left" Height="175" Margin="10,40,0,0" Stroke="Black" StrokeThickness="0.7" VerticalAlignment="Top" Width="346"/>
+                
+                <Label Content="Hintergrund bei Gewinn:" HorizontalAlignment="Left" Margin="22,55,0,0" VerticalAlignment="Top"/>
+                <xctk:ColorPicker Name="clrPcker_BackgroundProfit" ShowTabHeaders="False" ColorMode="ColorCanvas" 
+                                  ShowStandardColors="False" ShowAvailableColors="False" SelectedColorChanged="clrPcker_BackgroundProfit_SelectedColorChanged" 
+                                  Margin="180,55,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="156"></xctk:ColorPicker>
+
+                <Label Content="Hintergrund bei Verlust:" HorizontalAlignment="Left" Margin="22,95,0,0" VerticalAlignment="Top"/>
+                <xctk:ColorPicker x:Name="clrPcker_BackgroundLoss" ShowTabHeaders="False" ColorMode="ColorCanvas" 
+                                  ShowStandardColors="False" ShowAvailableColors="False" SelectedColorChanged="clrPcker_BackgroundLoss_SelectedColorChanged" 
+                                  Margin="180,95,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="156"/>
+
+                <Label Content="Schriftfarbe bei Gewinn:" HorizontalAlignment="Left" Margin="22,135,0,0" VerticalAlignment="Top"/>
+                <xctk:ColorPicker x:Name="clrPcker_FontProfit" ShowTabHeaders="False" AvailableColorsHeader="Schriftfarbe"
+                                  ShowStandardColors="False" ShowAvailableColors="True" SelectedColorChanged="clrPcker_FontProfit_SelectedColorChanged" 
+                                  Margin="180,135,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="156"/>
+
+                <Label Content="Schriftfarbe bei Verlust:" HorizontalAlignment="Left" Margin="22,175,0,0" VerticalAlignment="Top"/>
+                <xctk:ColorPicker x:Name="clrPcker_FontLoss" ShowTabHeaders="False" AvailableColorsHeader="Schriftfarbe" 
+                                  ShowStandardColors="False" ShowAvailableColors="True" SelectedColorChanged="clrPcker_FontLoss_SelectedColorChanged" 
+                                  Margin="180,175,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="156"/>
+
+                <CheckBox x:Name="checkBox_Autostart" Checked="checkBox_Autostart_Checked" Unchecked="checkBox_Autostart_Unchecked" Content="Mit Windows starten" HorizontalAlignment="Left" Margin="10,307,0,0" VerticalAlignment="Top"/>
             </Grid>
-        </TabItem>        
+        </TabItem>
         <TabItem Header="APIs">
             <Grid Background="WhiteSmoke">
                 <ListView 
@@ -41,10 +66,6 @@
                 <Label Content="Verfügbare APIs" HorizontalAlignment="Left" Margin="37,11,0,0" VerticalAlignment="Top" Width="270" Height="26"/>
                 <Frame BorderBrush="#FF7F9DB9" BorderThickness="0.7" Margin="0,43,37,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Right" Width="221"/>
                 <Label Content="API Info" HorizontalAlignment="Right" Margin="0,11,25,0" VerticalAlignment="Top" Width="233" Height="26"/>
-            </Grid>
-        </TabItem>
-        <TabItem Header="Asset Fenster">
-            <Grid Background="WhiteSmoke">
             </Grid>
         </TabItem>
     </TabControl>

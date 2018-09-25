@@ -12,9 +12,9 @@ namespace AssetWatch
     public class DiskApiLoader : IApiLoader
     {
         /// <summary>
-        /// Defines the directory which contains the assemblies to load.
+        /// Defines the path which contains the assemblies to load.
         /// </summary>
-        private static string directory = Directory.GetCurrentDirectory() + @"\Apis\";
+        private static string path = Directory.GetCurrentDirectory() + @"\Apis\";
 
         /// <summary>
         /// Loads all available types which implement the IApi interface.
@@ -24,9 +24,15 @@ namespace AssetWatch
         {
             Assembly ass;
             List<IApi> loadedApis = new List<IApi>();
-            string[] files = Directory.GetFiles(directory, "*.dll");
+            string[] folders = Directory.GetDirectories(path);
+            List<string> files = new List<string>();
 
-            for (int i = 0; i < files.Length; i++)
+            foreach (string folder in folders)
+            {
+                files.AddRange((Directory.GetFiles(folder, "*.dll")).ToList());
+            }
+
+            for (int i = 0; i < files.Count; i++)
             {
                 try
                 {

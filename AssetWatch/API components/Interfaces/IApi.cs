@@ -33,6 +33,9 @@ namespace AssetWatch
         /// </summary>
         ApiInfo ApiInfo { get; }
 
+        /// <summary>
+        /// Starts the asset update thread.
+        /// </summary>
         void StartAssetUpdater();
 
         /// <summary>
@@ -52,8 +55,6 @@ namespace AssetWatch
         /// Fires the OnAvailableAssetsReceived event if successful.
         /// </summary>
         void RequestAvailableAssetsAsync();
-
-        //void RequestSingleAssetUpdateAsync(Asset asset);
 
         /// <summary>
         /// Sets the update interval of the API.

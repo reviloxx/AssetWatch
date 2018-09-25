@@ -14,34 +14,6 @@ namespace AssetWatch
         /// </summary>
         private List<AssetTile> subscribedAssetTiles;
 
-        public List<IApi> LoadedApis { get; private set; }
-
-        public Dictionary<IApi, List<Asset>> ReadyApis { get; }
-
-        /// <summary>
-        /// Is fired when a handled API is ready to use.
-        /// The event args contain the API which is ready and it's available assets.
-        /// </summary>
-        public event EventHandler<OnApiReadyEventArgs> OnApiReady;
-
-        /// <summary>
-        /// Is fired after an assembly which contains an IApi object was loaded.
-        /// The event args contain the loaded API.
-        /// </summary>
-        public event EventHandler<IApi> OnApiLoaded;
-
-        /// <summary>
-        /// Is fired when any error occurs within the IApi.
-        /// The event args contain the error type and a error message.
-        /// </summary>
-        public event EventHandler<OnApiErrorEventArgs> OnApiError;
-
-        /// <summary>
-        /// Is fired after an API was disabled.
-        /// The event args contain the disabled API.
-        /// </summary>
-        public event EventHandler<IApi> OnApiDisabled;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
         /// </summary>
@@ -49,7 +21,7 @@ namespace AssetWatch
         {
             this.subscribedAssetTiles = new List<AssetTile>();
             this.ReadyApis = new Dictionary<IApi, List<Asset>>();
-        }
+        }        
 
         /// <summary>
         /// Loads all available APIs by using an IApiLoader, sobscribes to it's events and requests it's available assets.
@@ -220,5 +192,33 @@ namespace AssetWatch
         {
             this.OnApiDisabled?.Invoke(this, disabledApi);
         }
+
+        public List<IApi> LoadedApis { get; private set; }
+
+        public Dictionary<IApi, List<Asset>> ReadyApis { get; }
+
+        /// <summary>
+        /// Is fired when a handled API is ready to use.
+        /// The event args contain the API which is ready and it's available assets.
+        /// </summary>
+        public event EventHandler<OnApiReadyEventArgs> OnApiReady;
+
+        /// <summary>
+        /// Is fired after an assembly which contains an IApi object was loaded.
+        /// The event args contain the loaded API.
+        /// </summary>
+        public event EventHandler<IApi> OnApiLoaded;
+
+        /// <summary>
+        /// Is fired when any error occurs within the IApi.
+        /// The event args contain the error type and a error message.
+        /// </summary>
+        public event EventHandler<OnApiErrorEventArgs> OnApiError;
+
+        /// <summary>
+        /// Is fired after an API was disabled.
+        /// The event args contain the disabled API.
+        /// </summary>
+        public event EventHandler<IApi> OnApiDisabled;
     }
 }

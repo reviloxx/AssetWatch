@@ -1,16 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AssetWatch
 {
@@ -19,52 +9,73 @@ namespace AssetWatch
     /// </summary>
     public partial class CalculatorWindow : Window
     {
+        /// <summary>
+        /// Defines the asset
+        /// </summary>
         private Asset asset;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CalculatorWindow"/> class.
+        /// </summary>
+        /// <param name="asset">The asset<see cref="Asset"/></param>
         public CalculatorWindow(Asset asset)
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.asset = asset;
-            label_Asset.Content = asset.Symbol;
-            label_Convert.Content = asset.ConvertCurrency;            
+            this.label_Asset.Content = asset.Symbol;
+            this.label_Convert.Content = asset.ConvertCurrency;
         }
 
+        /// <summary>
+        /// The textBox_Convert_TextChanged
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="TextChangedEventArgs"/></param>
         private void textBox_Convert_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!textBox_Convert.IsKeyboardFocused)
+            if (!this.textBox_Convert.IsKeyboardFocused)
             {
                 return;
             }
 
-            if (textBox_Convert.Text == string.Empty)
+            if (this.textBox_Convert.Text == string.Empty)
             {
-                textBox_Asset.Text = string.Empty;
+                this.textBox_Asset.Text = string.Empty;
             }
 
-            textBox_Asset.Text = this.CalculateAssetSum().ToString();
+            this.textBox_Asset.Text = this.CalculateAssetSum().ToString();
         }
 
+        /// <summary>
+        /// The textBox_Asset_TextChanged
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="TextChangedEventArgs"/></param>
         private void textBox_Asset_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!textBox_Asset.IsKeyboardFocused)
+            if (!this.textBox_Asset.IsKeyboardFocused)
             {
                 return;
             }
 
-            if (textBox_Asset.Text == string.Empty)
+            if (this.textBox_Asset.Text == string.Empty)
             {
-                textBox_Convert.Text = string.Empty;
+                this.textBox_Convert.Text = string.Empty;
             }
 
-            textBox_Convert.Text = this.CalculateConvertSum().ToString();
+            this.textBox_Convert.Text = this.CalculateConvertSum().ToString();
         }
 
+        /// <summary>
+        /// The CalculateConvertSum
+        /// </summary>
+        /// <returns>The <see cref="double"/></returns>
         private double CalculateConvertSum()
         {
             double assetSum;
             double assetPrice;
 
-            if (!double.TryParse(textBox_Asset.Text.Replace('.', ','), out assetSum))
+            if (!double.TryParse(this.textBox_Asset.Text.Replace('.', ','), out assetSum))
             {
                 return 0;
             }
@@ -77,12 +88,16 @@ namespace AssetWatch
             return Math.Round(assetSum * assetPrice, 2);
         }
 
+        /// <summary>
+        /// The CalculateAssetSum
+        /// </summary>
+        /// <returns>The <see cref="double"/></returns>
         private double CalculateAssetSum()
         {
             double convertInput;
             double assetPrice;
 
-            if (!double.TryParse(textBox_Convert.Text.Replace('.', ','), out convertInput))
+            if (!double.TryParse(this.textBox_Convert.Text.Replace('.', ','), out convertInput))
             {
                 return 0;
             }

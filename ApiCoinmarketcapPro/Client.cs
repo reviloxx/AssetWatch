@@ -162,7 +162,7 @@ namespace ApiCoinmarketcapPro
         /// The GetSingleAssetUpdate
         /// </summary>
         /// <param name="asset">The ass<see cref="Asset"/></param>
-        public void RequestSingleAssetUpdateAsync(Asset asset)
+        private void RequestSingleAssetUpdateAsync(Asset asset)
         {
             if (!this.ApiData.IsEnabled)
             {
@@ -331,6 +331,8 @@ namespace ApiCoinmarketcapPro
             {
                 return;
             }
+
+            this.WaitForConnection();
 
             List<int> ids = new List<int>();
 

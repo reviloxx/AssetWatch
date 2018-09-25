@@ -1,15 +1,18 @@
 ﻿
+using System;
+
 namespace AssetWatch
 {
     /// <summary>
     /// Defines the <see cref="TileStyle" />
     /// </summary>
+    [Serializable]
     public class TileStyle
     {
         /// <summary>
         /// Contains the background color when the asset is making profits
         /// </summary>
-        public string BackgroundColorPos
+        public string BackgroundColorProfit
         {
             get; set;
         }
@@ -17,15 +20,7 @@ namespace AssetWatch
         /// <summary>
         /// Contains the background color when the asset is making losses
         /// </summary>
-        public string BackgroundColorNeg
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Gets or sets the Transparency
-        /// </summary>
-        public int Transparency
+        public string BackgroundColorLoss
         {
             get; set;
         }
@@ -41,7 +36,7 @@ namespace AssetWatch
         /// <summary>
         /// Contains the font color when the asset is making profits
         /// </summary>
-        public string FontColorPos
+        public string FontColorProfit
         {
             get; set;
         }
@@ -49,31 +44,7 @@ namespace AssetWatch
         /// <summary>
         /// Contains the font color when the asset is making losses
         /// </summary>
-        public string FontColorNeg
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Contains the icon color when the asset is making profits
-        /// </summary>
-        public string IconColorPos
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Contains the icon color when the asset is making losses
-        /// </summary>
-        public int IconColorNeg
-        {
-            get; set;
-        }
-
-        /// <summary>
-        /// Contains True if the Tile uses an unique style instead of the global style
-        /// </summary>
-        public bool IsUniqueTileStyle
+        public string FontColorLoss
         {
             get; set;
         }
@@ -92,6 +63,15 @@ namespace AssetWatch
         public int PositionLocked
         {
             get; set;
+        }
+
+        public TileStyle()
+        {
+            this.BackgroundColorProfit = "#FF000000";
+            this.BackgroundColorLoss = "#FF000000";
+
+            this.FontColorProfit = "#FFFFFFFF";
+            this.FontColorLoss = "#FFFFFFFF";
         }
     }
 }

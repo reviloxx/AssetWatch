@@ -31,22 +31,30 @@ namespace AssetWatch
         public MainWindow()
         {
             InitializeComponent();
-            this.tileHandler = new MultiTileHandler(apiHandler);
-            this.globalTileStyle = new TileStyle();                    
+                        
+            this.globalTileStyle = new TileStyle();
 
-            // TODO: load saved data from disk            
+            // TODO: load saved data from disk         
+            
             apiHandler.LoadApis(apiLoader);
-        }                  
+            this.tileHandler = new MultiTileHandler(apiHandler, this.globalTileStyle);
+        }
+
+        private void MainSettingsWindow_OnGlobalTileColorChanged(object sender, EventArgs e)
+        {
+            this.tileHandler.ActivateGlobalTileStyle();
+        }
 
         private void menuItem_Settings_Click(object sender, RoutedEventArgs e)
         {
-            MainSettingsWindow sWindow = new MainSettingsWindow(apiHandler, this.globalTileStyle);
-            sWindow.Show();
+            MainSettingsWindow mainSettingsWindow = new MainSettingsWindow(apiHandler, this.globalTileStyle);
+            mainSettingsWindow.OnGlobalTileStyleChanged += this.MainSettingsWindow_OnGlobalTileColorChanged;
+            mainSettingsWindow.Show();
         }
 
         private void menuItem_AddAssetTile_Click(object sender, RoutedEventArgs e)
         {
-            this.tileHandler.AddAssetTile();
+            this.tileHandler.OpenNewAssetTile();
         }
 
         private void menuItem_Exit_Click(object sender, RoutedEventArgs e)

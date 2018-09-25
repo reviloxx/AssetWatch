@@ -8,7 +8,7 @@ namespace AssetWatch
     public class ApiInfo
     {
         /// <summary>
-        /// Gets or sets the MinUpdateInterval
+        /// Gets or sets the MinUpdateInterval.
         /// Contains the minimum supported update interval of the API.
         /// </summary>
         public int MinUpdateInterval { get; set; }
@@ -20,25 +20,25 @@ namespace AssetWatch
         public int MaxUpdateInterval { get; set; }
 
         /// <summary>
-        /// Gets or sets the UpdateIntervalInfoText
+        /// Gets or sets the UpdateIntervalInfoText.
         /// Contains an info text about the supported update intervals of the API.
         /// </summary>
         public string UpdateIntervalInfoText { get; set; }
 
         /// <summary>
-        /// Gets or sets the ApiInfoText
+        /// Gets or sets the ApiInfoText.
         /// Contains an info text about the API.
         /// </summary>
         public string ApiInfoText { get; set; }
 
         /// <summary>
-        /// Gets or sets the AssetUrl
+        /// Gets or sets the AssetUrl.
         /// Contains an Url to show the asset on a webpage.
         /// </summary>
         public string AssetUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the AssetUrlName
+        /// Gets or sets the AssetUrlName.
         /// Contains the name of the Url to display.
         /// </summary>
         public string AssetUrlName { get; set; }
@@ -64,7 +64,7 @@ namespace AssetWatch
         public bool ApiKeyRequired { get; set; }
 
         /// <summary>
-        /// Gets or sets the Url to the website where a user can get the API key.
+        /// Gets or sets the Url to the website where the user can get an API key.
         /// </summary>
         public string GetApiKeyUrl { get; set; }
 
@@ -75,7 +75,7 @@ namespace AssetWatch
     }
 
     /// <summary>
-    /// Defines the MArket
+    /// Defines the Market.
     /// </summary>
     public enum Market
     {

@@ -60,19 +60,31 @@ namespace AssetWatch
 
         private void button_Ok_Click(object sender, RoutedEventArgs e)
         {
-            Asset selectedAsset = (Asset)comboBox_Assets.SelectedValue;
+            double investedSum;
+            double holdingsCount;
+            
 
-            this.assetTileData.ApiName = this.selectedApi.ApiInfo.ApiName;
-            this.assetTileData.Asset.AssetId = selectedAsset.AssetId;
+            if(double.TryParse(textBox_InvestedSum.Text.Replace('.', ','), out investedSum) &&
+                double.TryParse(textBox_HoldingsCount.Text.Replace('.', ','), out holdingsCount))
+            {
+                Asset selectedAsset = (Asset)comboBox_Assets.SelectedValue;
+                this.assetTileData.ApiName = this.selectedApi.ApiInfo.ApiName;
+                this.assetTileData.Asset.AssetId = selectedAsset.AssetId;
 
-            Asset newAsset = new Asset{
-                AssetId = selectedAsset.AssetId,
-                ConvertCurrency = comboBox_ConvertCurrencies.SelectedValue.ToString(),
-                Name = selectedAsset.Name,
-                Symbol = selectedAsset.Symbol
-            };
 
-            this.FireOnAssetChanged(newAsset);
+                this.assetTileData.InvestedSum = investedSum;
+                this.assetTileData.HoldingsCount = holdingsCount;
+
+                Asset newAsset = new Asset
+                {
+                    AssetId = selectedAsset.AssetId,
+                    ConvertCurrency = comboBox_ConvertCurrencies.SelectedValue.ToString(),
+                    Name = selectedAsset.Name,
+                    Symbol = selectedAsset.Symbol
+                };
+
+                this.FireOnAssetChanged(newAsset);
+            }            
         }
 
         public class AssetTileSettingsWindowViewModel

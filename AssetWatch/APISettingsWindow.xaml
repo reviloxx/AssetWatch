@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssetWatch"
         mc:Ignorable="d"
-        Title="API Einstellungen" Height="450" Width="275">
+        Title="API Einstellungen" Height="450" Width="275" ResizeMode="NoResize">
     <Grid Background="WhiteSmoke">
         <TextBox x:Name="textbox_API_key" Margin="10,50,10,347" TextWrapping="Wrap" Text="29bc6cc3-7219-42f6-af87-f0147e9ee089"/>
         <Button x:Name="button_SaveExit" Content="OK" Click="button_SaveExit_Click" HorizontalAlignment="Left" Margin="10,390,0,0" VerticalAlignment="Top" Width="75"/>
@@ -15,8 +15,8 @@
                 API Key anfordern
             </Hyperlink>
         </TextBlock>
-        <TextBlock Text="API Update Intervall:" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.913,6.462"/>
-        <Slider Margin="10,146,10,0" VerticalAlignment="Top"/>
+        <TextBlock Text="Asset Update Intervall (in Minuten):" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.913,6.462"/>
+        <Slider x:Name="slider_UpdateInterval" AutoToolTipPlacement="BottomRight" Margin="10,146,10,0" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock_updateIntervalInfo" Margin="10,191,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="78"/>
     </Grid>
 </Window>
