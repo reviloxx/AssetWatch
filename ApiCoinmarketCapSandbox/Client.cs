@@ -19,6 +19,8 @@ namespace ApiCoinmarketcapSandbox
         /// </summary>
         private static ApiSchema apiSchema = ApiSchema.Sandbox;
 
+        private static string apiKey = "29bc6cc3-7219-42f6-af87-f0147e9ee089";
+
         /// <summary>
         /// Defines the availableAssets
         /// </summary>
@@ -69,7 +71,7 @@ namespace ApiCoinmarketcapSandbox
                 return new ApiInfo
                 {
                     ApiInfoText = "Diese API stellt veraltete Testdaten ohne Abruf-Limit zur Verfügung.",
-                    ApiKeyRequired = true,
+                    ApiKeyRequired = false,
                     ApiName = "Coinmarketcap Sandbox",
                     ApiClientVersion = "1.0",
                     Market = Market.Cryptocurrencies,
@@ -80,7 +82,7 @@ namespace ApiCoinmarketcapSandbox
                     SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
                         "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
                         "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
-                    UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
+                    UpdateIntervalInfoText = "Diese API stellt keine aktuellen Daten bereit, eine Änderung des Update Intervalls hat daher keine Auswirkung."
                 };
             }
         }
@@ -126,12 +128,7 @@ namespace ApiCoinmarketcapSandbox
         /// </summary>
         public void Enable()
         {
-            if (this.ApiData.ApiKey == string.Empty)
-            {
-                throw new Exception("API Key missing!");
-            }
-
-            this.client = new CoinMarketCapClient(apiSchema, this.ApiData.ApiKey);
+            this.client = new CoinMarketCapClient(apiSchema, apiKey);
             this.ApiData.IsEnabled = true;
         }
 
@@ -261,6 +258,7 @@ namespace ApiCoinmarketcapSandbox
                     });
                 });
 
+                this.availableAssets.OrderBy(ass => ass.Rank);
                 this.FireOnAvailableAssetsReceived();
             }
             catch (Exception e)
@@ -353,9 +351,9 @@ namespace ApiCoinmarketcapSandbox
 
                 assets.ForEach(ass =>
                 {
-                    var assetUpdate = a.Data.FirstOrDefault().Value;
+                    var assetUpdate = a.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
                     ass.PriceConvert = assetUpdate.Quote[ass.ConvertCurrency].Price.ToString();
-                    ass.LastUpdated = assetUpdate.LastUpdated;
+                    ass.LastUpdated = DateTime.Now;
                     ass.MarketCapConvert = assetUpdate.Quote[ass.ConvertCurrency].MarketCap.ToString();
                     ass.PercentChange1h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h.ToString();
                     ass.PercentChange24h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h.ToString();

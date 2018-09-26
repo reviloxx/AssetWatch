@@ -63,29 +63,39 @@ namespace AssetWatch
         public void UpdateAsset(object sender, Asset asset)
         {
             this.AssetTileData.Asset = asset;
+            this.CalculateProfit();
 
             this.Dispatcher.Invoke(() =>
             {
                 this.RefreshTileStyle();
-                this.button_Calc.Visibility = Visibility.Visible;
-                this.label_AssetPrice.Text = asset.ConvertCurrency + "/" + asset.Symbol;
-                this.textBlock_AssetPrice.Text = asset.PriceConvert;
-                this.label_Worth.Text = asset.ConvertCurrency;
-                this.textBlock_Worth.Text = this.currentWorth.ToString();
-                this.textBlock_AssetSymbol.Text = asset.Symbol;
-                this.textBlock_AssetAmount.Text = this.AssetTileData.HoldingsCount.ToString();
-                this.textBlock_last_Refresh.Text = "@" + asset.LastUpdated.ToString("hh:mm");
-                this.textBlock_Win.Text = string.Format("{0:F4}", this.profitLoss);
+                this.RefreshAssetTextblocks();
+                this.RefreshTileDataTextblocks();
+                this.button_Calc.Visibility = Visibility.Visible;                
             });
+        }
+
+        private void RefreshAssetTextblocks()
+        {
+            this.label_AssetPrice.Text = this.AssetTileData.Asset.ConvertCurrency + "/" + this.AssetTileData.Asset.Symbol;
+            this.textBlock_AssetPrice.Text = this.AssetTileData.Asset.PriceConvert;
+            this.label_Worth.Text = this.AssetTileData.Asset.ConvertCurrency;
+            this.textBlock_AssetSymbol.Text = this.AssetTileData.Asset.Symbol;
+            this.textBlock_last_Refresh.Text = "@" + this.AssetTileData.Asset.LastUpdated.ToString("HH:mm");
+        }
+
+        private void RefreshTileDataTextblocks()
+        {
+            this.label_WalletName.Text = this.AssetTileData.AssetTileName;
+            this.textBlock_Worth.Text = string.Format("{0:F2}", this.currentWorth);
+            this.textBlock_AssetAmount.Text = this.AssetTileData.HoldingsCount.ToString();
+            this.textBlock_Win.Text = string.Format("{0:+0.00;-#.00}", this.profitLoss) + " " + this.AssetTileData.Asset.ConvertCurrency;
         }
 
         /// <summary>
         /// The RefreshTileStyle
         /// </summary>
         public void RefreshTileStyle()
-        {
-            this.CalculateProfit();
-
+        {           
             if (this.AssetTileData.HasCustomTileStyle)
             {
                 if (this.profitLoss > -1)
@@ -245,12 +255,12 @@ namespace AssetWatch
                 this.FireOnAssetSelected();
             }
 
+            this.CalculateProfit();
+
             this.Dispatcher.Invoke(() =>
             {
                 this.RefreshTileStyle();
-                this.textBlock_Worth.Text = this.currentWorth.ToString();
-                this.textBlock_AssetAmount.Text = this.AssetTileData.HoldingsCount.ToString();
-                this.textBlock_Win.Text = string.Format("{0:F4}", this.profitLoss);
+                this.RefreshTileDataTextblocks();
             });
         }
 

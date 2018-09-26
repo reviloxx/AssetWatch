@@ -262,6 +262,8 @@ namespace ApiCoinmarketcapPro
                     });
                 });
 
+                this.availableAssets.OrderBy(ass => ass.Rank);
+
                 this.FireOnAvailableAssetsReceived();
             }
             catch (Exception e)
@@ -354,9 +356,9 @@ namespace ApiCoinmarketcapPro
 
                 assets.ForEach(ass =>
                 {
-                    var assetUpdate = a.Data.FirstOrDefault().Value;
+                    var assetUpdate = a.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
                     ass.PriceConvert = assetUpdate.Quote[ass.ConvertCurrency].Price.ToString();
-                    ass.LastUpdated = assetUpdate.LastUpdated;
+                    ass.LastUpdated = DateTime.Now;
                     ass.MarketCapConvert = assetUpdate.Quote[ass.ConvertCurrency].MarketCap.ToString();
                     ass.PercentChange1h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h.ToString();
                     ass.PercentChange24h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h.ToString();

@@ -40,6 +40,7 @@ namespace AssetWatch
 
         private void InitializeTextBoxes()
         {
+            textBox_TileName.Text = this.assetTileData.AssetTileName;
             textBox_HoldingsCount.Text = this.assetTileData.HoldingsCount.ToString();
             textBox_InvestedSum.Text = this.assetTileData.InvestedSum.ToString();
         }
@@ -47,6 +48,11 @@ namespace AssetWatch
         private void InitializeComboBoxes()
         {
             IApi api;
+
+            if(this.assetTileData.ApiName == null)
+            {
+                return;
+            }
 
             if (this.readyApis.Any(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName))
             {
@@ -105,16 +111,17 @@ namespace AssetWatch
         {
             double investedSum;
             double holdingsCount;
-            
+            Asset selectedAsset = (Asset)comboBox_Assets.SelectedValue;
 
-            if(double.TryParse(textBox_InvestedSum.Text.Replace('.', ','), out investedSum) &&
-                double.TryParse(textBox_HoldingsCount.Text.Replace('.', ','), out holdingsCount))
+            if (double.TryParse(textBox_InvestedSum.Text.Replace('.', ','), out investedSum) &&
+                double.TryParse(textBox_HoldingsCount.Text.Replace('.', ','), out holdingsCount) &&
+                selectedAsset != null && comboBox_ConvertCurrencies.SelectedValue != null)
             {
-                Asset selectedAsset = (Asset)comboBox_Assets.SelectedValue;
+                
                 this.assetTileData.ApiName = this.selectedApi.ApiInfo.ApiName;
                 this.assetTileData.Asset.AssetId = selectedAsset.AssetId;
 
-
+                this.assetTileData.AssetTileName = textBox_TileName.Text;
                 this.assetTileData.InvestedSum = investedSum;
                 this.assetTileData.HoldingsCount = holdingsCount;
 
@@ -127,7 +134,13 @@ namespace AssetWatch
                 };
 
                 this.FireOnAssetChanged(newAsset);
-            }            
+                this.Close();
+            }      
+            else
+            {
+                MessageBox.Show("Ungültige Eingabe!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         public class AssetTileSettingsWindowViewModel
