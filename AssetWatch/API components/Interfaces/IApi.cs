@@ -23,6 +23,8 @@ namespace AssetWatch
         /// </summary>
         event EventHandler<OnApiErrorEventArgs> OnApiError;
 
+        event EventHandler OnAppDataChanged;
+
         /// <summary>
         /// Gets the serializable ApiData which contains the current update interval of the API.
         /// </summary>

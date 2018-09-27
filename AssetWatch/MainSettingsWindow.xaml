@@ -48,8 +48,9 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="API Name" DisplayMemberBinding="{Binding Path=ApiInfo.ApiName}" Width="150"/>
-                            <GridViewColumn Header="Client Version" DisplayMemberBinding="{Binding Path=ApiInfo.ApiClientVersion}" Width="85"/>
-                            <GridViewColumn Header="Markt" DisplayMemberBinding="{Binding Path=ApiInfo.Market}" Width="120"/>
+                            <!--<GridViewColumn Header="Client Version" DisplayMemberBinding="{Binding Path=ApiInfo.ApiClientVersion}" Width="85"/>-->
+                            <GridViewColumn Header="Markt" DisplayMemberBinding="{Binding Path=ApiInfo.Market}" Width="110"/>
+                            <GridViewColumn Header="Aufrufe / Tag" DisplayMemberBinding="{Binding Path=ApiData.CallCountAverage1d}" Width="80"/>
                         </GridView>
                     </ListView.View>
                 </ListView>

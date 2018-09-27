@@ -52,54 +52,7 @@ namespace ApiCoinmarketcapPro
         /// <summary>
         /// Defines the assetUpdateWorker
         /// </summary>
-        private Thread assetUpdateWorker;
-
-        /// <summary>
-        /// Gets the ApiData
-        /// </summary>
-        public ApiData ApiData { get; set; }
-
-        /// <summary>
-        /// Gets the ApiInfo
-        /// </summary>
-        public ApiInfo ApiInfo
-        {
-            get
-            {
-                return new ApiInfo
-                {
-                    ApiInfoText = "Diese API bietet alle 5 Minuten aktuelle Daten über die wichtigsten Kryptowährungen.",
-                    ApiKeyRequired = true,
-                    ApiName = "Coinmarketcap Pro",
-                    ApiClientVersion = "1.0",
-                    Market = Market.Cryptocurrencies,
-                    AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
-                    AssetUrlName = "Auf Coinmarketcap.com anzeigen",
-                    GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
-                    MaxUpdateInterval = 3600,
-                    MinUpdateInterval = 300,
-                    SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
-                        "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
-                        "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
-                    UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
-                };
-            }
-        }
-
-        /// <summary>
-        /// Defines the OnAvailableAssetsReceived
-        /// </summary>
-        public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
-
-        /// <summary>
-        /// Defines the OnSingleAssetUpdated
-        /// </summary>
-        public event EventHandler<Asset> OnSingleAssetUpdated;
-
-        /// <summary>
-        /// Defines the OnApiError
-        /// </summary>
-        public event EventHandler<OnApiErrorEventArgs> OnApiError;
+        private Thread assetUpdateWorker;       
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
@@ -110,16 +63,7 @@ namespace ApiCoinmarketcapPro
             this.subscribedAssets = new List<Asset>();
             this.subscribedConvertCurrencies = new List<string>();
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
-            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.ApiData = new ApiData
-            {
-                ApiKey = string.Empty,
-                ApiName = this.ApiInfo.ApiName,
-                CallCount1moStartTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
-                CallsLeft1mo = 6000,
-                IsEnabled = false,
-                UpdateInterval = 300
-            };
+            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);            
         }
 
         /// <summary>
@@ -250,6 +194,16 @@ namespace ApiCoinmarketcapPro
             try
             {
                 var map = await this.client.GetCurrencyMapAsync();
+                this.ApiData.CallCount++;
+
+                try
+                {
+                    // save file might be used by another process
+                    this.FireOnAppDataChanged();
+                }
+                catch
+                { }
+                
 
                 map.Data.ForEach(c =>
                 {
@@ -268,8 +222,6 @@ namespace ApiCoinmarketcapPro
             }
             catch (Exception e)
             {
-                this.ApiData.IsEnabled = false;
-
                 if (e.Message.Contains("401"))
                 {
                     this.FireOnApiError(new OnApiErrorEventArgs
@@ -278,16 +230,16 @@ namespace ApiCoinmarketcapPro
                         ErrorType = ErrorType.Unauthorized
                     });
                 }
+                else
+                {
+                    this.FireOnApiError(new OnApiErrorEventArgs
+                    {
+                        ErrorMessage = e.Message,
+                        ErrorType = ErrorType.General
+                    });
+                }
             }
-        }
-
-        /// <summary>
-        /// The FireOnAvailableAssetsReceived
-        /// </summary>
-        public void FireOnAvailableAssetsReceived()
-        {
-            OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
-        }
+        }        
 
         /// <summary>
         /// The StartAssetUpdater
@@ -349,6 +301,9 @@ namespace ApiCoinmarketcapPro
             try
             {
                 var a = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
+                this.ApiData.CallCount++;
+                this.FireOnAppDataChanged();
+
                 if (a.Status.ErrorCode != 0)
                 {
                     // TODO: handle API error codes
@@ -398,6 +353,68 @@ namespace ApiCoinmarketcapPro
         private void FireOnSingleAssetUpdated(Asset asset)
         {
             OnSingleAssetUpdated?.Invoke(this, asset);
-        }             
+        }
+
+        /// <summary>
+        /// The FireOnAvailableAssetsReceived
+        /// </summary>
+        private void FireOnAvailableAssetsReceived()
+        {
+            OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
+        }
+
+        private void FireOnAppDataChanged()
+        {
+            this.OnAppDataChanged?.Invoke(this, null);
+        }
+
+        /// <summary>
+        /// Gets the ApiData
+        /// </summary>
+        public ApiData ApiData { get; set; }
+
+        /// <summary>
+        /// Gets the ApiInfo
+        /// </summary>
+        public ApiInfo ApiInfo
+        {
+            get
+            {
+                return new ApiInfo
+                {
+                    ApiInfoText = "Diese API bietet alle 5 Minuten aktuelle Daten über die wichtigsten Kryptowährungen.",
+                    ApiKeyRequired = true,
+                    ApiName = "Coinmarketcap Pro",
+                    ApiClientVersion = "1.0",
+                    Market = Market.Cryptocurrencies,
+                    AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
+                    AssetUrlName = "Auf Coinmarketcap.com anzeigen",
+                    GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
+                    MaxUpdateInterval = 3600,
+                    MinUpdateInterval = 300,
+                    SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
+                        "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
+                        "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
+                    UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
+                };
+            }
+        }
+
+        /// <summary>
+        /// Defines the OnAvailableAssetsReceived
+        /// </summary>
+        public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
+
+        /// <summary>
+        /// Defines the OnSingleAssetUpdated
+        /// </summary>
+        public event EventHandler<Asset> OnSingleAssetUpdated;
+
+        /// <summary>
+        /// Defines the OnApiError
+        /// </summary>
+        public event EventHandler<OnApiErrorEventArgs> OnApiError;
+
+        public event EventHandler OnAppDataChanged;
     }
 }

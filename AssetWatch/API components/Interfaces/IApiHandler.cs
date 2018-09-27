@@ -26,11 +26,7 @@ namespace AssetWatch
         /// </summary>
         event EventHandler<OnApiErrorEventArgs> OnApiError;
 
-        /// <summary>
-        /// Is fired after an API was disabled.
-        /// The event args contain the disabled API.
-        /// </summary>
-        event EventHandler<IApi> OnApiDisabled;// TODO: maybe unneccessary
+        event EventHandler OnAppDataChanged;
 
         /// <summary>
         /// Loads IApi objects by using an IApiLoader instance.

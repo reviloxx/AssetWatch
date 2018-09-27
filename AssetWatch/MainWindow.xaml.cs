@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace AssetWatch
 {
@@ -35,8 +36,10 @@ namespace AssetWatch
         {
             this.InitializeComponent();
             this.appData = fileHandler.LoadAppData();
+            menuItem_HideAssetTiles.IsChecked = this.appData.TileHandlerData.GlobalTileStyle.Hidden;
             this.tileHandler = new MultiTileHandler(apiHandler, this.appData);
             this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;
+            apiHandler.OnAppDataChanged += this.OnAppDataChanged;
         }
 
         /// <summary>
@@ -80,6 +83,11 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void menuItem_AddAssetTile_Click(object sender, RoutedEventArgs e)
         {
+            if (this.appData.TileHandlerData.GlobalTileStyle.Hidden)
+            {
+                this.HideTiles(false);
+            }
+
             this.tileHandler.OpenNewAssetTile();
         }
 
@@ -91,6 +99,34 @@ namespace AssetWatch
         private void menuItem_Exit_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void menuItem_HideAssetTiles_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!((MenuItem)sender).IsFocused)
+            {
+                return;
+            }
+
+            this.HideTiles(true);
+        }
+
+        private void menuItem_HideAssetTiles_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (!((MenuItem)sender).IsFocused)
+            {
+                return;
+            }
+
+            this.HideTiles(false);
+        }
+
+        private void HideTiles(bool hide)
+        {
+            this.appData.TileHandlerData.GlobalTileStyle.Hidden = hide;
+            menuItem_HideAssetTiles.IsChecked = hide;
+            fileHandler.SaveAppData(this.appData);
+            this.tileHandler.RefreshTileStyles();
         }
     }
 }

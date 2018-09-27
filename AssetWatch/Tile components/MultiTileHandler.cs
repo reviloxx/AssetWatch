@@ -60,7 +60,7 @@ namespace AssetWatch
         public void OpenNewAssetTile()
         {
             AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, new AssetTileData(), this.appData.TileHandlerData.GlobalTileStyle);
-            asstile.Closed += this.Asstile_Closed;
+            asstile.OnAssetTileClosed += this.Asstile_Closed;
             asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
             asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
             asstile.OnAppDataChanged += this.Asstile_OnAppDataChanged;
@@ -68,6 +68,34 @@ namespace AssetWatch
             this.appData.AssetTileDataSet.Add(asstile.AssetTileData);
             this.FireOnAppDataChanged();
             asstile.Show();
+        }        
+
+        /// <summary>
+        /// The OpenLoadedAssetTiles opens all asset tiles which were stored in the app data,
+        /// subscribes to it's events, adds it to the handled asset tiles and to the asset tiles to subscribe
+        /// if there is an API defined in the asset tile data.
+        /// </summary>
+        private void OpenLoadedAssetTiles()
+        {
+            this.appData.AssetTileDataSet.ForEach(assetTileData =>
+            {
+                AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, assetTileData, this.appData.TileHandlerData.GlobalTileStyle);
+                asstile.OnAssetTileClosed += this.Asstile_Closed;
+                asstile.OnAppDataChanged += this.Asstile_OnAppDataChanged;
+                asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
+                asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
+                this.handledAssetTiles.Add(asstile);
+
+                if (asstile.AssetTileData.ApiName != null && asstile.AssetTileData.ApiName != string.Empty)
+                {
+                    this.assetTilesToSubscribe.Add(asstile);
+                }
+                
+                if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
+                {
+                    asstile.Show();
+                }                
+            });
         }
 
         /// <summary>
@@ -83,31 +111,6 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The OpenLoadedAssetTiles opens all asset tiles which were stored in the app data,
-        /// subscribes to it's events, adds it to the handled asset tiles and to the asset tiles to subscribe
-        /// if there is an API defined in the asset tile data.
-        /// </summary>
-        private void OpenLoadedAssetTiles()
-        {
-            this.appData.AssetTileDataSet.ForEach(assetTileData =>
-            {
-                AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, assetTileData, this.appData.TileHandlerData.GlobalTileStyle);
-                asstile.Closed += this.Asstile_Closed;
-                asstile.OnAppDataChanged += this.Asstile_OnAppDataChanged;
-                asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
-                asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
-                this.handledAssetTiles.Add(asstile);
-
-                if (asstile.AssetTileData.ApiName != null && asstile.AssetTileData.ApiName != string.Empty)
-                {
-                    this.assetTilesToSubscribe.Add(asstile);
-                }
-                
-                asstile.Show();
-            });
-        }
-
-        /// <summary>
         /// The ApiHandler_OnApiLoaded applies a loaded API data to the loaded API, if a matching API data exists.
         /// Else it adds a new matching API data to the app data.
         /// Subscribes loaded asset tiles which were waiting for this API.
@@ -118,12 +121,31 @@ namespace AssetWatch
         private void ApiHandler_OnApiLoaded(object sender, IApi api)
         {
             // Apply loaded save data to API
-            if (this.appData.ApiDataSet.Exists(apiData => apiData.ApiName == api.ApiData.ApiName))
+            if (this.appData.ApiDataSet.Exists(apiData => apiData.ApiName == api.ApiInfo.ApiName))
             {
-                api.ApiData = this.appData.ApiDataSet.Find(apiData => apiData.ApiName == api.ApiData.ApiName);
+                ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
+
+                // reset call counter every month
+                if ((apiData.CallCountStartTime - DateTime.Now).Days + 1 > 30)
+                {
+                    apiData.CallCountStartTime = DateTime.Now;
+                    apiData.CallCount = 0;
+                }
+
+                api.ApiData = apiData;
             }
             else
             {
+                api.ApiData = new ApiData
+                {
+                    ApiKey = string.Empty,
+                    ApiName = api.ApiInfo.ApiName,
+                    CallCountStartTime = DateTime.Now,
+                    CallCount = 0,
+                    IsEnabled = false,
+                    UpdateInterval = api.ApiInfo.MinUpdateInterval
+                };
+
                 this.appData.ApiDataSet.Add(api.ApiData);
                 this.FireOnAppDataChanged();
             }

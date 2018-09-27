@@ -14,7 +14,9 @@ namespace AssetWatch
         /// <summary>
         /// Defines the path which contains the assemblies to load.
         /// </summary>
-        private static string path = Directory.GetCurrentDirectory() + @"\Apis\";
+        //private static string path = Directory.GetCurrentDirectory() + @"\Apis\";
+
+        private static string path = AppDomain.CurrentDomain.BaseDirectory + @"\Apis\";
 
         /// <summary>
         /// Loads all available types which implement the IApi interface.

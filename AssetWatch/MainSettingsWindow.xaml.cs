@@ -37,11 +37,7 @@ namespace AssetWatch
             this.checkBox_Autostart.IsChecked = this.IsStartupItem();
             this.InitializeColorPickers();
 
-            this.DataContext = new MainSettingsWindowViewModel
-            {
-                LoadedApis = this.apiHandler.LoadedApis,
-                GlobalTileStyle = this.globalTileStyle
-            };
+            this.DataContext = new MainSettingsWindowViewModel(this.apiHandler.LoadedApis);
         }
 
         /// <summary>
@@ -269,6 +265,11 @@ namespace AssetWatch
     /// </summary>
     public class MainSettingsWindowViewModel
     {
+        public MainSettingsWindowViewModel(List<IApi> loadedApis)
+        {
+            this.LoadedApis = loadedApis;
+        }
+
         /// <summary>
         /// Gets or sets the LoadedApis.
         /// </summary>

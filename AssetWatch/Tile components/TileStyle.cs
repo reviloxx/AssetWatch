@@ -47,6 +47,8 @@ namespace AssetWatch
         /// Gets or sets the FontColorLoss
         /// Contains the font color when the asset is making losses.
         /// </summary>
-        public string FontColorLoss { get; set; }        
+        public string FontColorLoss { get; set; }
+
+        public bool Hidden { get; set; }
     }
 }

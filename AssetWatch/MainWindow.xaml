@@ -13,6 +13,7 @@
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="menuItem_AddAssetTile" Header="Asset hinzufügen" Click="menuItem_AddAssetTile_Click" />
+                    <MenuItem x:Name="menuItem_HideAssetTiles" Header="Assets ausblenden" IsCheckable="True" Checked="menuItem_HideAssetTiles_Checked" Unchecked="menuItem_HideAssetTiles_Unchecked" />
                     <MenuItem x:Name="menuItem_Settings" Header="Einstellungen" Click="menuItem_Settings_Click" />
                     <MenuItem x:Name="menuItem_Exit" Header="Beenden" Click="menuItem_Exit_Click" />
                 </ContextMenu>

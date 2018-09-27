@@ -37,13 +37,13 @@ namespace AssetWatch
 
             this.LoadedApis.ForEach(api =>
             {
-                // TODO: load API data from disk and assign it to this API
                 api.OnAvailableAssetsReceived += this.Api_OnAvailableAssetsReceived;
                 api.OnSingleAssetUpdated += this.Api_OnSingleAssetUpdated;
                 api.OnApiError += this.Api_OnApiError;
+                api.OnAppDataChanged += this.Api_OnAppDataChanged;
                 this.FireOnApiLoaded(api);
             });
-        }
+        }        
 
         /// <summary>
         /// Subscribes an asset tile to the api handler and it's asset to the right API.
@@ -95,8 +95,6 @@ namespace AssetWatch
             {
                 this.ReadyApis.Remove(api);
             }
-
-            this.FireOnApiDisabled(api);
 
             api.Disable();
         }
@@ -156,6 +154,11 @@ namespace AssetWatch
             toNotify.ForEach(a => a.UpdateAsset(this, updatedAsset));
         }
 
+        private void Api_OnAppDataChanged(object sender, EventArgs e)
+        {
+            this.FireOnAppDataChanged();
+        }
+
         /// <summary>
         /// Fires the OnApiReady event.
         /// </summary>
@@ -183,14 +186,10 @@ namespace AssetWatch
         {
             OnApiError?.Invoke(sender, e);
         }
-
-        /// <summary>
-        /// Fires the OnApiDisabled event.
-        /// </summary>
-        /// <param name="disabledApi">The disabledApi<see cref="IApi"/></param>
-        private void FireOnApiDisabled(IApi disabledApi)
+        
+        private void FireOnAppDataChanged()
         {
-            this.OnApiDisabled?.Invoke(this, disabledApi);
+            this.OnAppDataChanged?.Invoke(this, null);
         }
 
         public List<IApi> LoadedApis { get; private set; }
@@ -215,10 +214,6 @@ namespace AssetWatch
         /// </summary>
         public event EventHandler<OnApiErrorEventArgs> OnApiError;
 
-        /// <summary>
-        /// Is fired after an API was disabled.
-        /// The event args contain the disabled API.
-        /// </summary>
-        public event EventHandler<IApi> OnApiDisabled;
+        public event EventHandler OnAppDataChanged;
     }
 }

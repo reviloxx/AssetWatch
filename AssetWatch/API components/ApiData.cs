@@ -24,26 +24,28 @@ namespace AssetWatch
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of API calls which are left today.
-        /// Negative value for infinite calls.
+        /// Gets or sets the time when the current average call count period started.
+        /// Gets reset every 30 days.
         /// </summary>
-        public int CallsLeft24h { get; set; }
+        public DateTime CallCountStartTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of API calls which are left this month.
-        /// Negative value for infinite calls.
+        /// Gets or sets the count of the calls in the current period.
+        /// Gets reset every 30 days.
         /// </summary>
-        public int CallsLeft1mo { get; set; }
+        public int CallCount { get; set; }
 
         /// <summary>
-        /// Gets or sets the time when the calls left 24h counter was started.
+        /// Gets the average daily call count for the current month.
         /// </summary>
-        public DateTime CallCount24hStartTime { get; set; }
-
-        /// <summary>
-        /// Gets or sets the time when the calls left 1mo counter was started.
-        /// </summary>
-        public DateTime CallCount1moStartTime { get; set; }
+        public int CallCountDailyAverage1m
+        {
+            get
+            {
+                int daysCount = (this.CallCountStartTime - DateTime.Now).Days + 1;
+                return this.CallCount / daysCount;
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the API is enabled.
