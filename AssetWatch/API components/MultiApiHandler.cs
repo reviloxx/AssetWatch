@@ -14,12 +14,15 @@ namespace AssetWatch
         /// </summary>
         private List<AssetTile> subscribedAssetTiles;
 
+        private List<PortfolioTile> subscribedPortfolioTiles;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
         /// </summary>
         public MultiApiHandler()
         {
             this.subscribedAssetTiles = new List<AssetTile>();
+            this.subscribedPortfolioTiles = new List<PortfolioTile>();
             this.ReadyApis = new Dictionary<IApi, List<Asset>>();
         }        
 
@@ -64,6 +67,16 @@ namespace AssetWatch
         public void UnsubscribeAssetTile(AssetTile assetTile)
         {
             this.subscribedAssetTiles.Remove(assetTile);
+        }
+
+        public void SubscribePortfolioTile(PortfolioTile portfolioTile)
+        {
+            this.subscribedPortfolioTiles.Add(portfolioTile);
+        }
+
+        public void UnsubscribePortfolioTile(PortfolioTile portfolioTile)
+        {
+            this.subscribedPortfolioTiles.Remove(portfolioTile);
         }
 
         /// <summary>
@@ -124,8 +137,6 @@ namespace AssetWatch
             // check which API sent it's available assets and put them in the dictionary
             IApi api = (IApi)sender;            
             this.ReadyApis.Add(api, availableAssets);
-
-            this.FireOnApiReady(new OnApiReadyEventArgs { Api = api, Assets = availableAssets });
         }
 
         /// <summary>
@@ -151,22 +162,15 @@ namespace AssetWatch
                                                                                 at.AssetTileData.Asset.AssetId == updatedAsset.AssetId &&
                                                                                 at.AssetTileData.Asset.ConvertCurrency == updatedAsset.ConvertCurrency);
 
-            toNotify.ForEach(a => a.UpdateAsset(this, updatedAsset));
+            toNotify.ForEach(a => a.Update(this, updatedAsset));
+
+            this.subscribedPortfolioTiles.ForEach(port => port.Update(updatedAsset));
         }
 
         private void Api_OnAppDataChanged(object sender, EventArgs e)
         {
             this.FireOnAppDataChanged();
-        }
-
-        /// <summary>
-        /// Fires the OnApiReady event.
-        /// </summary>
-        /// <param name="eventArgs">The eventArgs<see cref="OnApiReadyEventArgs"/> contain the API which is ready and it's available assets.</param>
-        private void FireOnApiReady(OnApiReadyEventArgs eventArgs)
-        {
-            OnApiReady?.Invoke(this, eventArgs);
-        }
+        }        
 
         /// <summary>
         /// Fires the OnApiLoaded event.
@@ -195,12 +199,6 @@ namespace AssetWatch
         public List<IApi> LoadedApis { get; private set; }
 
         public Dictionary<IApi, List<Asset>> ReadyApis { get; }
-
-        /// <summary>
-        /// Is fired when a handled API is ready to use.
-        /// The event args contain the API which is ready and it's available assets.
-        /// </summary>
-        public event EventHandler<OnApiReadyEventArgs> OnApiReady;
 
         /// <summary>
         /// Is fired after an assembly which contains an IApi object was loaded.

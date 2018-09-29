@@ -12,6 +12,8 @@ namespace AssetWatch
         /// </summary>
         void OpenNewAssetTile();
 
+        void OpenNewPortfolioTile();
+
         /// <summary>
         /// The SetGlobalTileStyle
         /// </summary>

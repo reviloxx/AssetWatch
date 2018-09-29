@@ -1,0 +1,28 @@
+﻿<Window x:Class="AssetWatch.InfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AssetWatch"
+        mc:Ignorable="d"
+        Title="Asset Info" Height="269.231" Width="291.453" ResizeMode="NoResize">
+    <Grid>
+        <TextBlock x:Name="textblock_Symbol" Margin="153,31,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_Rank" Margin="153,52,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_Price" Margin="153,73,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_MarketCap" Margin="153,115,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_AvailableSupply" Margin="153,136,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_TotalSupply" Margin="153,157,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_PercentChange24h" Margin="153,178,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,31,0,0" TextWrapping="Wrap" Text="Symbol:" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="USD Pri"/><Run Text="c"/><Run Text="e:"/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="10,105,0,0" TextWrapping="Wrap" Text="USD Market Cap:" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,136,0,0" TextWrapping="Wrap" Text="Circulating Supply:" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,157,0,0" TextWrapping="Wrap" Text="Max Supply:" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,177,0,0" TextWrapping="Wrap" Text="24h Change:" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,52,0,0" TextWrapping="Wrap" Text="Rank:" VerticalAlignment="Top"/>
+        <TextBlock Margin="0,0,10.8,10" TextWrapping="Wrap" Height="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="181">
+            <Hyperlink x:Name="hyperlink_Asset" Click="hyperlink_Asset_Click" RequestNavigate="hyperlink_Asset_RequestNavigate"></Hyperlink>
+        </TextBlock>
+    </Grid>
+</Window>

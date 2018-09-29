@@ -24,6 +24,8 @@ namespace AssetWatch
         /// </summary>
         private List<AssetTile> handledAssetTiles;
 
+        private List<PortfolioTile> handledPortfolioTiles;
+
         /// <summary>
         /// Defines the assetTilesToSubscribe.
         /// </summary>
@@ -43,14 +45,26 @@ namespace AssetWatch
         {
             this.apiHandler = apiHandler;
             this.handledAssetTiles = new List<AssetTile>();
+            this.handledPortfolioTiles = new List<PortfolioTile>();
             this.assetTilesToSubscribe = new List<AssetTile>();
             this.appData = appData;
 
             this.OpenLoadedAssetTiles();
+            this.OpenLoadedPortfolioTiles();
 
             apiHandler.OnApiLoaded += this.ApiHandler_OnApiLoaded;
             apiHandler.OnApiError += this.ApiHandler_OnApiError;
             apiHandler.LoadApis(apiLoader);
+        }
+
+        /// <summary>
+        /// The RefreshTileStyles is called after the global tile style has changed.
+        /// Calls the RefreshTileStyle method of all tiles.
+        /// </summary>
+        public void RefreshTileStyles()
+        {
+            this.handledAssetTiles.ForEach(ass => ass.RefreshTileStyle());
+            this.handledPortfolioTiles.ForEach(port => port.RefreshTileStyle());
         }
 
         /// <summary>
@@ -59,16 +73,28 @@ namespace AssetWatch
         /// </summary>
         public void OpenNewAssetTile()
         {
-            AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, new AssetTileData(), this.appData.TileHandlerData.GlobalTileStyle);
+            AssetTile asstile = new AssetTile(new AssetTileData(), this.appData, this.apiHandler.ReadyApis);
             asstile.OnAssetTileClosed += this.Asstile_Closed;
             asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
             asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
-            asstile.OnAppDataChanged += this.Asstile_OnAppDataChanged;
+            asstile.OnAppDataChanged += this.Tile_OnAppDataChanged;
             this.handledAssetTiles.Add(asstile);
             this.appData.AssetTileDataSet.Add(asstile.AssetTileData);
             this.FireOnAppDataChanged();
             asstile.Show();
         }        
+
+        public void OpenNewPortfolioTile()
+        {
+            // TODO: Baustelle
+            PortfolioTile portfoliotile = new PortfolioTile(new PortfolioTileData(), this.appData);
+            portfoliotile.OnAppDataChanged += this.Tile_OnAppDataChanged;
+            this.handledPortfolioTiles.Add(portfoliotile);
+            this.appData.PortfolioTileDataSet.Add(portfoliotile.PortfolioTileData);
+            this.apiHandler.SubscribePortfolioTile(portfoliotile);
+            this.FireOnAppDataChanged();
+            portfoliotile.Show();
+        }
 
         /// <summary>
         /// The OpenLoadedAssetTiles opens all asset tiles which were stored in the app data,
@@ -79,9 +105,9 @@ namespace AssetWatch
         {
             this.appData.AssetTileDataSet.ForEach(assetTileData =>
             {
-                AssetTile asstile = new AssetTile(this.apiHandler.ReadyApis, assetTileData, this.appData.TileHandlerData.GlobalTileStyle);
+                AssetTile asstile = new AssetTile(assetTileData, this.appData, this.apiHandler.ReadyApis);
                 asstile.OnAssetTileClosed += this.Asstile_Closed;
-                asstile.OnAppDataChanged += this.Asstile_OnAppDataChanged;
+                asstile.OnAppDataChanged += this.Tile_OnAppDataChanged;
                 asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
                 asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
                 this.handledAssetTiles.Add(asstile);
@@ -96,17 +122,21 @@ namespace AssetWatch
                     asstile.Show();
                 }                
             });
-        }
+        }        
 
-        /// <summary>
-        /// The RefreshTileStyles is called after the global tile style has changed.
-        /// Calls the RefreshTileStyle method of all tiles.
-        /// </summary>
-        public void RefreshTileStyles()
+        private void OpenLoadedPortfolioTiles()
         {
-            this.handledAssetTiles.ForEach(ass =>
+            this.appData.PortfolioTileDataSet.ForEach(portfoliotiledata =>
             {
-                ass.RefreshTileStyle();
+                PortfolioTile portfoliotile = new PortfolioTile(portfoliotiledata, this.appData);
+                portfoliotile.OnAppDataChanged += this.Tile_OnAppDataChanged;
+                this.handledPortfolioTiles.Add(portfoliotile);
+                this.apiHandler.SubscribePortfolioTile(portfoliotile);
+
+                if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
+                {
+                    portfoliotile.Show();
+                }
             });
         }
 
@@ -126,7 +156,7 @@ namespace AssetWatch
                 ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
 
                 // reset call counter every month
-                if ((apiData.CallCountStartTime - DateTime.Now).Days + 1 > 30)
+                if ((DateTime.Now - apiData.CallCountStartTime).Days + 1 > 30)
                 {
                     apiData.CallCountStartTime = DateTime.Now;
                     apiData.CallCount = 0;
@@ -186,7 +216,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="EventArgs"/></param>
-        private void Asstile_OnAppDataChanged(object sender, EventArgs e)
+        private void Tile_OnAppDataChanged(object sender, EventArgs e)
         {
             this.FireOnAppDataChanged();
         }
@@ -224,6 +254,9 @@ namespace AssetWatch
             this.apiHandler.UnsubscribeAssetTile(closedAssetTile);
             this.handledAssetTiles.Remove(closedAssetTile);
             this.appData.AssetTileDataSet.Remove(closedAssetTile.AssetTileData);
+
+            // remove this asset tile from all portfolio tiles
+            this.appData.PortfolioTileDataSet.ForEach(port => port.AssignedAssetTilesDataSet.Remove(closedAssetTile.AssetTileData));
 
             this.FireOnAppDataChanged();
         }

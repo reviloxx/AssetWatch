@@ -128,5 +128,10 @@ namespace AssetWatch
             fileHandler.SaveAppData(this.appData);
             this.tileHandler.RefreshTileStyles();
         }
+
+        private void menuItem_AddPortfolioTile_Click(object sender, RoutedEventArgs e)
+        {
+            this.tileHandler.OpenNewPortfolioTile();
+        }
     }
 }

@@ -42,7 +42,9 @@ namespace AssetWatch
         {
             get
             {
-                int daysCount = (this.CallCountStartTime - DateTime.Now).Days + 1;
+                int daysCount = Math.Max((DateTime.Now - this.CallCountStartTime).Days + 1, 1);
+                
+
                 return this.CallCount / daysCount;
             }
         }

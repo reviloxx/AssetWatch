@@ -9,12 +9,6 @@ namespace AssetWatch
     public interface IApiHandler
     {
         /// <summary>
-        /// Is fired when a handled API is ready to use.
-        /// The event args contain the API which is ready and it's available assets.
-        /// </summary>
-        event EventHandler<OnApiReadyEventArgs> OnApiReady;// TODO: maybe unneccessary
-
-        /// <summary>
         /// Is fired after an assembly which contains an IApi object was loaded.
         /// The event args contain the loaded API.
         /// </summary>
@@ -72,6 +66,10 @@ namespace AssetWatch
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe.</param>
         void UnsubscribeAssetTile(AssetTile assetTile);
+
+        void SubscribePortfolioTile(PortfolioTile portfolioTile);
+
+        void UnsubscribePortfolioTile(PortfolioTile portfolioTile);
 
         /// <summary>
         /// Gets a list of APIs which were loaded from assemblies.

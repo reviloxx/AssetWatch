@@ -50,13 +50,13 @@
                             <GridViewColumn Header="API Name" DisplayMemberBinding="{Binding Path=ApiInfo.ApiName}" Width="150"/>
                             <!--<GridViewColumn Header="Client Version" DisplayMemberBinding="{Binding Path=ApiInfo.ApiClientVersion}" Width="85"/>-->
                             <GridViewColumn Header="Markt" DisplayMemberBinding="{Binding Path=ApiInfo.Market}" Width="110"/>
-                            <GridViewColumn Header="Aufrufe / Tag" DisplayMemberBinding="{Binding Path=ApiData.CallCountAverage1d}" Width="80"/>
+                            <GridViewColumn Header="Aufrufe / Tag" DisplayMemberBinding="{Binding Path=ApiData.CallCountDailyAverage1m}" Width="80"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
                 <Button x:Name="button_ApiSettings" Click="button_ApiSettings_Click" IsEnabled="False" 
                 Margin="225,305,0,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Left" Width="30">
-                    <Image Source="Icons\settings_black.png" Width="15"/>
+                    <Image Source="..\..\Icons\settings_black.png" Width="15"/>
                 </Button>
                 <Button x:Name="button_EnableApi" Content="Aktivieren" FontWeight="DemiBold" Click="button_EnableApi_Click" IsEnabled="False" 
                 Margin="37,305,0,0" Background="#9ff799" HorizontalAlignment="Left" Width="80" Height="20" VerticalAlignment="Top"/>

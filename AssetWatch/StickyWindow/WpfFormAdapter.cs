@@ -128,8 +128,6 @@ namespace StickyWindowLibrary
 
         private Point getWindowOrigin()
         {
-            // TODO: alla prima invocazione far andare in cache per migliorare perf ed evitare errori di approx
-            //return new Point(-4, -28);
             if(!_origin.HasValue)
             {
                 var currentWinPointConverted = fromRelativeToDevice(-_window.Left, -_window.Top, _window);

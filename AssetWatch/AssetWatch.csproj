@@ -127,15 +127,22 @@
     <Compile Include="API components\EventArgs\OnApiReadyEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiLoader.cs" />
     <Compile Include="API components\ApiData.cs" />
-    <Compile Include="APISettingsWindow.xaml.cs">
+    <Compile Include="Tile components\TileHelpers.cs" />
+    <Compile Include="Windows\APISettingsWindow.xaml.cs">
       <DependentUpon>APISettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\PortfolioTileSettingsWindow.xaml.cs">
+      <DependentUpon>PortfolioTileSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\InfoWindow.xaml.cs">
+      <DependentUpon>InfoWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="System IO\AppData.cs" />
     <Compile Include="System IO\IFileHandler.cs" />
     <Compile Include="System IO\StandardFileHandler.cs" />
     <Compile Include="Tile components\MultiTileHandler.cs" />
     <Compile Include="Tile components\Interfaces\ITileHandler.cs" />
-    <Compile Include="MainSettingsWindow.xaml.cs">
+    <Compile Include="Windows\MainSettingsWindow.xaml.cs">
       <DependentUpon>MainSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="StickyWindow\IFormAdapter.cs" />
@@ -143,7 +150,7 @@
     <Compile Include="StickyWindow\WinFormAdapter.cs" />
     <Compile Include="StickyWindow\WpfFormAdapter.cs" />
     <Compile Include="Tile components\AssetTileData.cs" />
-    <Compile Include="Tile components\Windows\AssetTileSettingsWindow.xaml.cs">
+    <Compile Include="Windows\AssetTileSettingsWindow.xaml.cs">
       <DependentUpon>AssetTileSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tile components\PortfolioTileData.cs" />
@@ -154,15 +161,23 @@
       <DependentUpon>PortfolioTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tile components\TileStyle.cs" />
-    <Compile Include="Tile components\Windows\CalculatorWindow.xaml.cs">
+    <Compile Include="Windows\CalculatorWindow.xaml.cs">
       <DependentUpon>CalculatorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tile components\TileHandlerData.cs" />
-    <Page Include="APISettingsWindow.xaml">
+    <Page Include="Windows\APISettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainSettingsWindow.xaml">
+    <Page Include="Windows\PortfolioTileSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\InfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,7 +202,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Tile components\Windows\AssetTileSettingsWindow.xaml">
+    <Page Include="Windows\AssetTileSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -195,7 +210,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tile components\Windows\CalculatorWindow.xaml">
+    <Page Include="Windows\CalculatorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

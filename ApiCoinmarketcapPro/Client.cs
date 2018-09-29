@@ -313,12 +313,16 @@ namespace ApiCoinmarketcapPro
                 {
                     var assetUpdate = a.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
                     ass.PriceConvert = assetUpdate.Quote[ass.ConvertCurrency].Price.ToString();
+                    //ass.PriceUsd = assetUpdate.Quote["USD"].Price.ToString();
                     ass.LastUpdated = DateTime.Now;
                     ass.MarketCapConvert = assetUpdate.Quote[ass.ConvertCurrency].MarketCap.ToString();
+                    //ass.MarketCapUsd = assetUpdate.Quote["USD"].MarketCap.ToString();
                     ass.PercentChange1h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h.ToString();
                     ass.PercentChange24h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h.ToString();
                     ass.PercentChange7d = assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d.ToString();
                     ass.Rank = assetUpdate.CmcRank.ToString();
+                    ass.SupplyAvailable = assetUpdate.CirculatingSupply.ToString();
+                    ass.SupplyTotal = assetUpdate.TotalSupply.ToString();
                     this.FireOnSingleAssetUpdated(ass);
                 });
             }
@@ -331,7 +335,6 @@ namespace ApiCoinmarketcapPro
                 };
 
                 this.FireOnApiError(eventArgs);
-                this.ApiData.IsEnabled = false;
                 return;
             }
 

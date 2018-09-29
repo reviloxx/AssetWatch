@@ -1,6 +1,7 @@
 ﻿using Blue.Windows;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -41,28 +42,36 @@ namespace AssetWatch
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetTile"/> class.
         /// </summary>
+        /// <param name="assetTileData">The assetTileData<see cref="AssetTileData"/></param>
+        /// <param name="appData">The appData<see cref="AppData"/></param>
         /// <param name="readyApis">The readyApis<see cref="Dictionary{IApi, List{Asset}}"/></param>
-        /// <param name="globalTileStyle">The globalTileStyle<see cref="TileStyle"/></param>
-        public AssetTile(Dictionary<IApi, List<Asset>> readyApis, AssetTileData assetTileData, TileStyle globalTileStyle)
+        public AssetTile(AssetTileData assetTileData, AppData appData, Dictionary<IApi, List<Asset>> readyApis)
         {
             this.readyApis = readyApis;
-            this.globalTileStyle = globalTileStyle;
+            this.globalTileStyle = appData.TileHandlerData.GlobalTileStyle;
             this.AssetTileData = assetTileData;
             this.Loaded += this.walletWindow_Loaded;
             this.InitializeComponent();
             this.Left = this.AssetTileData.TilePosition.FromLeft;
             this.Top = this.AssetTileData.TilePosition.FromTop;
             this.RefreshTileStyle();
-        }        
+        }
 
         /// <summary>
         /// The UpdateAsset
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        public void UpdateAsset(object sender, Asset asset)
+        public void Update(object sender, Asset asset)
         {
-            this.AssetTileData.Asset = asset;
+            this.AssetTileData.Asset.PriceConvert = asset.PriceConvert;
+            this.AssetTileData.Asset.AssetId = asset.AssetId;
+            this.AssetTileData.Asset.Symbol = asset.Symbol;
+            this.AssetTileData.Asset.Name = asset.Name;
+            this.AssetTileData.Asset.Rank = asset.Rank;
+            this.AssetTileData.Asset.SupplyAvailable = asset.SupplyAvailable;
+            this.AssetTileData.Asset.SupplyTotal = asset.SupplyTotal;
+            this.AssetTileData.Asset.PercentChange24h = asset.PercentChange24h;
             this.CalculateProfit();
 
             this.Dispatcher.Invoke(() =>
@@ -70,55 +79,42 @@ namespace AssetWatch
                 this.RefreshTileStyle();
                 this.RefreshAssetTextblocks();
                 this.RefreshTileDataTextblocks();
-                this.button_Calc.Visibility = Visibility.Visible;                
+                this.button_Calc.Visibility = Visibility.Visible;
+                this.button_Info.Visibility = Visibility.Visible;
             });
         }
 
+        /// <summary>
+        /// The RefreshAssetTextblocks
+        /// </summary>
         private void RefreshAssetTextblocks()
         {
             this.label_AssetPrice.Text = this.AssetTileData.Asset.ConvertCurrency + "/" + this.AssetTileData.Asset.Symbol;
-            this.textBlock_AssetPrice.Text = this.ConvertToValueString(double.Parse(this.AssetTileData.Asset.PriceConvert));
+            this.textBlock_AssetPrice.Text = TileHelpers.ConvertToValueString(double.Parse(this.AssetTileData.Asset.PriceConvert));
             this.label_Worth.Text = this.AssetTileData.Asset.ConvertCurrency;
             this.textBlock_AssetSymbol.Text = this.AssetTileData.Asset.Symbol;
             this.textBlock_last_Refresh.Text = "@" + this.AssetTileData.Asset.LastUpdated.ToString("HH:mm");
         }
 
+        /// <summary>
+        /// The RefreshTileDataTextblocks
+        /// </summary>
         private void RefreshTileDataTextblocks()
         {
             this.label_WalletName.Text = this.AssetTileData.AssetTileName;
-            this.textBlock_Worth.Text = this.ConvertToValueString(this.currentWorth);
-            this.textBlock_AssetAmount.Text = this.ConvertToValueString(this.AssetTileData.HoldingsCount);
+            this.textBlock_Worth.Text = TileHelpers.ConvertToValueString(this.currentWorth);
+            this.textBlock_AssetAmount.Text = TileHelpers.ConvertToValueString(this.AssetTileData.HoldingsCount);
             char sign = this.profitLoss > 0 ? '+' : '-';
-            string textBoxWinText = sign + this.ConvertToValueString(this.profitLoss) + " " + this.AssetTileData.Asset.ConvertCurrency;
+            string textBoxWinText = sign + TileHelpers.ConvertToValueString(this.profitLoss) + " " + this.AssetTileData.Asset.ConvertCurrency;
             this.textBlock_Win.Text = textBoxWinText;
-        }
-
-        private string ConvertToValueString(double value)
-        {
-            value = Math.Abs(value);
-
-            if (value < 10)
-            {
-                return string.Format("{0:F4}", value);
-            }
-            if (value < 1)
-            {
-                return string.Format("{0:F5}", value);
-            }
-            if (value < 0.1)
-            {
-                return string.Format("{0:F6}", value);
-            }
-
-            return string.Format("{0:F2}", value);
         }
 
         /// <summary>
         /// The RefreshTileStyle
         /// </summary>
         public void RefreshTileStyle()
-        {           
-            if (globalTileStyle.Hidden)
+        {
+            if (this.globalTileStyle.Hidden)
             {
                 this.Visibility = Visibility.Hidden;
                 return;
@@ -251,6 +247,9 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void button_Info_Click(object sender, RoutedEventArgs e)
         {
+            IApi api = this.readyApis.First(r => r.Key.ApiInfo.ApiName == this.AssetTileData.ApiName).Key;
+            InfoWindow infWin = new InfoWindow(api.ApiInfo, this.AssetTileData.Asset);
+            infWin.Show();
         }
 
         /// <summary>
@@ -301,13 +300,14 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void button_Close_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Asset löschen?", this.AssetTileData.AssetTileName, MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            MessageBoxResult result = MessageBox.Show("Asset löschen?", this.AssetTileData.AssetTileName == null ? string.Empty : this.AssetTileData.AssetTileName,
+                MessageBoxButton.OKCancel, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.OK)
             {
                 this.FireOnAssetTileCLosed();
                 this.Close();
-            }                
+            }
         }
 
         /// <summary>
@@ -349,21 +349,31 @@ namespace AssetWatch
             this.OnAssetSelected?.Invoke(this, null);
         }
 
+        /// <summary>
+        /// The FireOnAppDataChanged
+        /// </summary>
         private void FireOnAppDataChanged()
         {
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
+        /// <summary>
+        /// The FireOnAssetTileCLosed
+        /// </summary>
         private void FireOnAssetTileCLosed()
         {
             this.OnAssetTileClosed?.Invoke(this, null);
         }
 
         /// <summary>
+        /// Gets the AssetTileData
         /// Gets or sets the AssetTileData
         /// </summary>
         public AssetTileData AssetTileData { get; private set; }
 
+        /// <summary>
+        /// Defines the OnAppDataChanged
+        /// </summary>
         public event EventHandler OnAppDataChanged;
 
         /// <summary>
@@ -376,6 +386,9 @@ namespace AssetWatch
         /// </summary>
         public event EventHandler OnAssetUnselected;
 
+        /// <summary>
+        /// Defines the OnAssetTileClosed
+        /// </summary>
         public event EventHandler OnAssetTileClosed;
     }
 }
