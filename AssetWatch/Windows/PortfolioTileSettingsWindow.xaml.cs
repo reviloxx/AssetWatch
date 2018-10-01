@@ -63,18 +63,9 @@ namespace AssetWatch
             if (listView_availableAssets.SelectedItems == null)
             {
                 return;
-            }
-            
+            }            
 
             List<AssetTileData> selectedAssetTileDataSet = listView_availableAssets.SelectedItems.Cast<AssetTileData>().ToList();
-
-            //selectedAssetTileDatas.ForEach(sel =>
-            //{
-            //    this.portfolioTileData.AssignedAssetTileDataSet
-            //    .Add(this.appData.AssetTileDataSet.First(asst => asst.AssetTileName == sel.AssetTileName &&
-            //                                                        asst.Asset.AssetId == sel.Asset.AssetId &&
-            //                                                        asst.HoldingsCount == sel.HoldingsCount));
-            //});
 
             this.portfolioTileData.AssignedAssetTilesDataSet = selectedAssetTileDataSet;
             this.portfolioTileData.PortfolioTileName = textBox_PortfolioName.Text;

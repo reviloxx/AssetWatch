@@ -140,6 +140,14 @@ namespace AssetWatch
             });
         }
 
+        public void LockTilePositions(bool locked)
+        {
+            this.handledAssetTiles.ForEach(ass => ass.LockPosition(locked));
+            this.handledPortfolioTiles.ForEach(port => port.LockPosition(locked));
+            this.appData.TileHandlerData.PositionsLocked = locked;
+            this.FireOnAppDataChanged();
+        }
+
         /// <summary>
         /// The ApiHandler_OnApiLoaded applies a loaded API data to the loaded API, if a matching API data exists.
         /// Else it adds a new matching API data to the app data.

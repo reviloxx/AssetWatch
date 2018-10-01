@@ -19,6 +19,8 @@ namespace AssetWatch
         /// </summary>
         private StickyWindow stickyWindow;
 
+        private bool positionLocked;
+
         /// <summary>
         /// Defines the currentWorth
         /// </summary>
@@ -47,6 +49,7 @@ namespace AssetWatch
         /// <param name="readyApis">The readyApis<see cref="Dictionary{IApi, List{Asset}}"/></param>
         public AssetTile(AssetTileData assetTileData, AppData appData, Dictionary<IApi, List<Asset>> readyApis)
         {
+            this.positionLocked = false;
             this.readyApis = readyApis;
             this.globalTileStyle = appData.TileHandlerData.GlobalTileStyle;
             this.AssetTileData = assetTileData;
@@ -62,16 +65,9 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        public void Update(object sender, Asset asset)
+        public void Update(Asset asset)
         {
-            this.AssetTileData.Asset.PriceConvert = asset.PriceConvert;
-            this.AssetTileData.Asset.AssetId = asset.AssetId;
-            this.AssetTileData.Asset.Symbol = asset.Symbol;
-            this.AssetTileData.Asset.Name = asset.Name;
-            this.AssetTileData.Asset.Rank = asset.Rank;
-            this.AssetTileData.Asset.SupplyAvailable = asset.SupplyAvailable;
-            this.AssetTileData.Asset.SupplyTotal = asset.SupplyTotal;
-            this.AssetTileData.Asset.PercentChange24h = asset.PercentChange24h;
+            this.AssetTileData.Asset = asset;
             this.CalculateProfit();
 
             this.Dispatcher.Invoke(() =>
@@ -90,7 +86,7 @@ namespace AssetWatch
         private void RefreshAssetTextblocks()
         {
             this.label_AssetPrice.Text = this.AssetTileData.Asset.ConvertCurrency + "/" + this.AssetTileData.Asset.Symbol;
-            this.textBlock_AssetPrice.Text = TileHelpers.ConvertToValueString(double.Parse(this.AssetTileData.Asset.PriceConvert));
+            this.textBlock_AssetPrice.Text = TileHelpers.FormatValueString(double.Parse(this.AssetTileData.Asset.PriceConvert), false);
             this.label_Worth.Text = this.AssetTileData.Asset.ConvertCurrency;
             this.textBlock_AssetSymbol.Text = this.AssetTileData.Asset.Symbol;
             this.textBlock_last_Refresh.Text = "@" + this.AssetTileData.Asset.LastUpdated.ToString("HH:mm");
@@ -102,10 +98,9 @@ namespace AssetWatch
         private void RefreshTileDataTextblocks()
         {
             this.label_WalletName.Text = this.AssetTileData.AssetTileName;
-            this.textBlock_Worth.Text = TileHelpers.ConvertToValueString(this.currentWorth);
-            this.textBlock_AssetAmount.Text = TileHelpers.ConvertToValueString(this.AssetTileData.HoldingsCount);
-            char sign = this.profitLoss > 0 ? '+' : '-';
-            string textBoxWinText = sign + TileHelpers.ConvertToValueString(this.profitLoss) + " " + this.AssetTileData.Asset.ConvertCurrency;
+            this.textBlock_Worth.Text = TileHelpers.FormatValueString(this.currentWorth, false);
+            this.textBlock_AssetAmount.Text = TileHelpers.FormatValueString(this.AssetTileData.HoldingsCount, false);
+            string textBoxWinText = TileHelpers.FormatValueString(this.profitLoss, true) + " " + this.AssetTileData.Asset.ConvertCurrency;
             this.textBlock_Win.Text = textBoxWinText;
         }
 
@@ -148,6 +143,16 @@ namespace AssetWatch
                     this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.FontColorLoss));
                 }
             }
+        }
+
+        public void LockPosition(bool locked)
+        {
+            if (this.stickyWindow != null)
+            {
+                this.stickyWindow.IsEnabled = !locked;                
+            }
+            this.positionLocked = locked;
+
         }
 
         /// <summary>
@@ -219,7 +224,7 @@ namespace AssetWatch
             this.stickyWindow.StickToOther = true;
             this.stickyWindow.StickOnResize = true;
             this.stickyWindow.StickOnMove = true;
-            this.stickyWindow.IsEnabled = true;
+            this.stickyWindow.IsEnabled = !this.positionLocked;
         }
 
         /// <summary>

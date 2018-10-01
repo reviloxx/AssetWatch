@@ -162,7 +162,7 @@ namespace AssetWatch
                                                                                 at.AssetTileData.Asset.AssetId == updatedAsset.AssetId &&
                                                                                 at.AssetTileData.Asset.ConvertCurrency == updatedAsset.ConvertCurrency);
 
-            toNotify.ForEach(a => a.Update(this, updatedAsset));
+            toNotify.ForEach(a => a.Update(updatedAsset));
 
             this.subscribedPortfolioTiles.ForEach(port => port.Update(updatedAsset));
         }

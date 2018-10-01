@@ -18,6 +18,8 @@ namespace AssetWatch
         /// </summary>
         private StickyWindow stickyWindow;
 
+        private bool positionLocked;
+
         /// <summary>
         /// Defines the availableAssets
         /// </summary>
@@ -36,7 +38,7 @@ namespace AssetWatch
         /// <summary>
         /// Defines the percentage1W
         /// </summary>
-        private double percentage1W;
+        private double percentage1W;        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PortfolioTile"/> class.
@@ -71,49 +73,6 @@ namespace AssetWatch
             }
 
             this.UpdateTextBlocks(updatedAsset.LastUpdated);
-        }
-
-        /// <summary>
-        /// The UpdateTextBlocks
-        /// </summary>
-        private void UpdateTextBlocks(DateTime? updatedTime)
-        {
-            List<AssetTileData> assetTilesDataSet = this.PortfolioTileData.AssignedAssetTilesDataSet;
-
-            double investTotal = PortfolioTileHelpers.CalculateInvest(assetTilesDataSet);
-            double worthTotal = PortfolioTileHelpers.CalculateWorth(assetTilesDataSet);
-            double winTotal = worthTotal - investTotal;
-            this.percentage24h = PortfolioTileHelpers.Calculate24hPercentage(assetTilesDataSet, worthTotal);
-            double win24h = PortfolioTileHelpers.CalculateWinLoss(this.percentage24h, worthTotal);
-            this.percentage1W = PortfolioTileHelpers.Calculate1WPercentage(assetTilesDataSet, worthTotal);
-            double win1W = PortfolioTileHelpers.CalculateWinLoss(this.percentage1W, worthTotal);
-
-            string convertCurrency = string.Empty;
-
-            if (this.PortfolioTileData.AssignedAssetTilesDataSet.Count > 0)
-            {
-                convertCurrency = " " + this.PortfolioTileData.AssignedAssetTilesDataSet[0].Asset.ConvertCurrency;
-            }
-
-            this.Dispatcher.Invoke(() =>
-            {
-                this.textBlock_PortfolioName.Text = this.PortfolioTileData.PortfolioTileName;
-
-                if (updatedTime != null)
-                {
-                    this.textBlock_last_Refresh.Text = "@" + ((DateTime)updatedTime).ToString("HH:mm");
-                }
-                
-                this.textBlock_Invest.Text = TileHelpers.ConvertToValueString(investTotal) + convertCurrency;
-                this.textBlock_Worth.Text = TileHelpers.ConvertToValueString(worthTotal) + convertCurrency;
-                this.textBlock_24hPercentage.Text = TileHelpers.ConvertToValueString(this.percentage24h).TrimEnd('0') + " %";
-                this.textBlock_24hWin.Text = TileHelpers.ConvertToValueString(win24h) + convertCurrency;
-                this.textBlock_1WPercentage.Text = TileHelpers.ConvertToValueString(this.percentage1W).TrimEnd('0') + " %";
-                this.textBlock_1WWin.Text = TileHelpers.ConvertToValueString(win1W) + convertCurrency;
-
-                char sign = winTotal > 0 ? '+' : '-';
-                this.textBlock_ATWin.Text = sign + TileHelpers.ConvertToValueString(winTotal) + convertCurrency;
-            });
         }
 
         /// <summary>
@@ -157,6 +116,59 @@ namespace AssetWatch
             }
         }
 
+        public void LockPosition(bool locked)
+        {
+            if (this.stickyWindow != null)
+            {
+                this.stickyWindow.IsEnabled = !locked;
+            }
+            this.positionLocked = locked;
+        }
+
+        /// <summary>
+        /// The UpdateTextBlocks
+        /// </summary>
+        private void UpdateTextBlocks(DateTime? updatedTime)
+        {
+            List<AssetTileData> assetTilesDataSet = this.PortfolioTileData.AssignedAssetTilesDataSet;
+
+            double investTotal = PortfolioTileHelpers.CalculateInvest(assetTilesDataSet);
+            double worthTotal = PortfolioTileHelpers.CalculateWorth(assetTilesDataSet);
+            double winTotal = worthTotal - investTotal;
+            this.percentage24h = PortfolioTileHelpers.Calculate24hPercentage(assetTilesDataSet, worthTotal);
+            double win24h = PortfolioTileHelpers.CalculateWinLoss(this.percentage24h, worthTotal);
+            this.percentage1W = PortfolioTileHelpers.Calculate1WPercentage(assetTilesDataSet, worthTotal);
+            double win1W = PortfolioTileHelpers.CalculateWinLoss(this.percentage1W, worthTotal);
+
+            string convertCurrency = string.Empty;
+
+            if (this.PortfolioTileData.AssignedAssetTilesDataSet.Count > 0)
+            {
+                convertCurrency = " " + this.PortfolioTileData.AssignedAssetTilesDataSet[0].Asset.ConvertCurrency;
+            }
+
+            this.Dispatcher.Invoke(() =>
+            {
+                this.textBlock_PortfolioName.Text = this.PortfolioTileData.PortfolioTileName;
+
+                if (updatedTime != null)
+                {
+                    this.textBlock_last_Refresh.Text = "@" + ((DateTime)updatedTime).ToString("HH:mm");
+                }
+                
+                this.textBlock_Invest.Text = TileHelpers.FormatValueString(investTotal, false) + convertCurrency;
+                this.textBlock_Worth.Text = TileHelpers.FormatValueString(worthTotal, false) + convertCurrency;
+                
+                this.textBlock_24hPercentage.Text = TileHelpers.FormatValueString(this.percentage24h, true) + " %";
+                this.textBlock_24hWin.Text = TileHelpers.FormatValueString(win24h, true) + convertCurrency;
+                
+                this.textBlock_1WPercentage.Text = TileHelpers.FormatValueString(this.percentage1W, true) + " %";
+                this.textBlock_1WWin.Text = TileHelpers.FormatValueString(win1W, true) + convertCurrency;
+                
+                this.textBlock_ATWin.Text = TileHelpers.FormatValueString(winTotal, true) + convertCurrency;
+            });
+        }   
+                
         /// <summary>
         /// The ChangeFontColor
         /// </summary>

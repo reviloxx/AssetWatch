@@ -19,6 +19,8 @@ namespace AssetWatch
         /// </summary>
         void RefreshTileStyles();
 
+        void LockTilePositions(bool locked);
+
         event EventHandler OnAppDataChanged;
     }
 }

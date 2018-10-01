@@ -14,7 +14,7 @@
             <Grid Background="WhiteSmoke">
                 <Label Content="Farben" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <Rectangle  HorizontalAlignment="Left" Height="175" Margin="10,40,0,0" Stroke="Black" StrokeThickness="0.7" VerticalAlignment="Top" Width="346"/>
-                
+
                 <Label Content="Hintergrund bei Gewinn:" HorizontalAlignment="Left" Margin="22,55,0,0" VerticalAlignment="Top"/>
                 <xctk:ColorPicker Name="clrPcker_BackgroundProfit" ShowTabHeaders="False" ColorMode="ColorCanvas" 
                                   ShowStandardColors="False" ShowAvailableColors="False" SelectedColorChanged="clrPcker_BackgroundProfit_SelectedColorChanged" 
@@ -44,29 +44,29 @@
             x:Name="listView_loadedApis"
             ItemsSource="{Binding Path=LoadedApis}" 
             SelectionChanged="listView_loadedApis_SelectionChanged"
-            SelectionMode="Single" Margin="37,43,279,0" Height="249" VerticalAlignment="Top">
+            SelectionMode="Single" Margin="10,40,0,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Left" Width="387">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="API Name" DisplayMemberBinding="{Binding Path=ApiInfo.ApiName}" Width="150"/>
                             <!--<GridViewColumn Header="Client Version" DisplayMemberBinding="{Binding Path=ApiInfo.ApiClientVersion}" Width="85"/>-->
                             <GridViewColumn Header="Markt" DisplayMemberBinding="{Binding Path=ApiInfo.Market}" Width="110"/>
-                            <GridViewColumn Header="Aufrufe / Tag" DisplayMemberBinding="{Binding Path=ApiData.CallCountDailyAverage1m}" Width="80"/>
+                            <GridViewColumn Header="calls/day average" DisplayMemberBinding="{Binding Path=ApiData.CallCountDailyAverage1m}" Width="110"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
                 <Button x:Name="button_ApiSettings" Click="button_ApiSettings_Click" IsEnabled="False" 
-                Margin="225,305,0,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Left" Width="30">
-                    <Image Source="..\..\Icons\settings_black.png" Width="15"/>
+                Margin="636,269,0,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Left" Width="30">
+                    <Image Source="..\Icons\settings_black.png" Width="15"/>
                 </Button>
                 <Button x:Name="button_EnableApi" Content="Aktivieren" FontWeight="DemiBold" Click="button_EnableApi_Click" IsEnabled="False" 
-                Margin="37,305,0,0" Background="#9ff799" HorizontalAlignment="Left" Width="80" Height="20" VerticalAlignment="Top"/>
+                Margin="402,269,0,0" Background="#9ff799" HorizontalAlignment="Left" Width="80" Height="20" VerticalAlignment="Top"/>
                 <Button x:Name="button_disableApi" Content="Deaktivieren" FontWeight="DemiBold" Click="button_disableApi_Click" IsEnabled="False" HorizontalAlignment="Left" 
-                Margin="130,305,0,0" VerticalAlignment="Top" Width="80" Height="20" Background="#ff8e8e"/>
-                <TextBlock x:Name="textBlock_API_Info" HorizontalAlignment="Right" 
-                   Margin="0,48,42,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="239" Width="211" />
-                <Label Content="Verfügbare APIs" HorizontalAlignment="Left" Margin="37,11,0,0" VerticalAlignment="Top" Width="270" Height="26"/>
-                <Frame BorderBrush="#FF7F9DB9" BorderThickness="0.7" Margin="0,43,37,0" Height="249" VerticalAlignment="Top" HorizontalAlignment="Right" Width="221"/>
-                <Label Content="API Info" HorizontalAlignment="Right" Margin="0,11,25,0" VerticalAlignment="Top" Width="233" Height="26"/>
+                Margin="487,269,0,0" VerticalAlignment="Top" Width="80" Height="20" Background="#ff8e8e" RenderTransformOrigin="0.242,0.331"/>
+                <TextBlock x:Name="textBlock_API_Info" HorizontalAlignment="Left" 
+                   Margin="402,40,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="203" Width="264" />
+                <Label Content="Verfügbare APIs" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="270" Height="26"/>
+                <Frame BorderBrush="#FF7F9DB9" BorderThickness="0.7" Margin="402,40,0,0" Height="203" VerticalAlignment="Top" HorizontalAlignment="Left" Width="264"/>
+                <Label Content="API Info" HorizontalAlignment="Left" Margin="402,10,0,0" VerticalAlignment="Top" Width="224" Height="26"/>
             </Grid>
         </TabItem>
     </TabControl>

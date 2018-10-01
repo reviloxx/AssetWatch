@@ -67,22 +67,75 @@ namespace AssetWatch
 
     public static class TileHelpers
     {
-        public static string ConvertToValueString(double value)
+        public static string FormatValueString(double value, bool forceSign)
         {
+            string sign = value > 0 ? "+" : string.Empty;
+            string valueString;
+
             if (Math.Abs(value) < 10)
             {
-                return string.Format("{0:F4}", value);
+                valueString = string.Format("{0:F4}", value);
             }
-            if (Math.Abs(value) < 1)
+            else if (Math.Abs(value) < 1)
             {
-                return string.Format("{0:F5}", value);
+                valueString = string.Format("{0:F5}", value);
             }
-            if (Math.Abs(value) < 0.1)
+            else if (Math.Abs(value) < 0.1)
             {
-                return string.Format("{0:F6}", value);
+                valueString = string.Format("{0:F6}", value);
+            }
+            else
+            {
+                valueString = string.Format("{0:N}", value);
             }
 
-            return string.Format("{0:F2}", value);
+            if (forceSign)
+            {
+                valueString = valueString.Insert(0, sign);
+            }
+
+            valueString = valueString.TrimEnd('0').TrimEnd(',');
+
+            return valueString;
+        }
+
+        public static string FormatValueString(string value, bool forceSign)
+        {
+            double val;
+
+            if (!double.TryParse(value, out val))
+            {
+                return string.Empty;
+            }
+
+            string sign = val > 0 ? "+" : string.Empty;
+            string valueString;
+
+            if (Math.Abs(val) < 10)
+            {
+                valueString = string.Format("{0:F4}", val);
+            }
+            else if (Math.Abs(val) < 1)
+            {
+                valueString = string.Format("{0:F5}", val);
+            }
+            else if (Math.Abs(val) < 0.1)
+            {
+                valueString = string.Format("{0:F6}", val);
+            }
+            else
+            {
+                valueString = string.Format("{0:N}", val);
+            }
+
+            if (forceSign)
+            {
+                valueString = valueString.Insert(0, sign);
+            }
+
+            valueString = valueString.TrimEnd('0').TrimEnd(',');
+
+            return valueString;
         }
     }
 }
