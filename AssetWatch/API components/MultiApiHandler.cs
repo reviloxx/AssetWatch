@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace AssetWatch
 {
@@ -146,7 +147,14 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="EventArgs"/> contain an error type and an error message.</param>
         private void Api_OnApiError(object sender, OnApiErrorEventArgs e)
         {
-            this.FireOnApiError(sender, e);
+            IApi api = (IApi)sender;
+
+            if (e.ErrorType == ErrorType.Unauthorized || e.ErrorType == ErrorType.BadRequest)
+            {
+                this.DisableApi(api);
+            }
+
+            MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -180,16 +188,6 @@ namespace AssetWatch
         {
             OnApiLoaded?.Invoke(this, loadedApi);
         }
-
-        /// <summary>
-        /// Fires the OnApiError event.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/> contains the API where the error occured.</param>
-        /// <param name="e">The e<see cref="OnApiErrorEventArgs"/> contain an error type and an error message.</param>
-        private void FireOnApiError(object sender, OnApiErrorEventArgs e)
-        {
-            OnApiError?.Invoke(sender, e);
-        }
         
         private void FireOnAppDataChanged()
         {
@@ -205,12 +203,6 @@ namespace AssetWatch
         /// The event args contain the loaded API.
         /// </summary>
         public event EventHandler<IApi> OnApiLoaded;
-
-        /// <summary>
-        /// Is fired when any error occurs within the IApi.
-        /// The event args contain the error type and a error message.
-        /// </summary>
-        public event EventHandler<OnApiErrorEventArgs> OnApiError;
 
         public event EventHandler OnAppDataChanged;
     }

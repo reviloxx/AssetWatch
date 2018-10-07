@@ -12,7 +12,7 @@ namespace AssetWatch
         /// <summary>
         /// Defines the api
         /// </summary>
-        private IApi api;
+        private IApi api;        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="APISettingsWindow"/> class.
@@ -21,7 +21,9 @@ namespace AssetWatch
         public APISettingsWindow(IApi api)
         {
             this.InitializeComponent();
+            this.DataContext = this;
             this.api = api;
+            this.UpdateInterval = this.api.ApiData.UpdateInterval / 60;
             this.textbox_API_key.IsEnabled = api.ApiInfo.ApiKeyRequired && !api.ApiData.IsEnabled;
 
             if (api.ApiInfo.ApiKeyRequired && api.ApiInfo.GetApiKeyUrl != null)
@@ -33,6 +35,7 @@ namespace AssetWatch
             this.textBlock_updateIntervalInfo.Text = api.ApiInfo.UpdateIntervalInfoText;
             this.slider_UpdateInterval.Minimum = api.ApiInfo.MinUpdateInterval / 60;
             this.slider_UpdateInterval.Maximum = api.ApiInfo.MaxUpdateInterval / 60;
+            slider_UpdateInterval.TickFrequency = 5;
 
             // TODO: bind slider value
             this.textbox_API_key.Text = api.ApiData.ApiKey;
@@ -46,7 +49,8 @@ namespace AssetWatch
         private void button_SaveExit_Click(object sender, RoutedEventArgs e)
         {
             this.api.ApiData.ApiKey = this.textbox_API_key.Text;
-            this.api.ApiData.UpdateInterval = (int)this.slider_UpdateInterval.Value * 60;
+            //this.api.ApiData.UpdateInterval = (int)this.slider_UpdateInterval.Value * 60;
+            this.api.ApiData.UpdateInterval = this.UpdateInterval * 60;
             this.Close();
         }
 
@@ -60,5 +64,7 @@ namespace AssetWatch
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
+
+        public int UpdateInterval { get; set; }
     }
 }

@@ -19,6 +19,8 @@ namespace AssetWatch
         /// </summary>
         public int MaxUpdateInterval { get; set; }
 
+        public int UpdateIntervalStepSize { get; set; }
+
         /// <summary>
         /// Gets or sets the UpdateIntervalInfoText.
         /// Contains an info text about the supported update intervals of the API.

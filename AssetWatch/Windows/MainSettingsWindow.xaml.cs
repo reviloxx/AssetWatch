@@ -258,6 +258,11 @@ namespace AssetWatch
         /// Defines the OnGlobalTileStyleChanged event.
         /// </summary>
         public event EventHandler OnGlobalTileStyleChanged;
+
+        private void button_OK_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 
     /// <summary>

@@ -31,6 +31,8 @@
         /// </summary>
         Unauthorized,
 
+        BadRequest,
+
         /// <summary>
         /// Defines the TooManyRequests ErrorType.
         /// </summary>

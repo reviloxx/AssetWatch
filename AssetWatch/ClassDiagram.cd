@@ -3,7 +3,7 @@
   <Class Name="AssetWatch.MultiApiHandler">
     <Position X="0.5" Y="15" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAwAAAAIEAAAAAAYAQwCBwgIGAAAADQAABAAAA=</HashCode>
+      <HashCode>ACAAAAAgAAAAIEAAAAAAYAQwCBwgICAAAADQAABAAAA=</HashCode>
       <FileName>API components\MultiApiHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -40,7 +40,7 @@
   <Class Name="AssetWatch.MainWindow" BaseTypeListCollapsed="true">
     <Position X="9.25" Y="19.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAEAAAIAAAAAAAAAAAEIgEAAACAAAAYBAAAAABgAAA=</HashCode>
+      <HashCode>AAAEAAoIAgAAQAAAAAAEIgEAAACAAAAYBAAAAABAAAA=</HashCode>
       <FileName>MainWindow.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -60,7 +60,7 @@
   <Class Name="AssetWatch.AssetTile">
     <Position X="4.25" Y="10.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ADYAAAABAEAEIEQAAQAAgIGAAAEBRAEhIQAAACBAEAA=</HashCode>
+      <HashCode>ADYAAAABAEAUMEQAAQAAgIGAAAEBRAEhIQAAACBAEAA=</HashCode>
       <FileName>Tile components\AssetTile.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -68,7 +68,7 @@
   <Class Name="AssetWatch.PortfolioTile">
     <Position X="13" Y="10.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACQABAAAACAABkUAAAAAAAiAAAABAAApAAAgACDAAAA=</HashCode>
+      <HashCode>ACQABAAAACAQFkUAAAAAAAiAAAABAAApAAAgACDAAAA=</HashCode>
       <FileName>Tile components\PortfolioTile.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -131,15 +131,15 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.MultiTileHandler">
-    <Position X="6.5" Y="2.75" Width="2.5" />
+    <Position X="6.5" Y="3" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ACAAgAAAAAAAAAAFAAAEAAAiKCAAAAAKgEABAYBAAEA=</HashCode>
+      <HashCode>ACAAgAAAAAAAAAAFAAAEAAAiKCAAAAAKgEABAYBIAEA=</HashCode>
       <FileName>Tile components\MultiTileHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="AssetWatch.TileHandlerData">
-    <Position X="9.25" Y="2.75" Width="1.75" />
+    <Position X="9.25" Y="3" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAABAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tile components\TileHandlerData.cs</FileName>
@@ -170,7 +170,7 @@
   <Class Name="AssetWatch.TileHelpers">
     <Position X="10.25" Y="13.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tile components\TileHelpers.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -184,7 +184,7 @@
   <Interface Name="AssetWatch.IApiHandler">
     <Position X="0.5" Y="10.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAAIAAAAAAAIAAgCBQgIEAAAADAAABAAAA=</HashCode>
+      <HashCode>AAAAAAAgAAAAIAAAAAAAIAAgCBQgIAAAAADAAABAAAA=</HashCode>
       <FileName>API components\Interfaces\IApiHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -198,7 +198,7 @@
   <Interface Name="AssetWatch.ITileHandler">
     <Position X="6.5" Y="0.5" Width="4.5" />
     <TypeIdentifier>
-      <HashCode>AAAAgAAAAAAAAAAEAAAAAAACAAAAAAAAAAAAAABAAAA=</HashCode>
+      <HashCode>AAAAgAAAAAAAAAAEAAAAAAACAAAAAAAAAAAAAABIAAA=</HashCode>
       <FileName>Tile components\Interfaces\ITileHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>

@@ -63,7 +63,16 @@ namespace ApiCoinmarketcapPro
             this.subscribedAssets = new List<Asset>();
             this.subscribedConvertCurrencies = new List<string>();
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
-            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);            
+            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
+            this.ApiData = new ApiData
+            {
+                ApiKey = string.Empty,
+                ApiName = this.ApiInfo.ApiName,
+                CallCountStartTime = DateTime.Now,
+                CallCount = 0,
+                IsEnabled = false,
+                UpdateInterval = 300
+            };
         }
 
         /// <summary>
@@ -222,22 +231,7 @@ namespace ApiCoinmarketcapPro
             }
             catch (Exception e)
             {
-                if (e.Message.Contains("401"))
-                {
-                    this.FireOnApiError(new OnApiErrorEventArgs
-                    {
-                        ErrorMessage = "API Key ungültig!",
-                        ErrorType = ErrorType.Unauthorized
-                    });
-                }
-                else
-                {
-                    this.FireOnApiError(new OnApiErrorEventArgs
-                    {
-                        ErrorMessage = e.Message,
-                        ErrorType = ErrorType.General
-                    });
-                }
+                this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
             }
         }        
 
@@ -301,22 +295,21 @@ namespace ApiCoinmarketcapPro
             try
             {
                 var a = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
-                this.ApiData.CallCount++;
+                this.ApiData.CallCount += this.subscribedConvertCurrencies.Count;
                 this.FireOnAppDataChanged();
 
                 if (a.Status.ErrorCode != 0)
                 {
-                    // TODO: handle API error codes
+                    // do something
+                    throw new Exception();
                 }
 
                 assets.ForEach(ass =>
                 {
                     var assetUpdate = a.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
                     ass.PriceConvert = assetUpdate.Quote[ass.ConvertCurrency].Price.ToString();
-                    //ass.PriceUsd = assetUpdate.Quote["USD"].Price.ToString();
                     ass.LastUpdated = DateTime.Now;
                     ass.MarketCapConvert = assetUpdate.Quote[ass.ConvertCurrency].MarketCap.ToString();
-                    //ass.MarketCapUsd = assetUpdate.Quote["USD"].MarketCap.ToString();
                     ass.PercentChange1h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h.ToString();
                     ass.PercentChange24h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h.ToString();
                     ass.PercentChange7d = assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d.ToString();
@@ -328,17 +321,37 @@ namespace ApiCoinmarketcapPro
             }
             catch (Exception e)
             {
-                OnApiErrorEventArgs eventArgs = new OnApiErrorEventArgs
-                {
-                    ErrorMessage = e.Message,
-                    ErrorType = ErrorType.General
-                };
-
-                this.FireOnApiError(eventArgs);
-                return;
+                this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
             }
 
-        }      
+        }     
+        
+        private OnApiErrorEventArgs BuildOnApiErrorEventArgs(string message)
+        {
+            if (message.Contains("400"))
+            {
+                return new OnApiErrorEventArgs
+                {
+                    ErrorMessage = message,
+                    ErrorType = ErrorType.BadRequest
+                };
+            }
+
+            if (message.Contains("401"))
+            {
+                return new OnApiErrorEventArgs
+                {
+                    ErrorMessage = "API Key ungültig!",
+                    ErrorType = ErrorType.Unauthorized
+                };
+            }
+
+            return new OnApiErrorEventArgs
+            {
+                ErrorMessage = message,
+                ErrorType = ErrorType.General
+            };            
+        }
 
         /// <summary>
         /// The FireOnApiError
@@ -395,6 +408,7 @@ namespace ApiCoinmarketcapPro
                     GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
                     MaxUpdateInterval = 3600,
                     MinUpdateInterval = 300,
+                    UpdateIntervalStepSize = 300,
                     SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
                         "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
                         "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },

@@ -14,11 +14,11 @@ namespace AssetWatch
         /// </summary>
         event EventHandler<IApi> OnApiLoaded;
 
-        /// <summary>
-        /// Is fired when any error occurs within the API.
-        /// The event args contain the error type and a error message.
-        /// </summary>
-        event EventHandler<OnApiErrorEventArgs> OnApiError;
+        ///// <summary>
+        ///// Is fired when any error occurs within the API.
+        ///// The event args contain the error type and a error message.
+        ///// </summary>
+        //event EventHandler<OnApiErrorEventArgs> OnApiError;
 
         event EventHandler OnAppDataChanged;
 

@@ -73,47 +73,51 @@ namespace AssetWatch
             }
 
             this.UpdateTextBlocks(updatedAsset.LastUpdated);
+            this.RefreshTileStyle();
         }
 
         /// <summary>
         /// The RefreshTileStyle
         /// </summary>
         public void RefreshTileStyle()
-        {
-            if (this.appData.TileHandlerData.GlobalTileStyle.Hidden)
+        {          
+            this.Dispatcher.Invoke(() =>
             {
-                this.Visibility = Visibility.Hidden;
-                return;
-            }
-
-            this.Visibility = Visibility.Visible;
-
-            if (this.PortfolioTileData.HasCustomTileStyle)
-            {
-                //if (this.profitLoss > -1)
+                if (this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.BackgroundColorProfit);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.FontColorProfit));
+                    this.Visibility = Visibility.Hidden;
+                    return;
                 }
-                //else
+
+                this.Visibility = Visibility.Visible;
+
+                if (this.PortfolioTileData.HasCustomTileStyle)
                 {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.BackgroundColorLoss);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.FontColorLoss));
-                }
-            }
-            else
-            {
-                if (this.percentage24h >= 0)
-                {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorProfit);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorProfit));
+                    //if (this.profitLoss > -1)
+                    {
+                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.BackgroundColorProfit);
+                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.FontColorProfit));
+                    }
+                    //else
+                    {
+                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.BackgroundColorLoss);
+                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.FontColorLoss));
+                    }
                 }
                 else
                 {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorLoss);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorLoss));
+                    if (this.percentage24h >= 0)
+                    {
+                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorProfit);
+                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorProfit));
+                    }
+                    else
+                    {
+                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorLoss);
+                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorLoss));
+                    }
                 }
-            }
+            });            
         }
 
         public void LockPosition(bool locked)
@@ -128,7 +132,7 @@ namespace AssetWatch
         /// <summary>
         /// The UpdateTextBlocks
         /// </summary>
-        private void UpdateTextBlocks(DateTime? updatedTime)
+        public void UpdateTextBlocks(DateTime? updatedTime)
         {
             List<AssetTileData> assetTilesDataSet = this.PortfolioTileData.AssignedAssetTilesDataSet;
 

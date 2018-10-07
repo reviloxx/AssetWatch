@@ -9,7 +9,7 @@
         Title="MainWindow" Height="450" Width="800"
         Visibility="Hidden">
     <Grid>
-        <tb:TaskbarIcon IconSource="Icons/aw.ico" ToolTipText="AssetWatch" MenuActivation="LeftOrRightClick">
+        <tb:TaskbarIcon IconSource="Icons/aw.ico" ToolTipText="AssetWatch" MenuActivation="RightClick" MouseLeftButtonDown="menuItem_Settings_Click">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="menuItem_AddAssetTile" Header="neue Asset Kachel" Click="menuItem_AddAssetTile_Click" />

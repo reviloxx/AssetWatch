@@ -68,7 +68,7 @@ namespace ApiCoinmarketcapSandbox
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
             this.ApiData = new ApiData
             {
-                ApiKey = string.Empty,
+                ApiKey = apiKey,
                 ApiName = this.ApiInfo.ApiName,
                 CallCountStartTime = DateTime.Now,
                 CallCount = 0,
@@ -325,20 +325,29 @@ namespace ApiCoinmarketcapSandbox
                     ass.PercentChange24h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h.ToString();
                     ass.PercentChange7d = assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d.ToString();
                     ass.Rank = assetUpdate.CmcRank.ToString();
+                    ass.SupplyAvailable = assetUpdate.CirculatingSupply.ToString();
+                    ass.SupplyTotal = assetUpdate.TotalSupply.ToString();
                     this.FireOnSingleAssetUpdated(ass);
                 });
             }
             catch (Exception e)
             {
-                OnApiErrorEventArgs eventArgs = new OnApiErrorEventArgs
+                if (e.Message.Contains("401"))
                 {
-                    ErrorMessage = e.Message,
-                    ErrorType = ErrorType.General
-                };
-
-                this.FireOnApiError(eventArgs);
-                this.ApiData.IsEnabled = false;
-                return;
+                    this.FireOnApiError(new OnApiErrorEventArgs
+                    {
+                        ErrorMessage = "API Key ungültig!",
+                        ErrorType = ErrorType.Unauthorized
+                    });
+                }
+                else
+                {
+                    this.FireOnApiError(new OnApiErrorEventArgs
+                    {
+                        ErrorMessage = e.Message,
+                        ErrorType = ErrorType.General
+                    });
+                }
             }
 
         }
@@ -397,6 +406,7 @@ namespace ApiCoinmarketcapSandbox
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen",
                     MaxUpdateInterval = 3600,
                     MinUpdateInterval = 300,
+                    UpdateIntervalStepSize = 300,
                     SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
                         "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
                         "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },

@@ -53,7 +53,6 @@ namespace AssetWatch
             this.OpenLoadedPortfolioTiles();
 
             apiHandler.OnApiLoaded += this.ApiHandler_OnApiLoaded;
-            apiHandler.OnApiError += this.ApiHandler_OnApiError;
             apiHandler.LoadApis(apiLoader);
         }
 
@@ -174,16 +173,6 @@ namespace AssetWatch
             }
             else
             {
-                api.ApiData = new ApiData
-                {
-                    ApiKey = string.Empty,
-                    ApiName = api.ApiInfo.ApiName,
-                    CallCountStartTime = DateTime.Now,
-                    CallCount = 0,
-                    IsEnabled = false,
-                    UpdateInterval = api.ApiInfo.MinUpdateInterval
-                };
-
                 this.appData.ApiDataSet.Add(api.ApiData);
                 this.FireOnAppDataChanged();
             }
@@ -206,17 +195,6 @@ namespace AssetWatch
                 this.apiHandler.EnableApi(api);
                 this.apiHandler.StartAssetUpdater(api);
             }
-        }
-
-        /// <summary>
-        /// The ApiHandler_OnApiError shows an error message if an error occured within an API.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="e">The e<see cref="OnApiErrorEventArgs"/></param>
-        private void ApiHandler_OnApiError(object sender, OnApiErrorEventArgs e)
-        {
-            IApi api = (IApi)sender;
-            MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -264,7 +242,16 @@ namespace AssetWatch
             this.appData.AssetTileDataSet.Remove(closedAssetTile.AssetTileData);
 
             // remove this asset tile from all portfolio tiles
-            this.appData.PortfolioTileDataSet.ForEach(port => port.AssignedAssetTilesDataSet.Remove(closedAssetTile.AssetTileData));
+            this.appData.PortfolioTileDataSet.ForEach(port =>
+            {
+                port.AssignedAssetTilesDataSet.Remove(closedAssetTile.AssetTileData);
+            });
+
+            this.handledPortfolioTiles.ForEach(portt =>
+            {
+                portt.UpdateTextBlocks(DateTime.Now);
+                portt.RefreshTileStyle();
+            });
 
             this.FireOnAppDataChanged();
         }
