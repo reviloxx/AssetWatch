@@ -47,6 +47,7 @@ namespace AssetWatch
         /// <param name="appData">The appData<see cref="AppData"/></param>
         public PortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
+            // TODO: refresh invest if invest of an asset tile changes
             this.InitializeComponent();
             this.availableAssets = new List<Asset>();
             this.PortfolioTileData = portfolioTileData;

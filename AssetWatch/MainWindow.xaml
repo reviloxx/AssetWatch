@@ -17,7 +17,7 @@
                     <MenuItem x:Name="menuItem_HideAssetTiles" Header="Kacheln ausblenden" IsCheckable="True" 
                               Checked="menuItem_HideAssetTiles_Checked" Unchecked="menuItem_HideAssetTiles_Unchecked" />
                     <MenuItem x:Name="menuItem_LockTilePositions" IsCheckable="True" Checked="menuItem_LockTilePositions_Checked" 
-                              Unchecked="menuItem_LockTilePositions_Unchecked" Header="Kachel Positionen sperren" />
+                              Unchecked="menuItem_LockTilePositions_Unchecked" Header="Kachel Positionen fixieren" />
                     <MenuItem x:Name="menuItem_Settings" Header="Einstellungen" Click="menuItem_Settings_Click" />
                     <MenuItem x:Name="menuItem_Exit" Header="Beenden" Click="menuItem_Exit_Click" />
                 </ContextMenu>

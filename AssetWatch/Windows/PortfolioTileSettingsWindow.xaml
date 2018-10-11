@@ -19,7 +19,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="button_OK" Content="OK" Click="button_OK_Click" HorizontalAlignment="Left" Margin="10,391,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="button_OK" Content="OK" Click="button_OK_Click" Width="75" Height="19" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom"/>
         <TextBox x:Name="textBox_PortfolioName" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Portfolio Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
     </Grid>

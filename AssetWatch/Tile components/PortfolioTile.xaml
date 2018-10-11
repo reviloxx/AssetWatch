@@ -48,16 +48,16 @@
                    FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="2" Foreground="White"/>
         
         <!--<TextBlock Text="24h +/-" Grid.Row="6" Grid.ColumnSpan="3" FontSize="16" Margin="10,5.4,37.6,5.4" Foreground="White"/>-->
-        <TextBlock x:Name="textBlock_24hWin" Grid.Column="2" TextWrapping="Wrap"  Grid.Row="6" TextAlignment="Right" 
-                   FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="2" Foreground="White"/>
+        <TextBlock x:Name="textBlock_24hWin" Grid.Column="1" TextWrapping="Wrap"  Grid.Row="6" TextAlignment="Right" 
+                   FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="3" Foreground="White"/>
 
         <TextBlock Text="1W + / -" Grid.Row="8" Grid.ColumnSpan="2" FontSize="16" Margin="10,5.4,0,5.4" Foreground="White"/>
         <TextBlock x:Name="textBlock_1WPercentage" Grid.Column="2" TextWrapping="Wrap"  Grid.Row="8" TextAlignment="Right" 
                    FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="2" Foreground="White"/>
 
         <!--<TextBlock Text="1W +/-" Grid.Row="9" Grid.ColumnSpan="3" FontSize="16" Margin="10,5.4,37.6,5.4" Foreground="White"/>-->
-        <TextBlock x:Name="textBlock_1WWin" Grid.Column="2" TextWrapping="Wrap"  Grid.Row="9" TextAlignment="Right" 
-                   FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="2" Foreground="White"/>        
+        <TextBlock x:Name="textBlock_1WWin" Grid.Column="1" TextWrapping="Wrap"  Grid.Row="9" TextAlignment="Right" 
+                   FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="3" Foreground="White"/>        
 
         <TextBlock x:Name="textBlock_ATWin" Foreground="White" Margin="0,0.6,0,0" Grid.Row="11" TextWrapping="Wrap" 
                    Grid.ColumnSpan="4" TextAlignment="Center" VerticalAlignment="Top" FontSize="14"/>

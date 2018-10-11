@@ -78,6 +78,8 @@ namespace AssetWatch
         /// </summary>
         public string Symbol { get; set; }
 
+        public string SymbolName { get { return this.Symbol + " (" + this.Name + ")"; } }
+
         /// <summary>
         /// Gets or sets the SupplyTotal.
         /// </summary>
