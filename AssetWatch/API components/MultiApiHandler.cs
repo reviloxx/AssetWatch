@@ -177,7 +177,14 @@ namespace AssetWatch
 
         private void Api_OnAppDataChanged(object sender, EventArgs e)
         {
-            this.FireOnAppDataChanged();
+            try
+            {
+                this.FireOnAppDataChanged();
+            }
+            catch
+            {
+                // save file might be in use by another process
+            }           
         }        
 
         /// <summary>

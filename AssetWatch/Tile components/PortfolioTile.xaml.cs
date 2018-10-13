@@ -72,6 +72,10 @@ namespace AssetWatch
 
                 toUpdate.ForEach(upd => upd.Asset = updatedAsset);
             }
+            else
+            {
+                return;
+            }
 
             this.UpdateTextBlocks(updatedAsset.LastUpdated);
             this.RefreshTileStyle();

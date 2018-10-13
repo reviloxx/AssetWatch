@@ -277,6 +277,7 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="Asset"/></param>
         private void assetTileSettingsWindow_OnAssetChanged(object sender, Asset e)
         {
+            // TODO: change of asset does not work properly
             // fire the events if the asset has changed
             if (e.AssetId != this.AssetTileData.Asset.AssetId || e.ConvertCurrency != this.AssetTileData.Asset.ConvertCurrency)
             {

@@ -7,8 +7,8 @@
     <ProjectGuid>{DBCCBC27-887F-42D6-A3BA-1DAFCA05A74C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ApiCoinmarketcapPro</RootNamespace>
-    <AssemblyName>ApiCoinmarketcapPro</AssemblyName>
+    <RootNamespace>ApiCoinmarketcap</RootNamespace>
+    <AssemblyName>ApiCoinmarketcap</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\AssetWatch\bin\Debug\Apis\Coinmarketcap Pro\</OutputPath>
+    <OutputPath>..\AssetWatch\bin\Debug\Apis\Coinmarketcap\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -53,6 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiCoinmarketcapPro.cs" />
+    <Compile Include="ApiCoinmarketcapSandbox.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

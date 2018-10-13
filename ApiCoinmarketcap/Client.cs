@@ -7,19 +7,17 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 
-namespace ApiCoinmarketcapSandbox
+namespace ApiCoinmarketcap
 {
     /// <summary>
     /// Defines the <see cref="Client" />
     /// </summary>
-    public class Client : IApi
+    public abstract class Client
     {
         /// <summary>
         /// Defines the apiSchema
         /// </summary>
-        private static ApiSchema apiSchema = ApiSchema.Sandbox;
-
-        private static string apiKey = "29bc6cc3-7219-42f6-af87-f0147e9ee089";
+        private ApiSchema apiSchema;
 
         /// <summary>
         /// Defines the availableAssets
@@ -49,7 +47,7 @@ namespace ApiCoinmarketcapSandbox
         /// <summary>
         /// Defines the client
         /// </summary>
-        private CoinMarketCapClient client;
+        private CoinMarketCapClient client;               
 
         /// <summary>
         /// Defines the assetUpdateWorker
@@ -59,22 +57,15 @@ namespace ApiCoinmarketcapSandbox
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
-        public Client()
+        public Client(ApiSchema apiSchema)
         {
+            this.apiSchema = apiSchema;
             this.availableAssets = new List<Asset>();
             this.subscribedAssets = new List<Asset>();
             this.subscribedConvertCurrencies = new List<string>();
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.ApiData = new ApiData
-            {
-                ApiKey = apiKey,
-                ApiName = this.ApiInfo.ApiName,
-                CallCountStartTime = DateTime.Now,
-                CallCount = 0,
-                IsEnabled = false,
-                UpdateInterval = 300
-            };
+            
         }
 
         /// <summary>
@@ -82,7 +73,21 @@ namespace ApiCoinmarketcapSandbox
         /// </summary>
         public void Enable()
         {
-            this.client = new CoinMarketCapClient(apiSchema, apiKey);
+            if (this.apiSchema == ApiSchema.Pro && this.ApiData.ApiKey == string.Empty)
+            {
+                throw new Exception("API Key missing!");
+            }
+
+            if (this.apiSchema == ApiSchema.Pro)
+            {
+                this.client = new CoinMarketCapClient(this.apiSchema, this.ApiData.ApiKey);
+            }
+            else
+            {
+                string apiKey = "29bc6cc3-7219-42f6-af87-f0147e9ee089";
+                this.client = new CoinMarketCapClient(this.apiSchema, apiKey);
+            }
+
             this.ApiData.IsEnabled = true;
         }
 
@@ -93,7 +98,7 @@ namespace ApiCoinmarketcapSandbox
         {
             this.ApiData.IsEnabled = false;
             this.StopAssetUpdater();
-        }
+        }        
 
         /// <summary>
         /// The RequestAvailableAssetsAsync
@@ -209,7 +214,7 @@ namespace ApiCoinmarketcapSandbox
                 }
                 catch
                 { }
-
+                
 
                 map.Data.ForEach(c =>
                 {
@@ -222,30 +227,15 @@ namespace ApiCoinmarketcapSandbox
                     });
                 });
 
-                this.availableAssets.OrderBy(ass => ass.Rank);
+                this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
 
                 this.FireOnAvailableAssetsReceived();
             }
             catch (Exception e)
             {
-                if (e.Message.Contains("401"))
-                {
-                    this.FireOnApiError(new OnApiErrorEventArgs
-                    {
-                        ErrorMessage = "API Key ungültig!",
-                        ErrorType = ErrorType.Unauthorized
-                    });
-                }
-                else
-                {
-                    this.FireOnApiError(new OnApiErrorEventArgs
-                    {
-                        ErrorMessage = e.Message,
-                        ErrorType = ErrorType.General
-                    });
-                }
+                this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
             }
-        }
+        }        
 
         /// <summary>
         /// The StartAssetUpdater
@@ -271,7 +261,7 @@ namespace ApiCoinmarketcapSandbox
                 this.assetUpdateWorker.Abort();
             }
             catch (Exception) { }
-        }
+        }             
 
         /// <summary>
         /// The AssetUpdateWorker
@@ -283,7 +273,7 @@ namespace ApiCoinmarketcapSandbox
                 this.RequestAssetUpdates(this.subscribedAssets);
                 Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
-        }
+        }        
 
         private async void RequestAssetUpdates(List<Asset> assets)
         {
@@ -307,12 +297,13 @@ namespace ApiCoinmarketcapSandbox
             try
             {
                 var a = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
-                this.ApiData.CallCount++;
+                this.ApiData.CallCount += this.subscribedConvertCurrencies.Count;
                 this.FireOnAppDataChanged();
 
                 if (a.Status.ErrorCode != 0)
                 {
-                    // TODO: handle API error codes
+                    // do something
+                    throw new Exception();
                 }
 
                 assets.ForEach(ass =>
@@ -332,32 +323,35 @@ namespace ApiCoinmarketcapSandbox
             }
             catch (Exception e)
             {
-                if (e.Message.Contains("401"))
+                this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
+            }
+        }     
+        
+        private OnApiErrorEventArgs BuildOnApiErrorEventArgs(string message)
+        {
+            if (message.Contains("400"))
+            {
+                return new OnApiErrorEventArgs
                 {
-                    this.FireOnApiError(new OnApiErrorEventArgs
-                    {
-                        ErrorMessage = "API Key ungültig!",
-                        ErrorType = ErrorType.Unauthorized
-                    });
-                }
-                else
-                {
-                    this.FireOnApiError(new OnApiErrorEventArgs
-                    {
-                        ErrorMessage = e.Message,
-                        ErrorType = ErrorType.General
-                    });
-                }
+                    ErrorMessage = message,
+                    ErrorType = ErrorType.BadRequest
+                };
             }
 
-        }
+            if (message.Contains("401"))
+            {
+                return new OnApiErrorEventArgs
+                {
+                    ErrorMessage = "API Key ungültig!",
+                    ErrorType = ErrorType.Unauthorized
+                };
+            }
 
-        /// <summary>
-        /// The FireOnAvailableAssetsReceived
-        /// </summary>
-        private void FireOnAvailableAssetsReceived()
-        {
-            OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
+            return new OnApiErrorEventArgs
+            {
+                ErrorMessage = message,
+                ErrorType = ErrorType.General
+            };            
         }
 
         /// <summary>
@@ -378,6 +372,14 @@ namespace ApiCoinmarketcapSandbox
             OnSingleAssetUpdated?.Invoke(this, asset);
         }
 
+        /// <summary>
+        /// The FireOnAvailableAssetsReceived
+        /// </summary>
+        private void FireOnAvailableAssetsReceived()
+        {
+            OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
+        }
+
         private void FireOnAppDataChanged()
         {
             this.OnAppDataChanged?.Invoke(this, null);
@@ -388,32 +390,33 @@ namespace ApiCoinmarketcapSandbox
         /// </summary>
         public ApiData ApiData { get; set; }
 
-        /// <summary>
-        /// Gets the ApiInfo
-        /// </summary>
-        public ApiInfo ApiInfo
-        {
-            get
-            {
-                return new ApiInfo
-                {
-                    ApiInfoText = "Diese API stellt veraltete Testdaten ohne Abruf-Limit zur Verfügung.",
-                    ApiKeyRequired = false,
-                    ApiName = "Coinmarketcap Sandbox",
-                    ApiClientVersion = "1.0",
-                    Market = Market.Cryptocurrencies,
-                    AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
-                    AssetUrlName = "Auf Coinmarketcap.com anzeigen",
-                    MaxUpdateInterval = 3600,
-                    MinUpdateInterval = 300,
-                    UpdateIntervalStepSize = 300,
-                    SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
-                        "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
-                        "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
-                    UpdateIntervalInfoText = "Diese API stellt keine aktuellen Daten bereit, eine Änderung des Update Intervalls hat daher keine Auswirkung."
-                };
-            }
-        }
+        ///// <summary>
+        ///// Gets the ApiInfo
+        ///// </summary>
+        //public ApiInfo ApiInfo
+        //{
+        //    get
+        //    {
+        //        return new ApiInfo
+        //        {
+        //            ApiInfoText = "Diese API bietet alle 5 Minuten aktuelle Daten über die wichtigsten Kryptowährungen.",
+        //            ApiKeyRequired = true,
+        //            ApiName = "Coinmarketcap Pro",
+        //            ApiClientVersion = "1.0",
+        //            Market = Market.Cryptocurrencies,
+        //            AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
+        //            AssetUrlName = "Auf Coinmarketcap.com anzeigen",
+        //            GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
+        //            MaxUpdateInterval = 3600,
+        //            MinUpdateInterval = 300,
+        //            UpdateIntervalStepSize = 300,
+        //            SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
+        //                "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
+        //                "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
+        //            UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
+        //        };
+        //    }
+        //}
 
         /// <summary>
         /// Defines the OnAvailableAssetsReceived
