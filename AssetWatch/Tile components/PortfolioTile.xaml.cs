@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AssetWatch
 {
@@ -29,6 +30,7 @@ namespace AssetWatch
         /// Defines the appData
         /// </summary>
         private AppData appData;
+        private double winTotal;
 
         /// <summary>
         /// Defines the percentage24h
@@ -85,9 +87,12 @@ namespace AssetWatch
         /// The RefreshTileStyle
         /// </summary>
         public void RefreshTileStyle()
-        {          
+        {                     
             this.Dispatcher.Invoke(() =>
             {
+                Brush posBackgroundColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorProfit);
+                Brush negBackgroundColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorLoss);                
+
                 if (this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
                     this.Visibility = Visibility.Hidden;
@@ -98,31 +103,65 @@ namespace AssetWatch
 
                 if (this.PortfolioTileData.HasCustomTileStyle)
                 {
-                    //if (this.profitLoss > -1)
-                    {
-                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.BackgroundColorProfit);
-                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.FontColorProfit));
-                    }
-                    //else
-                    {
-                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.BackgroundColorLoss);
-                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.PortfolioTileData.CustomTileStyle.FontColorLoss));
-                    }
+                    // TODO: custom tile styles
                 }
                 else
                 {
-                    if (this.percentage24h >= 0)
-                    {
-                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorProfit);
-                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorProfit));
-                    }
-                    else
-                    {
-                        this.Background = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorLoss);
-                        this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorLoss));
-                    }
+                    rectangle_Head.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
+                    rectangle_between.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
+                    rectangle_foot.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
+
+                    rectangle_24h.Fill = this.percentage24h >= 0 ? posBackgroundColor : negBackgroundColor;
+                    rectangle_1W.Fill = this.percentage1W >= 0 ? posBackgroundColor : negBackgroundColor;
+
+                    this.ChangeFontColor();
                 }
             });            
+        }
+
+        /// <summary>
+        /// The ChangeFontColor
+        /// </summary>
+        private void ChangeFontColor()
+        {
+            Brush posFontColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorProfit);
+            Brush negFontColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorLoss);
+
+            Brush brushMain = this.winTotal >= 0 ? posFontColor : negFontColor;
+            Brush brush24h = this.percentage24h >= 0 ? posFontColor : negFontColor;
+            Brush brush1W = this.percentage1W >= 0 ? posFontColor : negFontColor;
+
+            textBlock_PortfolioName.Foreground = brushMain;
+            textBlock_last_Refresh.Foreground = brushMain;
+            textBlock_Invest.Foreground = brushMain;
+            label_Invest.Foreground = brushMain;
+            label_Worth.Foreground = brushMain;
+            textBlock_Worth.Foreground = brushMain;
+            textBlock_ATWin.Foreground = brushMain;
+
+            label_24h.Foreground = brush24h;
+            textBlock_24hPercentage.Foreground = brush24h;
+            textBlock_24hWin.Foreground = brush24h;
+            rectangle_24h.Stroke = brushMain;
+
+            label_1W.Foreground = brush1W;
+            textBlock_1WPercentage.Foreground = brush1W;
+            textBlock_1WWin.Foreground = brush1W;
+            rectangle_1W.Stroke = brush1W;
+
+            string color = brushMain.ToString() == "#FFFFFFFF" ? "white" : "black";
+
+            if (!this.button_Settings.IsMouseOver)
+            {
+                Uri uri = new Uri(@"../Icons/settings_" + color + ".png", UriKind.Relative);
+                this.settings_Image.Source = new BitmapImage(uri);
+            }
+
+            if (!this.button_Close.IsMouseOver)
+            {
+                Uri uri = new Uri(@"../Icons/remove-icon-" + color + ".png", UriKind.Relative);
+                this.close_Image.Source = new BitmapImage(uri);
+            }
         }
 
         public void LockPosition(bool locked)
@@ -143,7 +182,7 @@ namespace AssetWatch
 
             double investTotal = PortfolioTileHelpers.CalculateInvest(assetTilesDataSet);
             double worthTotal = PortfolioTileHelpers.CalculateWorth(assetTilesDataSet);
-            double winTotal = worthTotal - investTotal;
+            this.winTotal = worthTotal - investTotal;
             this.percentage24h = PortfolioTileHelpers.Calculate24hPercentage(assetTilesDataSet, worthTotal);
             double win24h = PortfolioTileHelpers.CalculateWinLoss(this.percentage24h, worthTotal);
             this.percentage1W = PortfolioTileHelpers.Calculate1WPercentage(assetTilesDataSet, worthTotal);
@@ -176,15 +215,7 @@ namespace AssetWatch
                 
                 this.textBlock_ATWin.Text = TileHelpers.FormatValueString(winTotal, true) + convertCurrency;
             });
-        }   
-                
-        /// <summary>
-        /// The ChangeFontColor
-        /// </summary>
-        /// <param name="brush">The brush<see cref="Brush"/></param>
-        private void ChangeFontColor(Brush brush)
-        {
-        }
+        }                     
 
         /// <summary>
         /// The button_MouseEnter

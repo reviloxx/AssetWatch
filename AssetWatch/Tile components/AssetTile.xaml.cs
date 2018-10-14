@@ -117,32 +117,28 @@ namespace AssetWatch
 
             this.Visibility = Visibility.Visible;
 
+            Brush backgroundColor = Brushes.Black;
+            Brush fontColor = Brushes.Black;
+
             if (this.AssetTileData.HasCustomTileStyle)
             {
-                if (this.profitLoss > -1)
-                {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.BackgroundColorProfit);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.FontColorProfit));
-                }
-                else
-                {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.BackgroundColorLoss);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.FontColorLoss));
-                }
+                backgroundColor = this.profitLoss >= 0 ? (Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.BackgroundColorProfit) :
+                                                            (Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.BackgroundColorLoss);
+
+                fontColor = this.profitLoss >= 0 ? (Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.FontColorProfit) :
+                                                      (Brush)new BrushConverter().ConvertFromString(this.AssetTileData.CustomTileStyle.FontColorLoss);
             }
             else
             {
-                if (this.profitLoss > -1)
-                {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.BackgroundColorProfit);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.FontColorProfit));
-                }
-                else
-                {
-                    this.Background = (Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.BackgroundColorLoss);
-                    this.ChangeFontColor((Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.FontColorLoss));
-                }
+                backgroundColor = this.profitLoss >= 0 ? (Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.BackgroundColorProfit) :
+                                                            (Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.BackgroundColorLoss);
+
+                fontColor = this.profitLoss >= 0 ? (Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.FontColorProfit) :
+                                                      (Brush)new BrushConverter().ConvertFromString(this.globalTileStyle.FontColorLoss);
             }
+
+            this.Background = backgroundColor;
+            this.ChangeFontColor(fontColor);
         }
 
         public void LockPosition(bool locked)
