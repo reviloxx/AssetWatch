@@ -26,7 +26,10 @@ namespace AssetWatch
 
             assetTilesDataSet.ForEach(asstiledata =>
             {
-                worthTotal += asstiledata.HoldingsCount * double.Parse(asstiledata.Asset.PriceConvert);
+                if (asstiledata.Asset.PriceConvert != null)
+                {
+                    worthTotal += asstiledata.HoldingsCount * double.Parse(asstiledata.Asset.PriceConvert);
+                }                
             });
 
             return worthTotal;

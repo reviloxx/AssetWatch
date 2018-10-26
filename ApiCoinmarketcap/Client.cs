@@ -117,8 +117,13 @@ namespace ApiCoinmarketcap
         /// The GetSingleAssetUpdate
         /// </summary>
         /// <param name="asset">The ass<see cref="Asset"/></param>
-        private void RequestSingleAssetUpdateAsync(Asset asset)
+        public void RequestSingleAssetUpdateAsync(Asset asset)
         {
+            if (!this.assetUpdateWorker.IsAlive)
+            {
+                return;
+            }
+
             if (!this.ApiData.IsEnabled)
             {
                 throw new Exception("API is not enabled!");
@@ -143,12 +148,6 @@ namespace ApiCoinmarketcap
             if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
             {
                 this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);
-            }
-
-            // request an update for this asset if the worker thread is already running, so there is no delay for receiving data for this asset
-            if (this.assetUpdateWorker.IsAlive)
-            {
-                this.RequestSingleAssetUpdateAsync(asset);
             }
         }
 
@@ -389,34 +388,6 @@ namespace ApiCoinmarketcap
         /// Gets the ApiData
         /// </summary>
         public ApiData ApiData { get; set; }
-
-        ///// <summary>
-        ///// Gets the ApiInfo
-        ///// </summary>
-        //public ApiInfo ApiInfo
-        //{
-        //    get
-        //    {
-        //        return new ApiInfo
-        //        {
-        //            ApiInfoText = "Diese API bietet alle 5 Minuten aktuelle Daten über die wichtigsten Kryptowährungen.",
-        //            ApiKeyRequired = true,
-        //            ApiName = "Coinmarketcap Pro",
-        //            ApiClientVersion = "1.0",
-        //            Market = Market.Cryptocurrencies,
-        //            AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
-        //            AssetUrlName = "Auf Coinmarketcap.com anzeigen",
-        //            GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
-        //            MaxUpdateInterval = 3600,
-        //            MinUpdateInterval = 300,
-        //            UpdateIntervalStepSize = 300,
-        //            SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
-        //                "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
-        //                "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
-        //            UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
-        //        };
-        //    }
-        //}
 
         /// <summary>
         /// Defines the OnAvailableAssetsReceived

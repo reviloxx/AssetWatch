@@ -23,6 +23,9 @@ namespace AssetWatch
                     loadedAppData = (AppData)xs.Deserialize(fs);
                 }
             }
+
+            loadedAppData.AssetTileDataSet = loadedAppData.AssetTileDataSet.OrderBy(atds => atds.AssetTileName).ToList();
+
             return loadedAppData;
         }
 

@@ -53,7 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiCoinmarketcapPro.cs" />
+    <Compile Include="ApiCoinmarketcapProEUR.cs" />
+    <Compile Include="ApiCoinmarketcapProBTC.cs" />
+    <Compile Include="ApiCoinmarketcapProUSD.cs" />
     <Compile Include="ApiCoinmarketcapSandbox.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ApiCoinmarketcap
 {
-    public class ApiCoinmarketcapPro : Client, IApi
+    public class ApiCoinmarketcapProEUR : Client, IApi
     {
-        public ApiCoinmarketcapPro() : base(CoinMarketCapPro.Types.ApiSchema.Pro)
+        public ApiCoinmarketcapProEUR() : base(CoinMarketCapPro.Types.ApiSchema.Pro)
             
         {
             this.ApiData = new ApiData
@@ -32,9 +32,9 @@ namespace ApiCoinmarketcap
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Diese API bietet alle 5 Minuten aktuelle Daten über die wichtigsten Kryptowährungen.",
+                    ApiInfoText = "Diese API bietet alle 5 Minuten aktuelle Daten über die wichtigsten Kryptowährungen. Unterstützt nur EUR als Basiswährung.",
                     ApiKeyRequired = true,
-                    ApiName = "Coinmarketcap Pro",
+                    ApiName = "Coinmarketcap Pro - EUR",
                     ApiClientVersion = "1.0",
                     Market = Market.Cryptocurrencies,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
@@ -43,9 +43,7 @@ namespace ApiCoinmarketcap
                     MaxUpdateInterval = 3600,
                     MinUpdateInterval = 300,
                     UpdateIntervalStepSize = 300,
-                    SupportedConvertCurrencies = new List<string>() { "AUD", "BRL", "CAD", "CHF", "CLP", "CNY",
-                    "CZK", "DKK", "EUR", "GBP", "HKD", "HUF", "IDR", "ILS", "INR", "JPY", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP",
-                    "PKR", "PLN", "RUB", "SEK", "SGD", "THB", "TRY", "TWD", "USD", "ZAR", "BTC", "ETH", "XRP", "LTC", "BCH" },
+                    SupportedConvertCurrencies = new List<string>() { "EUR" },
                     UpdateIntervalInfoText = "Diese API stellt alle 5 Minuten aktualisierte Daten bereit."
                 };
             }

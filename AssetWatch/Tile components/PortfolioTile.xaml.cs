@@ -30,6 +30,7 @@ namespace AssetWatch
         /// Defines the appData
         /// </summary>
         private AppData appData;
+
         private double winTotal;
 
         /// <summary>
@@ -50,6 +51,7 @@ namespace AssetWatch
         public PortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
             // TODO: refresh invest if invest of an asset tile changes
+            // TODO: app crashes if adding an empty asset tile
             this.InitializeComponent();
             this.availableAssets = new List<Asset>();
             this.PortfolioTileData = portfolioTileData;
@@ -270,8 +272,7 @@ namespace AssetWatch
 
             if (result == MessageBoxResult.OK)
             {
-                // TODO: remove closed portfolio tile
-                // this.FireOnPortfoloiTileCLosed();
+                this.FireOnPortfolioTileClosed();
                 this.Close();
             }
         }
@@ -311,6 +312,11 @@ namespace AssetWatch
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
+        private void FireOnPortfolioTileClosed()
+        {
+            this.OnPortfolioTileClosed?.Invoke(this, null);
+        }
+
         /// <summary>
         /// Gets the PortfolioTileData
         /// </summary>
@@ -320,5 +326,7 @@ namespace AssetWatch
         /// Defines the OnAppDataChanged
         /// </summary>
         public event EventHandler OnAppDataChanged;
+
+        public event EventHandler OnPortfolioTileClosed;
     }
 }

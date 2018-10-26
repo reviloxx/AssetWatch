@@ -58,6 +58,7 @@ namespace AssetWatch
             // search the API to subscribe in the dictionary
             IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
             api.SubscribeAssetToUpdater(assetTile.AssetTileData.Asset);
+            api.RequestSingleAssetUpdateAsync(assetTile.AssetTileData.Asset);
             this.subscribedAssetTiles.Add(assetTile);
         }
 
@@ -116,16 +117,6 @@ namespace AssetWatch
         public void StartAssetUpdater(IApi api)
         {
             api.StartAssetUpdater();
-        }
-
-        /// <summary>
-        /// The SetUpdateInterval sets a new update interval for updating all subscribed assets of an API.
-        /// </summary>
-        /// <param name="api">The api<see cref="IApi"/> to set the update interval.</param>
-        /// <param name="seconds">The seconds<see cref="int"/> defines the new update interval.</param>
-        public void SetUpdateInterval(IApi api, int seconds)
-        {
-            api.SetUpdateInterval(seconds);
         }
 
         /// <summary>

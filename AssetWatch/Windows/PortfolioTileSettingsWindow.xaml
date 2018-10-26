@@ -13,14 +13,15 @@
                   ItemsSource="{Binding Path=AssetTileDataSet}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="AssetTileName" DisplayMemberBinding="{Binding Path=AssetTileName}" Width="100"/>
-                    <GridViewColumn Header="Asset" DisplayMemberBinding="{Binding Path=Asset.Symbol}" Width="100"/>
-                    <GridViewColumn Header="Asset Summe" DisplayMemberBinding="{Binding Path=HoldingsCount}" Width="100"/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=AssetTileName}" Width="139"/>
+                    <GridViewColumn Header="Asset" DisplayMemberBinding="{Binding Path=Asset.Symbol}" Width="70"/>
+                    <GridViewColumn Header="Währung" DisplayMemberBinding="{Binding Path=Asset.ConvertCurrency}" Width="70"/>
+                    <GridViewColumn Header="Anzahl" DisplayMemberBinding="{Binding Path=HoldingsCount}" Width="66"/>
                 </GridView>
             </ListView.View>
         </ListView>
         <Button x:Name="button_OK" Content="OK" Click="button_OK_Click" Width="75" Height="19" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom"/>
-        <TextBox x:Name="textBox_PortfolioName" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="textBox_PortfolioName" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2.4" Width="120"/>
         <Label Content="Portfolio Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

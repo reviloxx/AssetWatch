@@ -9,14 +9,14 @@
     <Grid>
         <TextBlock x:Name="textblock_Symbol" Margin="153,31,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
         <TextBlock x:Name="textblock_Rank" Margin="153,52,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_Price" Margin="153,73,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_MarketCap" Margin="153,115,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_Price" Margin="153,84,9.8,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_MarketCap" Margin="153,105,9.8,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
         <TextBlock x:Name="textblock_AvailableSupply" Margin="153,136,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
         <TextBlock x:Name="textblock_TotalSupply" Margin="153,157,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
         <TextBlock x:Name="textblock_PercentChange24h" Margin="153,178,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,31,0,0" TextWrapping="Wrap" Text="Symbol:" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="USD Pri"/><Run Text="c"/><Run Text="e:"/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="10,105,0,0" TextWrapping="Wrap" Text="USD Market Cap:" VerticalAlignment="Top"/>
+        <TextBlock x:Name="label_Price" HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock x:Name="label_MarketCap" HorizontalAlignment="Left" Margin="10,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,136,0,0" TextWrapping="Wrap" Text="Circulating Supply:" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,157,0,0" TextWrapping="Wrap" Text="Max Supply:" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,177,0,0" TextWrapping="Wrap" Text="24h Change:" VerticalAlignment="Top"/>

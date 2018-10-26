@@ -23,6 +23,9 @@ namespace AssetWatch
         /// </summary>
         event EventHandler<OnApiErrorEventArgs> OnApiError;
 
+        /// <summary>
+        /// Is fired after the AppData was changed.
+        /// </summary>
         event EventHandler OnAppDataChanged;
 
         /// <summary>
@@ -59,10 +62,10 @@ namespace AssetWatch
         void RequestAvailableAssetsAsync();
 
         /// <summary>
-        /// Sets the update interval of the API.
+        /// Requests a single asset update.
+        /// Useful to get the data immediately when subscribing a new asset.
         /// </summary>
-        /// <param name="updateInterval">The update interval in seconds.</param>
-        void SetUpdateInterval(int updateInterval);
+        void RequestSingleAssetUpdateAsync(Asset asset);
 
         /// <summary>
         /// Enables the API and starts the asset update thread if there are any subscribed assets.

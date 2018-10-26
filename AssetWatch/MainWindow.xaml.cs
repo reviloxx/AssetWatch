@@ -143,7 +143,7 @@ namespace AssetWatch
             MainSettingsWindow mainSettingsWindow = new MainSettingsWindow(apiHandler, this.appData.TileHandlerData.GlobalTileStyle);
             mainSettingsWindow.Closed += this.OnAppDataChanged;
             mainSettingsWindow.OnGlobalTileStyleChanged += this.MainSettingsWindow_OnGlobalTileStyleChanged;
-            mainSettingsWindow.Show();
+            mainSettingsWindow.ShowDialog();
         }
 
         /// <summary>

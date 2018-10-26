@@ -72,28 +72,28 @@ namespace AssetWatch
         /// </summary>
         public void OpenNewAssetTile()
         {
-            AssetTile asstile = new AssetTile(new AssetTileData(), this.appData, this.apiHandler.ReadyApis);
-            asstile.OnAssetTileClosed += this.Asstile_Closed;
-            asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
-            asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
-            asstile.OnAppDataChanged += this.Tile_OnAppDataChanged;
-            this.handledAssetTiles.Add(asstile);
-            this.appData.AssetTileDataSet.Add(asstile.AssetTileData);
+            AssetTile assetTile = new AssetTile(new AssetTileData(), this.appData, this.apiHandler.ReadyApis);
+            assetTile.OnAssetTileClosed += this.AssetTile_OnAssetTileClosed;
+            assetTile.OnAssetSelected += this.AssetTile_OnAssetSelected;
+            assetTile.OnAssetUnselected += this.AssetTile_OnAssetUnselected;
+            assetTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
+            this.handledAssetTiles.Add(assetTile);
+            this.appData.AssetTileDataSet.Add(assetTile.AssetTileData);
             this.FireOnAppDataChanged();
-            asstile.Show();
+            assetTile.Show();
         }        
 
         public void OpenNewPortfolioTile()
         {
-            // TODO: Baustelle
-            PortfolioTile portfoliotile = new PortfolioTile(new PortfolioTileData(), this.appData);
-            portfoliotile.OnAppDataChanged += this.Tile_OnAppDataChanged;
-            this.handledPortfolioTiles.Add(portfoliotile);
-            this.appData.PortfolioTileDataSet.Add(portfoliotile.PortfolioTileData);
-            this.apiHandler.SubscribePortfolioTile(portfoliotile);
+            PortfolioTile portfolioTile = new PortfolioTile(new PortfolioTileData(), this.appData);
+            portfolioTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
+            portfolioTile.OnPortfolioTileClosed += this.PortfolioTile_OnPortfolioTileClosed;
+            this.handledPortfolioTiles.Add(portfolioTile);
+            this.appData.PortfolioTileDataSet.Add(portfolioTile.PortfolioTileData);
+            this.apiHandler.SubscribePortfolioTile(portfolioTile);
             this.FireOnAppDataChanged();
-            portfoliotile.Show();
-        }
+            portfolioTile.Show();
+        }        
 
         /// <summary>
         /// The OpenLoadedAssetTiles opens all asset tiles which were stored in the app data,
@@ -104,21 +104,21 @@ namespace AssetWatch
         {
             this.appData.AssetTileDataSet.ForEach(assetTileData =>
             {
-                AssetTile asstile = new AssetTile(assetTileData, this.appData, this.apiHandler.ReadyApis);
-                asstile.OnAssetTileClosed += this.Asstile_Closed;
-                asstile.OnAppDataChanged += this.Tile_OnAppDataChanged;
-                asstile.OnAssetSelected += this.Asstile_OnAssetSelected;
-                asstile.OnAssetUnselected += this.Asstile_OnAssetUnselected;
-                this.handledAssetTiles.Add(asstile);
+                AssetTile assetTile = new AssetTile(assetTileData, this.appData, this.apiHandler.ReadyApis);
+                assetTile.OnAssetTileClosed += this.AssetTile_OnAssetTileClosed;
+                assetTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
+                assetTile.OnAssetSelected += this.AssetTile_OnAssetSelected;
+                assetTile.OnAssetUnselected += this.AssetTile_OnAssetUnselected;
+                this.handledAssetTiles.Add(assetTile);
 
-                if (asstile.AssetTileData.ApiName != null && asstile.AssetTileData.ApiName != string.Empty)
+                if (assetTile.AssetTileData.ApiName != null && assetTile.AssetTileData.ApiName != string.Empty)
                 {
-                    this.assetTilesToSubscribe.Add(asstile);
+                    this.assetTilesToSubscribe.Add(assetTile);
                 }
                 
                 if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
-                    asstile.Show();
+                    assetTile.Show();
                 }                
             });
         }        
@@ -127,14 +127,15 @@ namespace AssetWatch
         {
             this.appData.PortfolioTileDataSet.ForEach(portfoliotiledata =>
             {
-                PortfolioTile portfoliotile = new PortfolioTile(portfoliotiledata, this.appData);
-                portfoliotile.OnAppDataChanged += this.Tile_OnAppDataChanged;
-                this.handledPortfolioTiles.Add(portfoliotile);
-                this.apiHandler.SubscribePortfolioTile(portfoliotile);
+                PortfolioTile portfolioTile = new PortfolioTile(portfoliotiledata, this.appData);
+                portfolioTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
+                portfolioTile.OnPortfolioTileClosed += this.PortfolioTile_OnPortfolioTileClosed;
+                this.handledPortfolioTiles.Add(portfolioTile);
+                this.apiHandler.SubscribePortfolioTile(portfolioTile);
 
                 if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
-                    portfoliotile.Show();
+                    portfolioTile.Show();
                 }
             });
         }
@@ -212,7 +213,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/> contains the asset tile to subscribe.</param>
         /// <param name="e">The e<see cref="EventArgs"/></param>
-        private void Asstile_OnAssetSelected(object sender, EventArgs e)
+        private void AssetTile_OnAssetSelected(object sender, EventArgs e)
         {
             this.apiHandler.SubscribeAssetTile((AssetTile)sender);
         }
@@ -222,7 +223,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/> contains the asset tile to unsubscribe.</param>
         /// <param name="e">The e<see cref="EventArgs"/></param>
-        private void Asstile_OnAssetUnselected(object sender, EventArgs e)
+        private void AssetTile_OnAssetUnselected(object sender, EventArgs e)
         {
             this.apiHandler.UnsubscribeAssetTile((AssetTile)sender);
         }
@@ -233,7 +234,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/> contains the closed asset tile.</param>
         /// <param name="e">The e<see cref="EventArgs"/></param>
-        private void Asstile_Closed(object sender, EventArgs e)
+        private void AssetTile_OnAssetTileClosed(object sender, EventArgs e)
         {
             AssetTile closedAssetTile = (AssetTile)sender;
 
@@ -249,9 +250,20 @@ namespace AssetWatch
 
             this.handledPortfolioTiles.ForEach(portt =>
             {
-                portt.UpdateTextBlocks(DateTime.Now);
+                portt.UpdateTextBlocks(DateTime.Now);                
                 portt.RefreshTileStyle();
             });
+
+            this.FireOnAppDataChanged();
+        }
+
+        private void PortfolioTile_OnPortfolioTileClosed(object sender, EventArgs e)
+        {
+            PortfolioTile closedPortfolioTile = (PortfolioTile)sender;
+
+            this.apiHandler.UnsubscribePortfolioTile(closedPortfolioTile);
+            this.handledPortfolioTiles.Remove(closedPortfolioTile);
+            this.appData.PortfolioTileDataSet.Remove(closedPortfolioTile.PortfolioTileData);
 
             this.FireOnAppDataChanged();
         }

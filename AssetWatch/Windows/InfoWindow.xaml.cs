@@ -20,11 +20,15 @@ namespace AssetWatch
             this.Title = asset.Name;
             this.textblock_Symbol.Text = asset.Symbol;
             this.textblock_Rank.Text = asset.Rank;
-            this.textblock_Price.Text = TileHelpers.FormatValueString(asset.PriceUsd, false);
+
+            this.label_Price.Text = asset.ConvertCurrency + " Price:";
+            this.textblock_Price.Text = TileHelpers.FormatValueString(asset.PriceConvert, false);
+
+            this.label_MarketCap.Text = asset.ConvertCurrency + " Market Cap:";
             this.textblock_MarketCap.Text = TileHelpers.FormatValueString(asset.MarketCapUsd, false);
             this.textblock_AvailableSupply.Text = TileHelpers.FormatValueString(asset.SupplyAvailable, false);
             this.textblock_TotalSupply.Text = TileHelpers.FormatValueString(asset.SupplyTotal, false);
-            this.textblock_PercentChange24h.Text = TileHelpers.FormatValueString(asset.PercentChange24h, true);
+            this.textblock_PercentChange24h.Text = TileHelpers.FormatValueString(asset.PercentChange24h, true) + "%";
 
             this.hyperlink_Asset.NavigateUri = new Uri(apiInfo.AssetUrl.Replace("#NAME#", asset.Name));
             this.hyperlink_Asset.Inlines.Add(apiInfo.AssetUrlName);

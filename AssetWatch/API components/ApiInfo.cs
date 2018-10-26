@@ -14,11 +14,15 @@ namespace AssetWatch
         public int MinUpdateInterval { get; set; }
 
         /// <summary>
-        /// Gets or sets the MaxUpdateInterval
+        /// Gets or sets the MaxUpdateInterval.
         /// Contains the maximum supported update interval of the API.
         /// </summary>
         public int MaxUpdateInterval { get; set; }
 
+        /// <summary>
+        /// Gets or sets the UpdateIntervalStepSize.
+        /// Is used for the slider steps.
+        /// </summary>
         public int UpdateIntervalStepSize { get; set; }
 
         /// <summary>
@@ -85,7 +89,6 @@ namespace AssetWatch
         /// Defines the market Cryptocurrencies.
         /// </summary>
         Cryptocurrencies,
-
         /// <summary>
         /// Defines market the Stocks.
         /// </summary>

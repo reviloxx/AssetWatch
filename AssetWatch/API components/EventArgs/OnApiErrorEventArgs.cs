@@ -6,12 +6,12 @@
     public class OnApiErrorEventArgs
     {
         /// <summary>
-        /// Gets or sets the ErrorType.
+        /// Gets or sets the ErrorType
         /// </summary>
         public ErrorType ErrorType { get; set; }
 
         /// <summary>
-        /// Gets or sets the ErrorMessage.
+        /// Gets or sets the ErrorMessage
         /// </summary>
         public string ErrorMessage { get; set; }
     }
@@ -31,6 +31,9 @@
         /// </summary>
         Unauthorized,
 
+        /// <summary>
+        /// Defines the BadRequest ErrorType wich is caused by an invalid API request.
+        /// </summary>
         BadRequest,
 
         /// <summary>

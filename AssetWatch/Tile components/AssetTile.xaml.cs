@@ -224,24 +224,6 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The button_MouseEnter
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="e">The e<see cref="MouseEventArgs"/></param>
-        private void button_MouseEnter(object sender, MouseEventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// The button_MouseLeave
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="e">The e<see cref="MouseEventArgs"/></param>
-        private void button_MouseLeave(object sender, MouseEventArgs e)
-        {
-        }
-
-        /// <summary>
         /// The button_Info_Click
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
@@ -273,8 +255,6 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="Asset"/></param>
         private void assetTileSettingsWindow_OnAssetChanged(object sender, Asset e)
         {
-            // TODO: change of asset does not work properly
-            // fire the events if the asset has changed
             if (e.AssetId != this.AssetTileData.Asset.AssetId || e.ConvertCurrency != this.AssetTileData.Asset.ConvertCurrency)
             {
                 if (this.AssetTileData.Asset != null)
@@ -291,7 +271,16 @@ namespace AssetWatch
             this.Dispatcher.Invoke(() =>
             {
                 this.RefreshTileStyle();
+
+                if (this.AssetTileData.Asset.PriceConvert != null)
+                {
+                    this.RefreshAssetTextblocks();
+                    this.button_Calc.Visibility = Visibility.Visible;
+                    this.button_Info.Visibility = Visibility.Visible;
+                }
+                
                 this.RefreshTileDataTextblocks();
+                
             });
         }
 

@@ -14,12 +14,9 @@ namespace AssetWatch
         /// </summary>
         event EventHandler<IApi> OnApiLoaded;
 
-        ///// <summary>
-        ///// Is fired when any error occurs within the API.
-        ///// The event args contain the error type and a error message.
-        ///// </summary>
-        //event EventHandler<OnApiErrorEventArgs> OnApiError;
-
+        /// <summary>
+        /// Is fired after the AppData was changed.
+        /// </summary>
         event EventHandler OnAppDataChanged;
 
         /// <summary>
@@ -47,13 +44,6 @@ namespace AssetWatch
         void StartAssetUpdater(IApi api);
 
         /// <summary>
-        /// The SetUpdateInterval sets a new update interval for updating all subscribed assets of an API.
-        /// </summary>
-        /// <param name="api">The api<see cref="IApi"/> to set the update interval.</param>
-        /// <param name="seconds">The seconds<see cref="int"/> defines the new update interval.</param>
-        void SetUpdateInterval(IApi api, int seconds);
-
-        /// <summary>
         /// Subscribes an asset tile to the API handler.
         /// A subscribed asset tile gets informed everytime it's asset is updated by calling the asset tile's "UpdateAsset" function.
         /// </summary>
@@ -67,8 +57,16 @@ namespace AssetWatch
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe.</param>
         void UnsubscribeAssetTile(AssetTile assetTile);
 
+        /// <summary>
+        /// Subscribes a portfolio tile to the API handler.
+        /// </summary>
+        /// <param name="portfolioTile">The portfolioTile<see cref="PortfolioTile"/></param>
         void SubscribePortfolioTile(PortfolioTile portfolioTile);
 
+        /// <summary>
+        /// Unsubscribes a portfolio tile from the API handler.
+        /// </summary>
+        /// <param name="portfolioTile">The portfolioTile<see cref="PortfolioTile"/></param>
         void UnsubscribePortfolioTile(PortfolioTile portfolioTile);
 
         /// <summary>

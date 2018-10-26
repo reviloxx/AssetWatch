@@ -99,6 +99,12 @@ namespace AssetWatch
             this.selectedApi = this.readyApis.ElementAt(comboBox_Apis.SelectedIndex).Key;
 
             comboBox_ConvertCurrencies.ItemsSource = this.selectedApi.ApiInfo.SupportedConvertCurrencies;
+
+            if (comboBox_ConvertCurrencies.Items.Count > 0)
+            {
+                comboBox_ConvertCurrencies.SelectedIndex = 0;
+            }
+
             comboBox_Assets.ItemsSource = this.readyApis.ElementAt(comboBox_Apis.SelectedIndex).Value;
         }
 
@@ -118,8 +124,7 @@ namespace AssetWatch
                 selectedAsset != null && comboBox_ConvertCurrencies.SelectedValue != null)
             {
                 
-                this.assetTileData.ApiName = this.selectedApi.ApiInfo.ApiName;
-                this.assetTileData.Asset.AssetId = selectedAsset.AssetId;
+                this.assetTileData.ApiName = this.selectedApi.ApiInfo.ApiName;                
 
                 this.assetTileData.AssetTileName = textBox_TileName.Text;
                 this.assetTileData.InvestedSum = investedSum;
@@ -134,6 +139,9 @@ namespace AssetWatch
                 };
 
                 this.FireOnAssetChanged(newAsset);
+
+                this.assetTileData.Asset.AssetId = selectedAsset.AssetId;
+
                 this.Close();
             }      
             else

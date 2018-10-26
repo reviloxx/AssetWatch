@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace AssetWatch
 {
@@ -19,7 +20,7 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets a value indicating whether the tile positions are locked or not.
         /// </summary>
-        public bool PositionsLocked { get; set; }        
+        public bool PositionsLocked { get; set; }
 
         /// <summary>
         /// Gets or sets the GlobalTileStyle.

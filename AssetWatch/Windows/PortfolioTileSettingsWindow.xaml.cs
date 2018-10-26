@@ -40,32 +40,55 @@ namespace AssetWatch
             {
                 textBox_PortfolioName.Text = portfolioTileData.PortfolioTileName;
 
-                // TODO: select items
-                
+                portfolioTileData.AssignedAssetTilesDataSet.ForEach(ass =>
+                {
+                    if (this.appData.AssetTileDataSet.Any(ast => ast.HoldingsCount == ass.HoldingsCount &&
+                                                                    ast.InvestedSum == ass.InvestedSum &&
+                                                                    ast.Asset.AssetId == ass.Asset.AssetId &&
+                                                                    ast.Asset.ConvertCurrency == ass.Asset.ConvertCurrency))
+                    {
+                        AssetTileData temp = this.appData.AssetTileDataSet.Find(ast => ast.HoldingsCount == ass.HoldingsCount &&
+                                                                    ast.InvestedSum == ass.InvestedSum &&
+                                                                    ast.Asset.AssetId == ass.Asset.AssetId &&
+                                                                    ast.Asset.ConvertCurrency == ass.Asset.ConvertCurrency);
 
-                //portfolioTileData.AssignedAssetTileDataSet.ForEach(ass =>
-                //{
-                //    int i = listView_availableAssets.Items.IndexOf(ass);
 
-                //    if (i > -1)
-                //    {
-                //        DataRowView row = (DataRowView)listView_availableAssets.Items[i];
-                //        listView_availableAssets.SelectedItems.Add(row);
-                //    }                   
+                        int i = listView_availableAssets.Items.IndexOf(temp);
+                        listView_availableAssets.UpdateLayout();
+                        listView_availableAssets.ScrollIntoView(listView_availableAssets.Items[i]);
+                        (listView_availableAssets.ItemContainerGenerator.ContainerFromIndex(i) as ListViewItem).IsSelected = true;                        
+                    }                      
+                });
 
-                //    //(listView_availableAssets.ItemContainerGenerator.ContainerFromIndex(1) as ListViewItem).IsSelected = true;
-                //});
+                listView_availableAssets.Focus();
             });
         }
 
         private void button_OK_Click(object sender, RoutedEventArgs e)
         {
-            if (listView_availableAssets.SelectedItems == null)
+            if (listView_availableAssets.SelectedItems.Count < 1)
             {
                 return;
             }            
 
             List<AssetTileData> selectedAssetTileDataSet = listView_availableAssets.SelectedItems.Cast<AssetTileData>().ToList();
+            string convert = selectedAssetTileDataSet[0].Asset.ConvertCurrency;
+
+            foreach (var sel in selectedAssetTileDataSet)
+            {
+                if (sel.Asset.ConvertCurrency != convert)
+                {
+                    MessageBox.Show("Die Währungen zur Umrechnung müssen übereinstimmen!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (sel.Asset.Symbol == null || sel.Asset.ConvertCurrency == null)
+                {
+                    MessageBox.Show("Ungültige Asset Kachel ausgewählt!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
 
             this.portfolioTileData.AssignedAssetTilesDataSet = selectedAssetTileDataSet;
             this.portfolioTileData.PortfolioTileName = textBox_PortfolioName.Text;
