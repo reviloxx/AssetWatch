@@ -78,6 +78,9 @@ namespace AssetWatch
                 this.button_Calc.Visibility = Visibility.Visible;
                 this.button_Info.Visibility = Visibility.Visible;
             });
+
+            // Fires the event so that possibly involved portfolio tiles can refresh
+            this.FireOnAssetTileUpdated();
         }
 
         /// <summary>
@@ -265,6 +268,11 @@ namespace AssetWatch
                 this.AssetTileData.Asset = e;
                 this.FireOnAssetSelected();
             }
+            else
+            {
+                // Fire the event if the asset did not change, so that possibly involved portfolio tiles can refresh instantly
+                this.FireOnAssetTileUpdated();
+            }
 
             this.CalculateProfit();
 
@@ -281,7 +289,7 @@ namespace AssetWatch
                 
                 this.RefreshTileDataTextblocks();
                 
-            });
+            });            
         }
 
         /// <summary>
@@ -348,6 +356,11 @@ namespace AssetWatch
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
+        private void FireOnAssetTileUpdated()
+        {
+            this.OnAssetTileUpdated?.Invoke(this, null);
+        }
+
         /// <summary>
         /// The FireOnAssetTileCLosed
         /// </summary>
@@ -376,6 +389,8 @@ namespace AssetWatch
         /// Defines the OnAssetUnselected
         /// </summary>
         public event EventHandler OnAssetUnselected;
+
+        public event EventHandler OnAssetTileUpdated;
 
         /// <summary>
         /// Defines the OnAssetTileClosed

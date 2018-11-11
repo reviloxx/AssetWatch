@@ -36,11 +36,15 @@ namespace AssetWatch
 
         private void PortfolioTileSettingsWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            List<AssetTileData> assignedAssetTileDatas = this.appData.AssetTileDataSet
+                .Where(ass => this.portfolioTileData.AssignedAssetTileIds.Contains(ass.AssetTileId))
+                .ToList();
+
             this.Dispatcher.Invoke(() =>
             {
                 textBox_PortfolioName.Text = portfolioTileData.PortfolioTileName;
 
-                portfolioTileData.AssignedAssetTilesDataSet.ForEach(ass =>
+                assignedAssetTileDatas.ForEach(ass =>
                 {
                     if (this.appData.AssetTileDataSet.Any(ast => ast.HoldingsCount == ass.HoldingsCount &&
                                                                     ast.InvestedSum == ass.InvestedSum &&
@@ -78,7 +82,7 @@ namespace AssetWatch
             {
                 if (sel.Asset.ConvertCurrency != convert)
                 {
-                    MessageBox.Show("Die Währungen zur Umrechnung müssen übereinstimmen!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Die Basiswährungen der Asset Kacheln müssen übereinstimmen!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -90,7 +94,9 @@ namespace AssetWatch
             }
 
 
-            this.portfolioTileData.AssignedAssetTilesDataSet = selectedAssetTileDataSet;
+            this.portfolioTileData.AssignedAssetTileIds = new List<int>();
+            selectedAssetTileDataSet.ForEach(sel => this.portfolioTileData.AssignedAssetTileIds.Add(sel.AssetTileId));
+
             this.portfolioTileData.PortfolioTileName = textBox_PortfolioName.Text;
             this.FireOnPortfolioTileDataChanged();
             this.Close();

@@ -58,18 +58,6 @@ namespace AssetWatch
         void UnsubscribeAssetTile(AssetTile assetTile);
 
         /// <summary>
-        /// Subscribes a portfolio tile to the API handler.
-        /// </summary>
-        /// <param name="portfolioTile">The portfolioTile<see cref="PortfolioTile"/></param>
-        void SubscribePortfolioTile(PortfolioTile portfolioTile);
-
-        /// <summary>
-        /// Unsubscribes a portfolio tile from the API handler.
-        /// </summary>
-        /// <param name="portfolioTile">The portfolioTile<see cref="PortfolioTile"/></param>
-        void UnsubscribePortfolioTile(PortfolioTile portfolioTile);
-
-        /// <summary>
         /// Gets a list of APIs which were loaded from assemblies.
         /// </summary>
         List<IApi> LoadedApis { get; }

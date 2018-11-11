@@ -72,7 +72,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="button_OK" Content="OK" Click="button_OK_Click" HorizontalAlignment="Left" Height="19" Margin="10,0,0,6.4" VerticalAlignment="Bottom" Width="75"/>
+        <Button x:Name="button_OK" Content="OK" Click="button_OK_Click" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom" Width="75"/>
     </Grid>
 </Window>
 

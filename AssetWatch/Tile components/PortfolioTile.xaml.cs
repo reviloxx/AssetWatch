@@ -50,8 +50,6 @@ namespace AssetWatch
         /// <param name="appData">The appData<see cref="AppData"/></param>
         public PortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
-            // TODO: refresh invest if invest of an asset tile changes
-            // TODO: app crashes if adding an empty asset tile
             this.InitializeComponent();
             this.availableAssets = new List<Asset>();
             this.PortfolioTileData = portfolioTileData;
@@ -66,23 +64,17 @@ namespace AssetWatch
         /// The Update
         /// </summary>
         /// <param name="updatedAsset">The updatedAsset<see cref="Asset"/></param>
-        public void Update(Asset updatedAsset)
+        public void Update(AssetTile updatedAsset)
         {
-            if (this.PortfolioTileData.AssignedAssetTilesDataSet.Any(asst => asst.Asset.Symbol == updatedAsset.Symbol &&
-                                                                             asst.Asset.ConvertCurrency == updatedAsset.ConvertCurrency))
+            if (this.PortfolioTileData.AssignedAssetTileIds.Any(id => id == updatedAsset.AssetTileData.AssetTileId))
             {
-                List<AssetTileData> toUpdate = this.PortfolioTileData.AssignedAssetTilesDataSet.FindAll(asst => asst.Asset.Symbol == updatedAsset.Symbol &&
-                                                                             asst.Asset.ConvertCurrency == updatedAsset.ConvertCurrency);
-
-                toUpdate.ForEach(upd => upd.Asset = updatedAsset);
+                this.UpdateTextBlocks(updatedAsset.AssetTileData.Asset.LastUpdated);
+                this.RefreshTileStyle();
             }
             else
             {
                 return;
-            }
-
-            this.UpdateTextBlocks(updatedAsset.LastUpdated);
-            this.RefreshTileStyle();
+            }            
         }
 
         /// <summary>
@@ -180,21 +172,23 @@ namespace AssetWatch
         /// </summary>
         public void UpdateTextBlocks(DateTime? updatedTime)
         {
-            List<AssetTileData> assetTilesDataSet = this.PortfolioTileData.AssignedAssetTilesDataSet;
+            List<AssetTileData> assignedAssetTileDatas = this.appData.AssetTileDataSet
+                .Where(ass => this.PortfolioTileData.AssignedAssetTileIds.Contains(ass.AssetTileId))
+                .ToList();
 
-            double investTotal = PortfolioTileHelpers.CalculateInvest(assetTilesDataSet);
-            double worthTotal = PortfolioTileHelpers.CalculateWorth(assetTilesDataSet);
+            double investTotal = PortfolioTileHelpers.CalculateInvest(assignedAssetTileDatas);
+            double worthTotal = PortfolioTileHelpers.CalculateWorth(assignedAssetTileDatas);
             this.winTotal = worthTotal - investTotal;
-            this.percentage24h = PortfolioTileHelpers.Calculate24hPercentage(assetTilesDataSet, worthTotal);
+            this.percentage24h = PortfolioTileHelpers.Calculate24hPercentage(assignedAssetTileDatas, worthTotal);
             double win24h = PortfolioTileHelpers.CalculateWinLoss(this.percentage24h, worthTotal);
-            this.percentage1W = PortfolioTileHelpers.Calculate1WPercentage(assetTilesDataSet, worthTotal);
+            this.percentage1W = PortfolioTileHelpers.Calculate1WPercentage(assignedAssetTileDatas, worthTotal);
             double win1W = PortfolioTileHelpers.CalculateWinLoss(this.percentage1W, worthTotal);
 
             string convertCurrency = string.Empty;
 
-            if (this.PortfolioTileData.AssignedAssetTilesDataSet.Count > 0)
+            if (assignedAssetTileDatas.Count > 0)
             {
-                convertCurrency = " " + this.PortfolioTileData.AssignedAssetTilesDataSet[0].Asset.ConvertCurrency;
+                convertCurrency = " " + assignedAssetTileDatas[0].Asset.ConvertCurrency;
             }
 
             this.Dispatcher.Invoke(() =>
@@ -217,25 +211,9 @@ namespace AssetWatch
                 
                 this.textBlock_ATWin.Text = TileHelpers.FormatValueString(winTotal, true) + convertCurrency;
             });
-        }                     
+        }             
+        
 
-        /// <summary>
-        /// The button_MouseEnter
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="e">The e<see cref="MouseEventArgs"/></param>
-        private void button_MouseEnter(object sender, MouseEventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// The button_MouseLeave
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="e">The e<see cref="MouseEventArgs"/></param>
-        private void button_MouseLeave(object sender, MouseEventArgs e)
-        {
-        }
 
         /// <summary>
         /// The button_Settings_Click

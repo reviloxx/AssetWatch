@@ -36,6 +36,8 @@ namespace AssetWatch
         /// </summary>
         private AppData appData;
 
+        private Random rand;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTileHandler"/> class.
         /// </summary>
@@ -48,6 +50,7 @@ namespace AssetWatch
             this.handledPortfolioTiles = new List<PortfolioTile>();
             this.assetTilesToSubscribe = new List<AssetTile>();
             this.appData = appData;
+            this.rand = new Random();
 
             this.OpenLoadedAssetTiles();
             this.OpenLoadedPortfolioTiles();
@@ -72,16 +75,23 @@ namespace AssetWatch
         /// </summary>
         public void OpenNewAssetTile()
         {
-            AssetTile assetTile = new AssetTile(new AssetTileData(), this.appData, this.apiHandler.ReadyApis);
+            AssetTile assetTile = new AssetTile(new AssetTileData(this.rand), this.appData, this.apiHandler.ReadyApis);
             assetTile.OnAssetTileClosed += this.AssetTile_OnAssetTileClosed;
             assetTile.OnAssetSelected += this.AssetTile_OnAssetSelected;
             assetTile.OnAssetUnselected += this.AssetTile_OnAssetUnselected;
             assetTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
+            assetTile.OnAssetTileUpdated += this.AssetTile_OnAssetTileUpdated;
             this.handledAssetTiles.Add(assetTile);
             this.appData.AssetTileDataSet.Add(assetTile.AssetTileData);
             this.FireOnAppDataChanged();
             assetTile.Show();
-        }        
+        }
+
+        private void AssetTile_OnAssetTileUpdated(object sender, EventArgs e)
+        {
+            AssetTile updatedAssetTile = (AssetTile)sender;
+            this.handledPortfolioTiles.ForEach(port => port.Update(updatedAssetTile));
+        }
 
         public void OpenNewPortfolioTile()
         {
@@ -90,7 +100,6 @@ namespace AssetWatch
             portfolioTile.OnPortfolioTileClosed += this.PortfolioTile_OnPortfolioTileClosed;
             this.handledPortfolioTiles.Add(portfolioTile);
             this.appData.PortfolioTileDataSet.Add(portfolioTile.PortfolioTileData);
-            this.apiHandler.SubscribePortfolioTile(portfolioTile);
             this.FireOnAppDataChanged();
             portfolioTile.Show();
         }        
@@ -109,6 +118,7 @@ namespace AssetWatch
                 assetTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
                 assetTile.OnAssetSelected += this.AssetTile_OnAssetSelected;
                 assetTile.OnAssetUnselected += this.AssetTile_OnAssetUnselected;
+                assetTile.OnAssetTileUpdated += this.AssetTile_OnAssetTileUpdated;
                 this.handledAssetTiles.Add(assetTile);
 
                 if (assetTile.AssetTileData.ApiName != null && assetTile.AssetTileData.ApiName != string.Empty)
@@ -131,7 +141,6 @@ namespace AssetWatch
                 portfolioTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
                 portfolioTile.OnPortfolioTileClosed += this.PortfolioTile_OnPortfolioTileClosed;
                 this.handledPortfolioTiles.Add(portfolioTile);
-                this.apiHandler.SubscribePortfolioTile(portfolioTile);
 
                 if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
@@ -245,7 +254,7 @@ namespace AssetWatch
             // remove this asset tile from all portfolio tiles
             this.appData.PortfolioTileDataSet.ForEach(port =>
             {
-                port.AssignedAssetTilesDataSet.Remove(closedAssetTile.AssetTileData);
+                port.AssignedAssetTileIds.Remove(closedAssetTile.AssetTileData.AssetTileId);
             });
 
             this.handledPortfolioTiles.ForEach(portt =>
@@ -260,8 +269,6 @@ namespace AssetWatch
         private void PortfolioTile_OnPortfolioTileClosed(object sender, EventArgs e)
         {
             PortfolioTile closedPortfolioTile = (PortfolioTile)sender;
-
-            this.apiHandler.UnsubscribePortfolioTile(closedPortfolioTile);
             this.handledPortfolioTiles.Remove(closedPortfolioTile);
             this.appData.PortfolioTileDataSet.Remove(closedPortfolioTile.PortfolioTileData);
 

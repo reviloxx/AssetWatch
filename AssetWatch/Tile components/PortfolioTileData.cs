@@ -11,7 +11,7 @@ namespace AssetWatch
         {
             this.TilePosition = new Position();
             this.CustomTileStyle = new TileStyle();
-            this.AssignedAssetTilesDataSet = new List<AssetTileData>();
+            this.AssignedAssetTileIds = new List<int>();
         }
 
         public Position TilePosition { get; set; }
@@ -23,7 +23,7 @@ namespace AssetWatch
 
         public bool HasCustomTileStyle { get; set; }
 
-        public List<AssetTileData> AssignedAssetTilesDataSet { get; set; }
+        public List<int> AssignedAssetTileIds { get; set; }
 
         public string PortfolioTileName { get; set; }
     }

@@ -15,17 +15,14 @@ namespace AssetWatch
         /// </summary>
         private List<AssetTile> subscribedAssetTiles;
 
-        private List<PortfolioTile> subscribedPortfolioTiles;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
         /// </summary>
         public MultiApiHandler()
         {
             this.subscribedAssetTiles = new List<AssetTile>();
-            this.subscribedPortfolioTiles = new List<PortfolioTile>();
             this.ReadyApis = new Dictionary<IApi, List<Asset>>();
-        }        
+        }
 
         /// <summary>
         /// Loads all available APIs by using an IApiLoader, sobscribes to it's events and requests it's available assets.
@@ -47,10 +44,10 @@ namespace AssetWatch
                 api.OnAppDataChanged += this.Api_OnAppDataChanged;
                 this.FireOnApiLoaded(api);
             });
-        }        
+        }
 
         /// <summary>
-        /// Subscribes an asset tile to the api handler and it's asset to the right API.
+        /// Subscribes an asset tile to the API handler and it's asset to the right API.
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to subscribe.</param>
         public void SubscribeAssetTile(AssetTile assetTile)
@@ -63,23 +60,13 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// Unsubscribes an asset tile from the api handler.
+        /// Unsubscribes an asset tile from the API handler.
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe</param>
         public void UnsubscribeAssetTile(AssetTile assetTile)
         {
             this.subscribedAssetTiles.Remove(assetTile);
-        }
-
-        public void SubscribePortfolioTile(PortfolioTile portfolioTile)
-        {
-            this.subscribedPortfolioTiles.Add(portfolioTile);
-        }
-
-        public void UnsubscribePortfolioTile(PortfolioTile portfolioTile)
-        {
-            this.subscribedPortfolioTiles.Remove(portfolioTile);
-        }
+        }        
 
         /// <summary>
         /// Enables the API and requests it's available assets if neccessary.
@@ -96,8 +83,9 @@ namespace AssetWatch
             }
             else
             {
-                throw new Exception("should not happen");
-            }            
+                // should never happen
+                throw new Exception();
+            }
         }
 
         /// <summary>
@@ -114,6 +102,10 @@ namespace AssetWatch
             api.Disable();
         }
 
+        /// <summary>
+        /// Starts the asset updater of an API.
+        /// </summary>
+        /// <param name="api">The api<see cref="IApi"/> to start the asset updater.</param>
         public void StartAssetUpdater(IApi api)
         {
             api.StartAssetUpdater();
@@ -127,7 +119,7 @@ namespace AssetWatch
         private void Api_OnAvailableAssetsReceived(object sender, List<Asset> availableAssets)
         {
             // check which API sent it's available assets and put them in the dictionary
-            IApi api = (IApi)sender;            
+            IApi api = (IApi)sender;
             this.ReadyApis.Add(api, availableAssets);
         }
 
@@ -157,15 +149,18 @@ namespace AssetWatch
         private void Api_OnSingleAssetUpdated(object sender, Asset updatedAsset)
         {
             IApi api = (IApi)sender;
-            List<AssetTile> toNotify = this.subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName && 
+            List<AssetTile> toNotify = this.subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName &&
                                                                                 at.AssetTileData.Asset.AssetId == updatedAsset.AssetId &&
                                                                                 at.AssetTileData.Asset.ConvertCurrency == updatedAsset.ConvertCurrency);
 
-            toNotify.ForEach(a => a.Update(updatedAsset));
-
-            this.subscribedPortfolioTiles.ForEach(port => port.Update(updatedAsset));
+            toNotify.ForEach(a => a.Update(updatedAsset));            
         }
 
+        /// <summary>
+        /// Is called after an API has changed the call counter in the AppData.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="EventArgs"/></param>
         private void Api_OnAppDataChanged(object sender, EventArgs e)
         {
             try
@@ -175,8 +170,8 @@ namespace AssetWatch
             catch
             {
                 // save file might be in use by another process
-            }           
-        }        
+            }
+        }
 
         /// <summary>
         /// Fires the OnApiLoaded event.
@@ -186,14 +181,23 @@ namespace AssetWatch
         {
             OnApiLoaded?.Invoke(this, loadedApi);
         }
-        
+
+        /// <summary>
+        /// Fires the OnAppDataChanged event.
+        /// </summary>
         private void FireOnAppDataChanged()
         {
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
+        /// <summary>
+        /// Gets the LoadedApis
+        /// </summary>
         public List<IApi> LoadedApis { get; private set; }
 
+        /// <summary>
+        /// Gets the ReadyApis
+        /// </summary>
         public Dictionary<IApi, List<Asset>> ReadyApis { get; }
 
         /// <summary>
@@ -202,6 +206,9 @@ namespace AssetWatch
         /// </summary>
         public event EventHandler<IApi> OnApiLoaded;
 
+        /// <summary>
+        /// Defines the OnAppDataChanged
+        /// </summary>
         public event EventHandler OnAppDataChanged;
     }
 }

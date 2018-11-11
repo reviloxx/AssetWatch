@@ -8,6 +8,8 @@ namespace AssetWatch
     [Serializable]
     public class AssetTileData
     {
+        public int AssetTileId { get; set; }
+
         public string AssetTileName { get; set; }
         /// <summary>
         /// Gets or sets the name of the used API.
@@ -40,6 +42,17 @@ namespace AssetWatch
 
         public AssetTileData()
         {
+            this.Asset = new Asset();
+            this.HoldingsCount = 0;
+            this.InvestedSum = 0;
+            this.TilePosition = new Position();
+            this.CustomTileStyle = new TileStyle();
+            this.HasCustomTileStyle = false;
+        }
+
+        public AssetTileData(Random rand)
+        {
+            this.AssetTileId = rand.Next();
             this.Asset = new Asset();
             this.HoldingsCount = 0;
             this.InvestedSum = 0;
