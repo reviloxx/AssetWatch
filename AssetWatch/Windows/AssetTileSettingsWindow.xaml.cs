@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AssetWatch
 {
@@ -19,17 +11,29 @@ namespace AssetWatch
     /// </summary>
     public partial class AssetTileSettingsWindow : Window
     {
+        /// <summary>
+        /// Contains the available APIs which are ready to use.
+        /// </summary>
         private Dictionary<IApi, List<Asset>> readyApis;
 
+        /// <summary>
+        /// Defines the assetTileData.
+        /// </summary>
         private AssetTileData assetTileData;
 
+        /// <summary>
+        /// Contains the currently selected API.
+        /// </summary>
         private IApi selectedApi;
-        
-        public event EventHandler<Asset> OnAssetChanged;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssetTileSettingsWindow"/> class.
+        /// </summary>
+        /// <param name="readyApis">The readyApis<see cref="Dictionary{IApi, List{Asset}}"/></param>
+        /// <param name="assetTileData">The assetTileData<see cref="AssetTileData"/></param>
         public AssetTileSettingsWindow(Dictionary<IApi, List<Asset>> readyApis, AssetTileData assetTileData)
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.readyApis = readyApis;
             this.assetTileData = assetTileData;
 
@@ -38,18 +42,24 @@ namespace AssetWatch
             this.InitializeComboBoxes();
         }
 
+        /// <summary>
+        /// The InitializeTextBoxes
+        /// </summary>
         private void InitializeTextBoxes()
         {
-            textBox_TileName.Text = this.assetTileData.AssetTileName;
-            textBox_HoldingsCount.Text = this.assetTileData.HoldingsCount.ToString();
-            textBox_InvestedSum.Text = this.assetTileData.InvestedSum.ToString();
+            this.textBox_TileName.Text = this.assetTileData.AssetTileName;
+            this.textBox_HoldingsCount.Text = this.assetTileData.HoldingsCount.ToString();
+            this.textBox_InvestedSum.Text = this.assetTileData.InvestedSum.ToString();
         }
 
+        /// <summary>
+        /// The InitializeComboBoxes
+        /// </summary>
         private void InitializeComboBoxes()
         {
             IApi api;
 
-            if(this.assetTileData.ApiName == null)
+            if (this.assetTileData.ApiName == null)
             {
                 return;
             }
@@ -57,7 +67,7 @@ namespace AssetWatch
             if (this.readyApis.Any(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName))
             {
                 api = this.readyApis.First(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName).Key;
-                comboBox_Apis.SelectedItem = this.readyApis.First(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName);                
+                this.comboBox_Apis.SelectedItem = this.readyApis.First(r => r.Key.ApiInfo.ApiName == this.assetTileData.ApiName);
             }
             else
             {
@@ -67,7 +77,8 @@ namespace AssetWatch
 
             if (api.ApiInfo.SupportedConvertCurrencies.Contains(this.assetTileData.Asset.ConvertCurrency))
             {
-                comboBox_ConvertCurrencies.SelectedItem = this.assetTileData.Asset.ConvertCurrency;
+                // TODO: does not work
+                this.comboBox_ConvertCurrencies.SelectedItem = this.assetTileData.Asset.ConvertCurrency;
             }
             else
             {
@@ -77,7 +88,7 @@ namespace AssetWatch
 
             if (this.readyApis[api].Any(ass => ass.Symbol == this.assetTileData.Asset.Symbol))
             {
-                comboBox_Assets.SelectedItem = this.readyApis[api].First(a => a.Symbol == this.assetTileData.Asset.Symbol);
+                this.comboBox_Assets.SelectedItem = this.readyApis[api].First(a => a.Symbol == this.assetTileData.Asset.Symbol);
             }
             else
             {
@@ -86,64 +97,74 @@ namespace AssetWatch
             }
         }
 
+        /// <summary>
+        /// The comboBox_Apis_SelectionChanged
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="SelectionChangedEventArgs"/></param>
         private void comboBox_Apis_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (comboBox_Apis.SelectedIndex < 0)
+            if (this.comboBox_Apis.SelectedIndex < 0)
             {
                 this.selectedApi = null;
-                comboBox_ConvertCurrencies.ItemsSource = null;
-                comboBox_Assets.ItemsSource = null;
+                this.comboBox_ConvertCurrencies.ItemsSource = null;
+                this.comboBox_Assets.ItemsSource = null;
                 return;
             }
 
-            this.selectedApi = this.readyApis.ElementAt(comboBox_Apis.SelectedIndex).Key;
+            this.selectedApi = this.readyApis.ElementAt(this.comboBox_Apis.SelectedIndex).Key;
 
-            comboBox_ConvertCurrencies.ItemsSource = this.selectedApi.ApiInfo.SupportedConvertCurrencies;
+            this.comboBox_ConvertCurrencies.ItemsSource = this.selectedApi.ApiInfo.SupportedConvertCurrencies;
 
-            if (comboBox_ConvertCurrencies.Items.Count > 0)
+            if (this.comboBox_ConvertCurrencies.Items.Count > 0)
             {
-                comboBox_ConvertCurrencies.SelectedIndex = 0;
+                this.comboBox_ConvertCurrencies.SelectedIndex = 0;
             }
 
-            comboBox_Assets.ItemsSource = this.readyApis.ElementAt(comboBox_Apis.SelectedIndex).Value;
+            this.comboBox_Assets.ItemsSource = this.readyApis.ElementAt(this.comboBox_Apis.SelectedIndex).Value;
         }
 
-        private void FireOnAssetChanged(Asset newAsset)
-        {
-            this.OnAssetChanged?.Invoke(this, newAsset);
-        }               
-
+        /// <summary>
+        /// The button_Ok_Click
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void button_Ok_Click(object sender, RoutedEventArgs e)
         {
             double investedSum;
             double holdingsCount;
-            Asset selectedAsset = (Asset)comboBox_Assets.SelectedValue;
+            Asset selectedAsset = (Asset)this.comboBox_Assets.SelectedValue;
 
-            if (double.TryParse(textBox_InvestedSum.Text.Replace('.', ','), out investedSum) &&
-                double.TryParse(textBox_HoldingsCount.Text.Replace('.', ','), out holdingsCount) &&
-                selectedAsset != null && comboBox_ConvertCurrencies.SelectedValue != null)
+            if (double.TryParse(this.textBox_InvestedSum.Text.Replace('.', ','), out investedSum) &&
+                double.TryParse(this.textBox_HoldingsCount.Text.Replace('.', ','), out holdingsCount) &&
+                selectedAsset != null && this.comboBox_ConvertCurrencies.SelectedValue != null)
             {
-                
-                this.assetTileData.ApiName = this.selectedApi.ApiInfo.ApiName;                
 
-                this.assetTileData.AssetTileName = textBox_TileName.Text;
+                
+
+                this.assetTileData.AssetTileName = this.textBox_TileName.Text;
                 this.assetTileData.InvestedSum = investedSum;
                 this.assetTileData.HoldingsCount = holdingsCount;
 
                 Asset newAsset = new Asset
                 {
                     AssetId = selectedAsset.AssetId,
-                    ConvertCurrency = comboBox_ConvertCurrencies.SelectedValue.ToString(),
+                    ConvertCurrency = this.comboBox_ConvertCurrencies.SelectedValue.ToString(),
                     Name = selectedAsset.Name,
                     Symbol = selectedAsset.Symbol
                 };
 
-                this.FireOnAssetChanged(newAsset);
+                this.FireOnAssetChanged(new OnAssetTileSettingsChangedEventArgs
+                {
+                    NewApiName = this.selectedApi.ApiInfo.ApiName,
+                    NewAsset = newAsset
+                });
 
+                this.assetTileData.ApiName = this.selectedApi.ApiInfo.ApiName;
                 this.assetTileData.Asset.AssetId = selectedAsset.AssetId;
 
                 this.Close();
-            }      
+            }
             else
             {
                 MessageBox.Show("Ungültige Eingabe!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -151,8 +172,28 @@ namespace AssetWatch
             }
         }
 
+        /// <summary>
+        /// The FireOnAssetChanged
+        /// </summary>
+        /// <param name="newAsset">The newAsset<see cref="Asset"/></param>
+        private void FireOnAssetChanged(OnAssetTileSettingsChangedEventArgs onAssetTileSettingsChangedEventArgs)
+        {
+            this.OnAssetTileSettingsChanged?.Invoke(this, onAssetTileSettingsChangedEventArgs);
+        }
+
+        /// <summary>
+        /// Defines the OnAssetChanged
+        /// </summary>
+        public event EventHandler<OnAssetTileSettingsChangedEventArgs> OnAssetTileSettingsChanged;
+
+        /// <summary>
+        /// Defines the <see cref="AssetTileSettingsWindowViewModel" />
+        /// </summary>
         public class AssetTileSettingsWindowViewModel
         {
+            /// <summary>
+            /// Gets or sets the ReadyApis
+            /// </summary>
             public Dictionary<IApi, List<Asset>> ReadyApis { get; set; }
         }
     }

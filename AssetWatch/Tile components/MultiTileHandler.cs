@@ -36,6 +36,9 @@ namespace AssetWatch
         /// </summary>
         private AppData appData;
 
+        /// <summary>
+        /// The random number generator for asset tile ids.
+        /// </summary>
         private Random rand;
 
         /// <summary>
@@ -172,6 +175,7 @@ namespace AssetWatch
             {
                 ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
 
+                // TODO: maybe rethink
                 // reset call counter every month
                 if ((DateTime.Now - apiData.CallCountStartTime).Days + 1 > 30)
                 {
@@ -189,6 +193,7 @@ namespace AssetWatch
 
             List<AssetTile> toRemove = new List<AssetTile>();
 
+            // subscribe all asset tiles which were waiting for this API to be loaded
             this.assetTilesToSubscribe.ForEach(assToSub =>
             {
                 if (assToSub.AssetTileData.ApiName == api.ApiInfo.ApiName)
@@ -198,6 +203,7 @@ namespace AssetWatch
                 }
             });
 
+            // remove the subscribed asset tiles from the waiting list
             toRemove.ForEach(rm => this.assetTilesToSubscribe.Remove(rm));
 
             if (api.ApiData.IsEnabled)
@@ -259,7 +265,7 @@ namespace AssetWatch
 
             this.handledPortfolioTiles.ForEach(portt =>
             {
-                portt.UpdateTextBlocks(DateTime.Now);                
+                portt.UpdateTextBlocks(null);                
                 portt.RefreshTileStyle();
             });
 

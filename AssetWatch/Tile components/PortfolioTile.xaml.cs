@@ -176,13 +176,13 @@ namespace AssetWatch
                 .Where(ass => this.PortfolioTileData.AssignedAssetTileIds.Contains(ass.AssetTileId))
                 .ToList();
 
-            double investTotal = PortfolioTileHelpers.CalculateInvest(assignedAssetTileDatas);
-            double worthTotal = PortfolioTileHelpers.CalculateWorth(assignedAssetTileDatas);
+            double investTotal = TileHelpers.CalculateInvest(assignedAssetTileDatas);
+            double worthTotal = TileHelpers.CalculateWorth(assignedAssetTileDatas);
             this.winTotal = worthTotal - investTotal;
-            this.percentage24h = PortfolioTileHelpers.Calculate24hPercentage(assignedAssetTileDatas, worthTotal);
-            double win24h = PortfolioTileHelpers.CalculateWinLoss(this.percentage24h, worthTotal);
-            this.percentage1W = PortfolioTileHelpers.Calculate1WPercentage(assignedAssetTileDatas, worthTotal);
-            double win1W = PortfolioTileHelpers.CalculateWinLoss(this.percentage1W, worthTotal);
+            this.percentage24h = TileHelpers.Calculate24hPercentage(assignedAssetTileDatas, worthTotal);
+            double win24h = TileHelpers.CalculateWinLoss(this.percentage24h, worthTotal);
+            this.percentage1W = TileHelpers.Calculate7dPercentage(assignedAssetTileDatas, worthTotal);
+            double win1W = TileHelpers.CalculateWinLoss(this.percentage1W, worthTotal);
 
             string convertCurrency = string.Empty;
 
@@ -235,6 +235,7 @@ namespace AssetWatch
         private void PortfolioTileSettingsWindow_OnPortfolioTileDataChanged(object sender, EventArgs e)
         {
             this.UpdateTextBlocks(null);
+            this.RefreshTileStyle();
             this.FireOnAppDataChanged();
         }
 

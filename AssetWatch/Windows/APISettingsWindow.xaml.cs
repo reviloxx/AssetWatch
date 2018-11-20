@@ -27,7 +27,7 @@ namespace AssetWatch
 
             textbox_API_key.IsEnabled = api.ApiInfo.ApiKeyRequired && !api.ApiData.IsEnabled;
 
-            if (api.ApiInfo.ApiKeyRequired && api.ApiInfo.GetApiKeyUrl != null)
+            if (api.ApiInfo.ApiKeyRequired && (api.ApiInfo.GetApiKeyUrl != null && api.ApiInfo.GetApiKeyUrl != string.Empty))
             {
                 hyperlink_getAPIKey.NavigateUri = new Uri(api.ApiInfo.GetApiKeyUrl);
                 textBlock_getAPIKEy.Visibility = Visibility.Visible;
@@ -36,7 +36,7 @@ namespace AssetWatch
             textBlock_updateIntervalInfo.Text = api.ApiInfo.UpdateIntervalInfoText;
             slider_UpdateInterval.Minimum = api.ApiInfo.MinUpdateInterval / 60;
             slider_UpdateInterval.Maximum = api.ApiInfo.MaxUpdateInterval / 60;
-            slider_UpdateInterval.TickFrequency = 5;
+            slider_UpdateInterval.TickFrequency = api.ApiInfo.UpdateIntervalStepSize / 60;
             textbox_API_key.Text = api.ApiData.ApiKey;
         }
 
@@ -48,7 +48,7 @@ namespace AssetWatch
         private void button_SaveExit_Click(object sender, RoutedEventArgs e)
         {
             this.api.ApiData.ApiKey = this.textbox_API_key.Text;
-            this.api.ApiData.UpdateInterval = this.UpdateInterval * 60;
+            this.api.ApiData.UpdateInterval = (int)this.UpdateInterval * 60;
             this.Close();
         }
 
@@ -63,6 +63,6 @@ namespace AssetWatch
             e.Handled = true;
         }
 
-        public int UpdateInterval { get; set; }
+        public double UpdateInterval { get; set; }        
     }
 }

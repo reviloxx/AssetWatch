@@ -11,19 +11,19 @@ namespace AssetWatch
         /// Gets or sets the MinUpdateInterval.
         /// Contains the minimum supported update interval of the API.
         /// </summary>
-        public int MinUpdateInterval { get; set; }
+        public double MinUpdateInterval { get; set; }
 
         /// <summary>
         /// Gets or sets the MaxUpdateInterval.
         /// Contains the maximum supported update interval of the API.
         /// </summary>
-        public int MaxUpdateInterval { get; set; }
+        public double MaxUpdateInterval { get; set; }
 
         /// <summary>
         /// Gets or sets the UpdateIntervalStepSize.
         /// Is used for the slider steps.
         /// </summary>
-        public int UpdateIntervalStepSize { get; set; }
+        public double UpdateIntervalStepSize { get; set; }
 
         /// <summary>
         /// Gets or sets the UpdateIntervalInfoText.

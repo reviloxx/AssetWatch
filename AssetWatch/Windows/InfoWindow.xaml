@@ -21,7 +21,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="10,157,0,0" TextWrapping="Wrap" Text="Max Supply:" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,177,0,0" TextWrapping="Wrap" Text="24h Change:" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,52,0,0" TextWrapping="Wrap" Text="Rank:" VerticalAlignment="Top"/>
-        <TextBlock Margin="0,0,10.8,10" TextWrapping="Wrap" Height="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="181">
+        <TextBlock Margin="0,0,10.8,10" TextWrapping="Wrap" Height="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="264">
             <Hyperlink x:Name="hyperlink_Asset" Click="hyperlink_Asset_Click" RequestNavigate="hyperlink_Asset_RequestNavigate"></Hyperlink>
         </TextBlock>
     </Grid>

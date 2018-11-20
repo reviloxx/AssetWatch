@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="AssetWatch.MultiApiHandler">
-    <Position X="0.5" Y="15" Width="2.5" />
+    <Position X="0.5" Y="14.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAgAAAAIEAAAAAAYAQwABwgICAAAADQAABAAAA=</HashCode>
+      <HashCode>ACAAAAAgAAAAAEAAAAAAYAAQABwgICAAAADQAABAAAA=</HashCode>
       <FileName>API components\MultiApiHandler.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -60,7 +60,7 @@
   <Class Name="AssetWatch.AssetTile">
     <Position X="4.25" Y="10.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ADYAAAABAEAUMAQAAQAAgIGAAAEBRAEhIQAAACBAEAA=</HashCode>
+      <HashCode>ADYAAAABCEAUMAQAAQAAgIGAAAEBRAEhIQAAECBCEAA=</HashCode>
       <FileName>Tile components\AssetTile.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -68,7 +68,7 @@
   <Class Name="AssetWatch.PortfolioTile">
     <Position X="13" Y="10.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACQABAAAACAQVkUAAAAAAAiAAAABAEApAAAggCDAAAA=</HashCode>
+      <HashCode>ACQABAAAACAQVgUAAAAAAAiAAAABAEAoAAAggCDAAAA=</HashCode>
       <FileName>Tile components\PortfolioTile.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -83,14 +83,14 @@
   <Class Name="AssetWatch.AssetTileData">
     <Position X="6.75" Y="10.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ACAAAABAAAAAAAAAAEAAAAAAAACAAAEEAEAgAAAAAAA=</HashCode>
+      <HashCode>ACAAAABgAAAAAAAAAEAAAAAAAACAAAEEAEAgAAAAAAA=</HashCode>
       <FileName>Tile components\AssetTileData.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.PortfolioTileData">
     <Position X="15.5" Y="10.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACACAEEAAAQAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAEEIAAQAAAAAAA=</HashCode>
       <FileName>Tile components\PortfolioTileData.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -98,7 +98,7 @@
     <Position X="0.5" Y="7.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAA=</HashCode>
-      <FileName>API components\EventArgs\OnApiReadyEventArgs.cs</FileName>
+      <FileName>EventArgs\OnApiReadyEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.ApiData">
@@ -112,7 +112,7 @@
     <Position X="2.75" Y="8.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>API components\EventArgs\OnApiErrorEventArgs.cs</FileName>
+      <FileName>EventArgs\OnApiErrorEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.MainSettingsWindow">
@@ -141,7 +141,7 @@
   <Class Name="AssetWatch.TileHandlerData">
     <Position X="9.25" Y="3" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAQAAAAEAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tile components\TileHandlerData.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -160,31 +160,24 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="AssetWatch.PortfolioTileHelpers">
-    <Position X="10.25" Y="14.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAAAIIAAgAAAAAABAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Tile components\TileHelpers.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="AssetWatch.TileHelpers">
-    <Position X="10.25" Y="13.25" Width="2" />
+    <Position X="10.25" Y="13.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAABAAAAAAAAACIIAAgAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Tile components\TileHelpers.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="AssetWatch.IApi">
     <Position X="0.5" Y="0.5" Width="4.75" />
     <TypeIdentifier>
-      <HashCode>AAAABAAAAAEACgAAAAAACAAAAAAAAEAAAAAgSABEAAA=</HashCode>
+      <HashCode>AAAABAAAAAEACgAAAAAACAAAAAAAAEAAQAAgSABEAAA=</HashCode>
       <FileName>API components\Interfaces\IApi.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="AssetWatch.IApiHandler">
     <Position X="0.5" Y="10.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAAIAAAAAAAIAAgABQgIAAAAADAAABAAAA=</HashCode>
+      <HashCode>AAAAAAAgAAAAAAAAAAAAIAAAABQgIAAAAADAAABAAAA=</HashCode>
       <FileName>API components\Interfaces\IApiHandler.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -213,7 +206,7 @@
     <Position X="16" Y="5.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAEAACAAAAEAAAAAAAAAgAAAAAA=</HashCode>
-      <FileName>API components\EventArgs\OnApiErrorEventArgs.cs</FileName>
+      <FileName>EventArgs\OnApiErrorEventArgs.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="AssetWatch.Market">

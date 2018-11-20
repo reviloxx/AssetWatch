@@ -24,6 +24,7 @@ namespace AssetWatch
             this.asset = asset;
             this.label_Asset.Content = asset.Symbol;
             this.label_Convert.Content = asset.ConvertCurrency;
+            this.textBox_Asset.Focus();
         }
 
         /// <summary>

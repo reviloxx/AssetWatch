@@ -15,12 +15,12 @@ namespace AssetWatch
     public partial class MainSettingsWindow : Window
     {
         /// <summary>
-        /// Defines the apiHandler.
+        /// Defines the apiHandler
         /// </summary>
         private IApiHandler apiHandler;
 
         /// <summary>
-        /// Defines the globalTileStyle.
+        /// Defines the globalTileStyle
         /// </summary>
         private TileStyle globalTileStyle;
 
@@ -41,7 +41,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The InitializeColorPickers sets the values of the color pickers depending on the values in the global tile style. 
+        /// The InitializeColorPickers sets the values of the color pickers depending on the values in the global tile style.
         /// </summary>
         private void InitializeColorPickers()
         {
@@ -259,6 +259,11 @@ namespace AssetWatch
         /// </summary>
         public event EventHandler OnGlobalTileStyleChanged;
 
+        /// <summary>
+        /// The button_OK_Click closes the settings window.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void button_OK_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -270,18 +275,22 @@ namespace AssetWatch
     /// </summary>
     public class MainSettingsWindowViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainSettingsWindowViewModel"/> class.
+        /// </summary>
+        /// <param name="loadedApis">The loadedApis<see cref="List{IApi}"/></param>
         public MainSettingsWindowViewModel(List<IApi> loadedApis)
         {
             this.LoadedApis = loadedApis;
         }
 
         /// <summary>
-        /// Gets or sets the LoadedApis.
+        /// Gets or sets the LoadedApis
         /// </summary>
         public List<IApi> LoadedApis { get; set; }
 
         /// <summary>
-        /// Gets or sets the GlobalTileStyle.
+        /// Gets or sets the GlobalTileStyle
         /// </summary>
         public TileStyle GlobalTileStyle { get; set; }
     }

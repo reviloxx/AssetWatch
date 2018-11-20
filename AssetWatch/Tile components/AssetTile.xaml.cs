@@ -246,7 +246,7 @@ namespace AssetWatch
         private void button_Settings_Click(object sender, RoutedEventArgs e)
         {
             AssetTileSettingsWindow assetTileSettingsWindow = new AssetTileSettingsWindow(this.readyApis, this.AssetTileData);
-            assetTileSettingsWindow.OnAssetChanged += this.assetTileSettingsWindow_OnAssetChanged;
+            assetTileSettingsWindow.OnAssetTileSettingsChanged += this.assetTileSettingsWindow_OnAssetTileSettingsChanged;
             assetTileSettingsWindow.ShowDialog();
             this.FireOnAppDataChanged();
         }
@@ -256,16 +256,19 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="Asset"/></param>
-        private void assetTileSettingsWindow_OnAssetChanged(object sender, Asset e)
+        private void assetTileSettingsWindow_OnAssetTileSettingsChanged(object sender, OnAssetTileSettingsChangedEventArgs e)
         {
-            if (e.AssetId != this.AssetTileData.Asset.AssetId || e.ConvertCurrency != this.AssetTileData.Asset.ConvertCurrency)
+            if (e.NewApiName != this.AssetTileData.ApiName ||
+                e.NewAsset.AssetId != this.AssetTileData.Asset.AssetId || 
+                e.NewAsset.ConvertCurrency != this.AssetTileData.Asset.ConvertCurrency)
             {
                 if (this.AssetTileData.Asset != null)
                 {
                     this.FireOnAssetUnselected();
                 }
 
-                this.AssetTileData.Asset = e;
+                this.AssetTileData.Asset = e.NewAsset;
+                this.AssetTileData.ApiName = e.NewApiName;
                 this.FireOnAssetSelected();
             }
             else

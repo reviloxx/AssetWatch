@@ -30,8 +30,11 @@ namespace AssetWatch
             this.textblock_TotalSupply.Text = TileHelpers.FormatValueString(asset.SupplyTotal, false);
             this.textblock_PercentChange24h.Text = TileHelpers.FormatValueString(asset.PercentChange24h, true) + "%";
 
-            this.hyperlink_Asset.NavigateUri = new Uri(apiInfo.AssetUrl.Replace("#NAME#", asset.Name));
-            this.hyperlink_Asset.Inlines.Add(apiInfo.AssetUrlName);
+            if (apiInfo.AssetUrl != string.Empty)
+            {
+                this.hyperlink_Asset.NavigateUri = new Uri(apiInfo.AssetUrl.Replace("#NAME#", asset.Name).Replace("#SYMBOL#", asset.Symbol));
+                this.hyperlink_Asset.Inlines.Add(apiInfo.AssetUrlName);
+            }            
         }
 
         /// <summary>

@@ -6,68 +6,6 @@ using System.Threading.Tasks;
 
 namespace AssetWatch
 { 
-    public static class PortfolioTileHelpers
-    {
-        public static double CalculateInvest(List<AssetTileData> assetTileDataSet)
-        {
-            double investTotal = 0;
-
-            assetTileDataSet.ForEach(asstiledata =>
-            {
-                investTotal += asstiledata.InvestedSum;
-            });
-
-            return investTotal;
-        }
-
-        public static double CalculateWorth(List<AssetTileData> assetTilesDataSet)
-        {
-            double worthTotal = 0;
-
-            assetTilesDataSet.ForEach(asstiledata =>
-            {
-                if (asstiledata.Asset.PriceConvert != null)
-                {
-                    worthTotal += asstiledata.HoldingsCount * double.Parse(asstiledata.Asset.PriceConvert);
-                }                
-            });
-
-            return worthTotal;
-        }
-
-        public static double Calculate24hPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
-        {
-            double percentage = 0;
-
-            assetTilesDataSet.ForEach(ass => {
-                double worth = ass.HoldingsCount * double.Parse(ass.Asset.PriceConvert);
-                double weight = worth / worthTotal;
-                percentage += double.Parse(ass.Asset.PercentChange24h) * weight;
-            });
-
-            return Math.Round(percentage, 2);
-        }
-
-        public static double Calculate1WPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
-        {
-            double percentage = 0;
-
-            assetTilesDataSet.ForEach(ass => {
-                double worth = ass.HoldingsCount * double.Parse(ass.Asset.PriceConvert);
-                double weight = worth / worthTotal;
-                percentage += double.Parse(ass.Asset.PercentChange7d) * weight;
-            });
-
-            return Math.Round(percentage, 2);
-        }
-
-        public static double CalculateWinLoss(double percentage, double worthTotal)
-        {
-            double mult = percentage / 100;
-            return worthTotal * mult;
-        }
-    }
-
     public static class TileHelpers
     {
         public static string FormatValueString(double value, bool forceSign)
@@ -139,6 +77,71 @@ namespace AssetWatch
             valueString = valueString.TrimEnd('0').TrimEnd(',');
 
             return valueString;
+        }
+
+        public static double CalculateInvest(List<AssetTileData> assetTileDataSet)
+        {
+            double investTotal = 0;
+
+            assetTileDataSet.ForEach(asstiledata =>
+            {
+                investTotal += asstiledata.InvestedSum;
+            });
+
+            return investTotal;
+        }
+
+        public static double CalculateWorth(List<AssetTileData> assetTilesDataSet)
+        {
+            double worthTotal = 0;
+
+            assetTilesDataSet.ForEach(asstiledata =>
+            {
+                if (asstiledata.Asset.PriceConvert != null)
+                {
+                    worthTotal += asstiledata.HoldingsCount * double.Parse(asstiledata.Asset.PriceConvert);
+                }                
+            });
+
+            return worthTotal;
+        }
+
+        public static double Calculate24hPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
+        {
+            double percentage = 0;
+
+            assetTilesDataSet.ForEach(ass => {
+                if (ass.Asset.PriceConvert != null && ass.Asset.PercentChange24h != null)
+                {
+                    double worth = ass.HoldingsCount * double.Parse(ass.Asset.PriceConvert);
+                    double weight = worth / worthTotal;
+                    percentage += double.Parse(ass.Asset.PercentChange24h) * weight;
+                }                
+            });
+
+            return Math.Round(percentage, 2);
+        }
+
+        public static double Calculate7dPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
+        {
+            double percentage = 0;
+
+            assetTilesDataSet.ForEach(ass => {
+                if (ass.Asset.PriceConvert != null && ass.Asset.PercentChange7d != null)
+                {
+                    double worth = ass.HoldingsCount * double.Parse(ass.Asset.PriceConvert);
+                    double weight = worth / worthTotal;
+                    percentage += double.Parse(ass.Asset.PercentChange7d) * weight;
+                }
+            });
+
+            return Math.Round(percentage, 2);
+        }
+
+        public static double CalculateWinLoss(double percentage, double worthTotal)
+        {
+            double mult = percentage / 100;
+            return worthTotal * mult;
         }
     }
 }

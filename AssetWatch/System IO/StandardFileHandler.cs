@@ -31,14 +31,21 @@ namespace AssetWatch
 
         public void SaveAppData(AppData appData)
         {
-            using (FileStream fs = new FileStream(saveLocation, FileMode.Create))
+            try
             {
-                XmlSerializer xs = new XmlSerializer(typeof(AppData));
-
-                if (fs.CanWrite)
+                using (FileStream fs = new FileStream(saveLocation, FileMode.Create))
                 {
-                    xs.Serialize(fs, appData);
+                    XmlSerializer xs = new XmlSerializer(typeof(AppData));
+
+                    if (fs.CanWrite)
+                    {
+                        xs.Serialize(fs, appData);
+                    }
                 }
+            }
+            catch
+            {
+                // save file might be used by another process
             }
         }
     }

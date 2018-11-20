@@ -160,15 +160,6 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The SetUpdateInterval
-        /// </summary>
-        /// <param name="updateInterval">The updateInterval<see cref="int"/></param>
-        public void SetUpdateInterval(int updateInterval)
-        {
-            this.ApiData.UpdateInterval = updateInterval;
-        }
-
-        /// <summary>
         /// The WaitForConnection
         /// </summary>
         private void WaitForConnection()
@@ -205,15 +196,7 @@ namespace ApiCoinmarketcap
             {
                 var map = await this.client.GetCurrencyMapAsync();
                 this.ApiData.CallCount++;
-
-                try
-                {
-                    // save file might be used by another process
-                    this.FireOnAppDataChanged();
-                }
-                catch
-                { }
-                
+                this.FireOnAppDataChanged();                
 
                 map.Data.ForEach(c =>
                 {
@@ -301,7 +284,7 @@ namespace ApiCoinmarketcap
 
                 if (a.Status.ErrorCode != 0)
                 {
-                    // do something
+                    // TODO: maybe do something
                     throw new Exception();
                 }
 

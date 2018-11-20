@@ -57,6 +57,9 @@
       <HintPath>..\packages\CoinMarketCapPro.1.0.3.4\lib\netstandard2.0\CoinMarketCapPro.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CryptoCompare, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CryptoCompare.1.0.4\lib\net45\CryptoCompare.dll</HintPath>
+    </Reference>
     <Reference Include="Flurl, Version=2.7.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Flurl.2.7.1\lib\net40\Flurl.dll</HintPath>
       <Private>True</Private>
@@ -79,7 +82,7 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -122,9 +125,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="API components\EventArgs\OnApiErrorEventArgs.cs" />
+    <Compile Include="EventArgs\OnApiErrorEventArgs.cs" />
+    <Compile Include="EventArgs\OnAssetTileSettingsChangedEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiHandler.cs" />
-    <Compile Include="API components\EventArgs\OnApiReadyEventArgs.cs" />
+    <Compile Include="EventArgs\OnApiReadyEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiLoader.cs" />
     <Compile Include="API components\ApiData.cs" />
     <Compile Include="Tile components\TileHelpers.cs" />
