@@ -93,10 +93,10 @@ namespace ApiCryptoCompare
 
         public void SubscribeAssetToUpdater(Asset asset)
         {
-            if (!this.subscribedAssets.Exists(sub => sub.AssetId == asset.AssetId))
+            if (!this.subscribedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
             {
                 this.subscribedAssets.Add(asset);
-            }
+            }                 
 
             if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
             {
@@ -106,6 +106,7 @@ namespace ApiCryptoCompare
 
         public void UnsubscribeAssetFromUpdater(Asset asset)
         {
+            // not implemented because at this API the number of calls is not dependent on the number of subscribed assets
         }
 
         private void WaitForConnection()
@@ -166,15 +167,24 @@ namespace ApiCryptoCompare
                     try
                     {
                         CoinFullAggregatedData data = res[ass.Symbol][con];
-                        ass.ConvertCurrency = con;                        
-                        ass.LastUpdated = DateTime.Now;
-                        ass.MarketCapConvert = data.MarketCap.ToString();
-                        ass.PercentChange24h = data.ChangePCT24Hour.ToString();
-                        ass.PriceConvert = data.Price.ToString();
-                        ass.Volume24hConvert = data.TotalVolume24H.ToString();
-                        this.FireOnSingleAssetUpdated(ass);
+
+                        if (ass.ConvertCurrency == con)
+                        {
+                            ass.LastUpdated = DateTime.Now;
+                            ass.MarketCap = (double)data.MarketCap;
+                            ass.PercentChange24h = (double)data.ChangePCT24Hour;
+                            ass.PercentChange1h = -101;
+                            ass.PercentChange7d = -101;
+                            ass.Price = (double)data.Price;
+                            ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
+                            this.FireOnSingleAssetUpdated(ass);
+                        }                        
                     }
-                    catch(Exception e)
+                    catch (KeyNotFoundException)
+                    {
+                        // ignore
+                    }
+                    catch (Exception e)
                     {
                         OnApiErrorEventArgs args = new OnApiErrorEventArgs
                         {
@@ -183,7 +193,7 @@ namespace ApiCryptoCompare
                         };
 
                         this.FireOnApiError(args);
-                    }                    
+                    }
                 });
             });
         }
@@ -258,8 +268,8 @@ namespace ApiCryptoCompare
                     MaxUpdateInterval = 300,
                     MinUpdateInterval = 15,
                     UpdateIntervalStepSize = 15,
-                    SupportedConvertCurrencies = new List<string>() { "EUR" },
-                    UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall von 15 Sekunden - 5 Minuten."
+                    SupportedConvertCurrencies = new List<string>() { "EUR", "USD", "BTC" },
+                    UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall von 15 Sekunden - 5 Minuten und erlaubt 100.000 Aufrufe pro Monat."
                 };
             }
         }

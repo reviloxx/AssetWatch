@@ -77,8 +77,8 @@ namespace AssetWatch
 
             if (api.ApiInfo.SupportedConvertCurrencies.Contains(this.assetTileData.Asset.ConvertCurrency))
             {
-                // TODO: does not work
-                this.comboBox_ConvertCurrencies.SelectedItem = this.assetTileData.Asset.ConvertCurrency;
+                this.comboBox_ConvertCurrencies.ItemsSource = api.ApiInfo.SupportedConvertCurrencies;
+                this.comboBox_ConvertCurrencies.SelectedItem = api.ApiInfo.SupportedConvertCurrencies.Find(cur => cur == this.assetTileData.Asset.ConvertCurrency);
             }
             else
             {
@@ -116,7 +116,7 @@ namespace AssetWatch
 
             this.comboBox_ConvertCurrencies.ItemsSource = this.selectedApi.ApiInfo.SupportedConvertCurrencies;
 
-            if (this.comboBox_ConvertCurrencies.Items.Count > 0)
+            if (this.comboBox_ConvertCurrencies.Items.Count == 1)
             {
                 this.comboBox_ConvertCurrencies.SelectedIndex = 0;
             }

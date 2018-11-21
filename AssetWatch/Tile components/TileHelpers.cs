@@ -8,7 +8,7 @@ namespace AssetWatch
 { 
     public static class TileHelpers
     {
-        public static string FormatValueString(double value, bool forceSign)
+        public static string GetValueString(double value, bool forceSign)
         {
             string sign = value > 0 ? "+" : string.Empty;
             string valueString;
@@ -97,10 +97,7 @@ namespace AssetWatch
 
             assetTilesDataSet.ForEach(asstiledata =>
             {
-                if (asstiledata.Asset.PriceConvert != null)
-                {
-                    worthTotal += asstiledata.HoldingsCount * double.Parse(asstiledata.Asset.PriceConvert);
-                }                
+                worthTotal += asstiledata.HoldingsCount * asstiledata.Asset.Price;                               
             });
 
             return worthTotal;
@@ -109,33 +106,39 @@ namespace AssetWatch
         public static double Calculate24hPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
         {
             double percentage = 0;
+            bool calculationValid = true;                       
 
             assetTilesDataSet.ForEach(ass => {
-                if (ass.Asset.PriceConvert != null && ass.Asset.PercentChange24h != null)
+                if (ass.Asset.PercentChange24h < -100)
                 {
-                    double worth = ass.HoldingsCount * double.Parse(ass.Asset.PriceConvert);
-                    double weight = worth / worthTotal;
-                    percentage += double.Parse(ass.Asset.PercentChange24h) * weight;
-                }                
+                    calculationValid = false;
+                }
+
+                double worth = ass.HoldingsCount * ass.Asset.Price;
+                double weight = worth / worthTotal;
+                percentage += ass.Asset.PercentChange24h * weight;                
             });
 
-            return Math.Round(percentage, 2);
+            return calculationValid ? Math.Round(percentage, 2) : 0;
         }
 
         public static double Calculate7dPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
         {
             double percentage = 0;
+            bool calculationValid = true;
 
             assetTilesDataSet.ForEach(ass => {
-                if (ass.Asset.PriceConvert != null && ass.Asset.PercentChange7d != null)
+                if (ass.Asset.PercentChange7d < -100)
                 {
-                    double worth = ass.HoldingsCount * double.Parse(ass.Asset.PriceConvert);
-                    double weight = worth / worthTotal;
-                    percentage += double.Parse(ass.Asset.PercentChange7d) * weight;
+                    calculationValid = false;
                 }
+
+                double worth = ass.HoldingsCount * ass.Asset.Price;
+                double weight = worth / worthTotal;
+                percentage += ass.Asset.PercentChange7d * weight;                
             });
 
-            return Math.Round(percentage, 2);
+            return calculationValid ? Math.Round(percentage, 2) : 0;
         }
 
         public static double CalculateWinLoss(double percentage, double worthTotal)

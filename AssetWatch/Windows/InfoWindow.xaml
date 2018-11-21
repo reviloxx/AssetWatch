@@ -7,13 +7,13 @@
         mc:Ignorable="d"
         Title="Asset Info" Height="269.231" Width="291.453" ResizeMode="NoResize">
     <Grid>
-        <TextBlock x:Name="textblock_Symbol" Margin="153,31,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_Rank" Margin="153,52,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_Price" Margin="153,84,9.8,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_MarketCap" Margin="153,105,9.8,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_AvailableSupply" Margin="153,136,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_TotalSupply" Margin="153,157,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
-        <TextBlock x:Name="textblock_PercentChange24h" Margin="153,178,10.4,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_Symbol" Margin="153,31,10,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_Rank" Margin="153,52,10,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_Price" Margin="153,84,10,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_MarketCap" Margin="153,105,10,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_AvailableSupply" Margin="153,136,10,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_TotalSupply" Margin="153,157,10,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textblock_PercentChange24h" Margin="153,178,10,0" TextWrapping="Wrap" Text="-" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,31,0,0" TextWrapping="Wrap" Text="Symbol:" VerticalAlignment="Top"/>
         <TextBlock x:Name="label_Price" HorizontalAlignment="Left" Margin="10,84,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock x:Name="label_MarketCap" HorizontalAlignment="Left" Margin="10,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
@@ -21,7 +21,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="10,157,0,0" TextWrapping="Wrap" Text="Max Supply:" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,177,0,0" TextWrapping="Wrap" Text="24h Change:" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,52,0,0" TextWrapping="Wrap" Text="Rank:" VerticalAlignment="Top"/>
-        <TextBlock Margin="0,0,10.8,10" TextWrapping="Wrap" Height="16" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="264">
+        <TextBlock Margin="10,0,10,10" TextWrapping="Wrap" Height="16" VerticalAlignment="Bottom">
             <Hyperlink x:Name="hyperlink_Asset" Click="hyperlink_Asset_Click" RequestNavigate="hyperlink_Asset_RequestNavigate"></Hyperlink>
         </TextBlock>
     </Grid>

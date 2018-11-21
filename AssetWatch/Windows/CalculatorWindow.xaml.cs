@@ -74,19 +74,13 @@ namespace AssetWatch
         private double CalculateConvertSum()
         {
             double assetSum;
-            double assetPrice;
 
             if (!double.TryParse(this.textBox_Asset.Text.Replace('.', ','), out assetSum))
             {
                 return 0;
             }
 
-            if (!double.TryParse(this.asset.PriceConvert, out assetPrice))
-            {
-                return 0;
-            }
-
-            return Math.Round(assetSum * assetPrice, 2);
+            return Math.Round(assetSum * asset.Price, 2);
         }
 
         /// <summary>
@@ -96,19 +90,13 @@ namespace AssetWatch
         private double CalculateAssetSum()
         {
             double convertInput;
-            double assetPrice;
 
             if (!double.TryParse(this.textBox_Convert.Text.Replace('.', ','), out convertInput))
             {
                 return 0;
             }
 
-            if (!double.TryParse(this.asset.PriceConvert, out assetPrice))
-            {
-                return 0;
-            }
-
-            double result = Math.Round(convertInput / assetPrice, 5);
+            double result = Math.Round(convertInput / asset.Price, 5);
 
             return result;
         }

@@ -66,6 +66,15 @@ namespace AssetWatch
         public void UnsubscribeAssetTile(AssetTile assetTile)
         {
             this.subscribedAssetTiles.Remove(assetTile);
+            IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
+
+            if (!this.subscribedAssetTiles.Exists(sub => sub.AssetTileData.ApiName == api.ApiInfo.ApiName &&
+                                                         sub.AssetTileData.Asset.AssetId == assetTile.AssetTileData.Asset.AssetId &&
+                                                         sub.AssetTileData.Asset.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
+            {
+                // unsunscribe asset from API if it is not needed anymore
+                api.UnsubscribeAssetFromUpdater(assetTile.AssetTileData.Asset);
+            }
         }        
 
         /// <summary>

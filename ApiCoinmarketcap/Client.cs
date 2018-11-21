@@ -157,6 +157,7 @@ namespace ApiCoinmarketcap
         /// <param name="asset">The asset<see cref="Asset"/></param>
         public void UnsubscribeAssetFromUpdater(Asset asset)
         {
+            // not implemented because at this API the number of calls is not dependent on the number of subscribed assets
         }
 
         /// <summary>
@@ -212,6 +213,10 @@ namespace ApiCoinmarketcap
                 this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
 
                 this.FireOnAvailableAssetsReceived();
+            }
+            catch (NullReferenceException)
+            {
+                // ignore
             }
             catch (Exception e)
             {
@@ -291,17 +296,21 @@ namespace ApiCoinmarketcap
                 assets.ForEach(ass =>
                 {
                     var assetUpdate = a.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
-                    ass.PriceConvert = assetUpdate.Quote[ass.ConvertCurrency].Price.ToString();
+                    ass.Price = (double)assetUpdate.Quote[ass.ConvertCurrency].Price;
                     ass.LastUpdated = DateTime.Now;
-                    ass.MarketCapConvert = assetUpdate.Quote[ass.ConvertCurrency].MarketCap.ToString();
-                    ass.PercentChange1h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h.ToString();
-                    ass.PercentChange24h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h.ToString();
-                    ass.PercentChange7d = assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d.ToString();
-                    ass.Rank = assetUpdate.CmcRank.ToString();
-                    ass.SupplyAvailable = assetUpdate.CirculatingSupply.ToString();
-                    ass.SupplyTotal = assetUpdate.TotalSupply.ToString();
+                    ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
+                    ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
+                    ass.PercentChange24h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
+                    ass.PercentChange7d = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
+                    ass.Rank = assetUpdate.CmcRank;
+                    ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
+                    ass.SupplyTotal = (double)assetUpdate.TotalSupply;
                     this.FireOnSingleAssetUpdated(ass);
                 });
+            }
+            catch (NullReferenceException)
+            {
+                // ignore
             }
             catch (Exception e)
             {

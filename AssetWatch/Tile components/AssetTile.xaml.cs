@@ -89,7 +89,7 @@ namespace AssetWatch
         private void RefreshAssetTextblocks()
         {
             this.label_AssetPrice.Text = this.AssetTileData.Asset.ConvertCurrency + "/" + this.AssetTileData.Asset.Symbol;
-            this.textBlock_AssetPrice.Text = TileHelpers.FormatValueString(double.Parse(this.AssetTileData.Asset.PriceConvert), false);
+            this.textBlock_AssetPrice.Text = TileHelpers.GetValueString(this.AssetTileData.Asset.Price, false);
             this.label_Worth.Text = this.AssetTileData.Asset.ConvertCurrency;
             this.textBlock_AssetSymbol.Text = this.AssetTileData.Asset.Symbol;
             this.textBlock_last_Refresh.Text = "@" + this.AssetTileData.Asset.LastUpdated.ToString("HH:mm");
@@ -101,9 +101,9 @@ namespace AssetWatch
         private void RefreshTileDataTextblocks()
         {
             this.label_WalletName.Text = this.AssetTileData.AssetTileName;
-            this.textBlock_Worth.Text = TileHelpers.FormatValueString(this.currentWorth, false);
-            this.textBlock_AssetAmount.Text = TileHelpers.FormatValueString(this.AssetTileData.HoldingsCount, false);
-            string textBoxWinText = TileHelpers.FormatValueString(this.profitLoss, true) + " " + this.AssetTileData.Asset.ConvertCurrency;
+            this.textBlock_Worth.Text = TileHelpers.GetValueString(this.currentWorth, false);
+            this.textBlock_AssetAmount.Text = TileHelpers.GetValueString(this.AssetTileData.HoldingsCount, false);
+            string textBoxWinText = TileHelpers.GetValueString(this.profitLoss, true) + " " + this.AssetTileData.Asset.ConvertCurrency;
             this.textBlock_Win.Text = textBoxWinText;
         }
 
@@ -202,12 +202,7 @@ namespace AssetWatch
         /// </summary>
         private void CalculateProfit()
         {
-            if (this.AssetTileData.Asset.PriceConvert == null)
-            {
-                return;
-            }
-
-            this.currentWorth = double.Parse(this.AssetTileData.Asset.PriceConvert) * this.AssetTileData.HoldingsCount;
+            this.currentWorth = this.AssetTileData.Asset.Price * this.AssetTileData.HoldingsCount;
             this.profitLoss = this.currentWorth - this.AssetTileData.InvestedSum;
         }
 
@@ -282,16 +277,11 @@ namespace AssetWatch
             this.Dispatcher.Invoke(() =>
             {
                 this.RefreshTileStyle();
-
-                if (this.AssetTileData.Asset.PriceConvert != null)
-                {
-                    this.RefreshAssetTextblocks();
-                    this.button_Calc.Visibility = Visibility.Visible;
-                    this.button_Info.Visibility = Visibility.Visible;
-                }
+                this.RefreshAssetTextblocks();
+                this.button_Calc.Visibility = Visibility.Visible;
+                this.button_Info.Visibility = Visibility.Visible;
                 
-                this.RefreshTileDataTextblocks();
-                
+                this.RefreshTileDataTextblocks();                
             });            
         }
 

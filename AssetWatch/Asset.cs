@@ -7,12 +7,7 @@ namespace AssetWatch
     /// </summary>
     [Serializable]
     public class Asset
-    {
-        /// <summary>
-        /// Gets or sets the SupplyAvailable.
-        /// </summary>
-        public string SupplyAvailable { get; set; }
-
+    {      
         /// <summary>
         /// Gets or sets the ConvertCurrency.
         /// </summary>
@@ -31,12 +26,7 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets the MarketCapConvert.
         /// </summary>
-        public string MarketCapConvert { get; set; }
-
-        /// <summary>
-        /// Gets or sets the MarketCapUsd.
-        /// </summary>
-        public string MarketCapUsd { get; set; }
+        public double MarketCap { get; set; }
 
         /// <summary>
         /// Gets or sets the Name.
@@ -46,32 +36,27 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets the PercentChange1h.
         /// </summary>
-        public string PercentChange1h { get; set; }
+        public double PercentChange1h { get; set; }
 
         /// <summary>
         /// Gets or sets the PercentChange24h.
         /// </summary>
-        public string PercentChange24h { get; set; }
+        public double PercentChange24h { get; set; }
 
         /// <summary>
         /// Gets or sets the PercentChange7d.
         /// </summary>
-        public string PercentChange7d { get; set; }
+        public double PercentChange7d { get; set; }
 
         /// <summary>
         /// Gets or sets the PriceConvert.
         /// </summary>
-        public string PriceConvert { get; set; }
-
-        /// <summary>
-        /// Gets or sets the PriceUsd.
-        /// </summary>
-        public string PriceUsd { get; set; }
+        public double Price { get; set; }        
 
         /// <summary>
         /// Gets or sets the Rank.
         /// </summary>
-        public string Rank { get; set; }
+        public int Rank { get; set; }
 
         /// <summary>
         /// Gets or sets the Symbol.
@@ -81,9 +66,14 @@ namespace AssetWatch
         public string SymbolName { get { return this.Symbol + " (" + this.Name + ")"; } }
 
         /// <summary>
+        /// Gets or sets the SupplyAvailable.
+        /// </summary>
+        public double SupplyAvailable { get; set; }
+
+        /// <summary>
         /// Gets or sets the SupplyTotal.
         /// </summary>
-        public string SupplyTotal { get; set; }
+        public double SupplyTotal { get; set; }
 
         /// <summary>
         /// Gets or sets the Volume24hConvert.

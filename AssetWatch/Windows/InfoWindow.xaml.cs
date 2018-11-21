@@ -19,16 +19,16 @@ namespace AssetWatch
             this.InitializeComponent();
             this.Title = asset.Name;
             this.textblock_Symbol.Text = asset.Symbol;
-            this.textblock_Rank.Text = asset.Rank;
+            this.textblock_Rank.Text = asset.Rank.ToString();
 
             this.label_Price.Text = asset.ConvertCurrency + " Price:";
-            this.textblock_Price.Text = TileHelpers.FormatValueString(asset.PriceConvert, false);
+            this.textblock_Price.Text = TileHelpers.GetValueString(asset.Price, false);
 
             this.label_MarketCap.Text = asset.ConvertCurrency + " Market Cap:";
-            this.textblock_MarketCap.Text = TileHelpers.FormatValueString(asset.MarketCapUsd, false);
-            this.textblock_AvailableSupply.Text = TileHelpers.FormatValueString(asset.SupplyAvailable, false);
-            this.textblock_TotalSupply.Text = TileHelpers.FormatValueString(asset.SupplyTotal, false);
-            this.textblock_PercentChange24h.Text = TileHelpers.FormatValueString(asset.PercentChange24h, true) + "%";
+            this.textblock_MarketCap.Text = TileHelpers.GetValueString(asset.MarketCap, false);
+            this.textblock_AvailableSupply.Text = TileHelpers.GetValueString(asset.SupplyAvailable, false);
+            this.textblock_TotalSupply.Text = TileHelpers.GetValueString(asset.SupplyTotal, false);
+            this.textblock_PercentChange24h.Text = TileHelpers.GetValueString(asset.PercentChange24h, true) + "%";
 
             if (apiInfo.AssetUrl != string.Empty)
             {

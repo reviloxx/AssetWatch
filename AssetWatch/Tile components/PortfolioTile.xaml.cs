@@ -200,16 +200,16 @@ namespace AssetWatch
                     this.textBlock_last_Refresh.Text = "@" + ((DateTime)updatedTime).ToString("HH:mm");
                 }
                 
-                this.textBlock_Invest.Text = TileHelpers.FormatValueString(investTotal, false) + convertCurrency;
-                this.textBlock_Worth.Text = TileHelpers.FormatValueString(worthTotal, false) + convertCurrency;
+                this.textBlock_Invest.Text = TileHelpers.GetValueString(investTotal, false) + convertCurrency;
+                this.textBlock_Worth.Text = TileHelpers.GetValueString(worthTotal, false) + convertCurrency;
                 
-                this.textBlock_24hPercentage.Text = TileHelpers.FormatValueString(this.percentage24h, true) + " %";
-                this.textBlock_24hWin.Text = TileHelpers.FormatValueString(win24h, true) + convertCurrency;
+                this.textBlock_24hPercentage.Text = TileHelpers.GetValueString(this.percentage24h, true) + " %";
+                this.textBlock_24hWin.Text = TileHelpers.GetValueString(win24h, true) + convertCurrency;
                 
-                this.textBlock_1WPercentage.Text = TileHelpers.FormatValueString(this.percentage1W, true) + " %";
-                this.textBlock_1WWin.Text = TileHelpers.FormatValueString(win1W, true) + convertCurrency;
+                this.textBlock_1WPercentage.Text = TileHelpers.GetValueString(this.percentage1W, true) + " %";
+                this.textBlock_1WWin.Text = TileHelpers.GetValueString(win1W, true) + convertCurrency;
                 
-                this.textBlock_ATWin.Text = TileHelpers.FormatValueString(winTotal, true) + convertCurrency;
+                this.textBlock_ATWin.Text = TileHelpers.GetValueString(winTotal, true) + convertCurrency;
             });
         }             
         
