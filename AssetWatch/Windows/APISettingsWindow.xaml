@@ -15,7 +15,7 @@
                 API Key anfordern
             </Hyperlink>
         </TextBlock>
-        <TextBlock Text="Asset Update Intervall (in Minuten):" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.913,6.462"/>
+        <TextBlock Text="Update Intervall (in Minuten):" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.913,6.462"/>
         <Slider x:Name="slider_UpdateInterval" Value="{Binding UpdateInterval}" IsSnapToTickEnabled="True" Margin="10,146,64.8,0" VerticalAlignment="Top" Height="23"/>
         <TextBlock x:Name="textBlock_updateIntervalInfo" Margin="10,191,10,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="78"/>
         <Label  Content="{Binding ElementName=slider_UpdateInterval, Path=Value}" Margin="218,146,9.8,0" Padding="2.4" Height="23" VerticalAlignment="Top"/>

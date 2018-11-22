@@ -89,7 +89,7 @@ namespace AssetWatch
             {
                 if (sel.Asset.ConvertCurrency != convert)
                 {
-                    MessageBox.Show("Die Basiswährungen der Asset Kacheln müssen übereinstimmen!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Die Basiswährungen der ausgewählten Asset Kacheln müssen übereinstimmen!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 

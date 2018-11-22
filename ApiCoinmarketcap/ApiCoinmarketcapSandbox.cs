@@ -1,14 +1,17 @@
 ﻿using AssetWatch;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApiCoinmarketcap
 {
+    /// <summary>
+    /// Defines the <see cref="ApiCoinmarketcapSandbox" />
+    /// </summary>
     public class ApiCoinmarketcapSandbox : Client, IApi
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiCoinmarketcapSandbox"/> class.
+        /// </summary>
         public ApiCoinmarketcapSandbox() : base(CoinMarketCapPro.Types.ApiSchema.Sandbox)
         {
             this.ApiData = new ApiData
@@ -22,6 +25,9 @@ namespace ApiCoinmarketcap
             };
         }
 
+        /// <summary>
+        /// Gets the ApiInfo
+        /// </summary>
         public ApiInfo ApiInfo
         {
             get
@@ -45,5 +51,5 @@ namespace ApiCoinmarketcap
                 };
             }
         }
-    }    
+    }
 }

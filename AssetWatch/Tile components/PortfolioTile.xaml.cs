@@ -50,7 +50,7 @@ namespace AssetWatch
         /// <param name="appData">The appData<see cref="AppData"/></param>
         public PortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
-            this.InitializeComponent();
+            this.InitializeComponent();            
             this.availableAssets = new List<Asset>();
             this.PortfolioTileData = portfolioTileData;
             this.appData = appData;
@@ -97,7 +97,7 @@ namespace AssetWatch
 
                 if (this.PortfolioTileData.HasCustomTileStyle)
                 {
-                    // TODO: custom tile styles
+                    // TODO: maybe add custom tile styles
                 }
                 else
                 {
@@ -223,8 +223,9 @@ namespace AssetWatch
         private void button_Settings_Click(object sender, RoutedEventArgs e)
         {
             PortfolioTileSettingsWindow portfolioTileSettingsWindow = new PortfolioTileSettingsWindow(this.appData, this.PortfolioTileData);
-            portfolioTileSettingsWindow.OnPortfolioTileDataChanged += this.PortfolioTileSettingsWindow_OnPortfolioTileDataChanged;
-            portfolioTileSettingsWindow.Show();
+            portfolioTileSettingsWindow.OnPortfolioTileDataChanged += this.PortfolioTileSettingsWindow_OnPortfolioTileDataChanged;            
+            portfolioTileSettingsWindow.ShowDialog();
+            // TODO: app crashes when addina an asset tile while a portfolio tile settings window is open
         }
 
         /// <summary>

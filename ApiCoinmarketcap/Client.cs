@@ -15,48 +15,49 @@ namespace ApiCoinmarketcap
     public abstract class Client
     {
         /// <summary>
-        /// Defines the apiSchema
+        /// Defines the apiSchema.
         /// </summary>
         private ApiSchema apiSchema;
 
         /// <summary>
-        /// Defines the availableAssets
+        /// Defines the availableAssets.
         /// </summary>
         private List<Asset> availableAssets;
 
         /// <summary>
-        /// Gets the SubscribedAssets
+        /// Gets the SubscribedAssets.
         /// </summary>
         private List<Asset> subscribedAssets;
 
         /// <summary>
-        /// Defines the subscribedConvertCurrencies
+        /// Defines the subscribedConvertCurrencies.
         /// </summary>
         private List<string> subscribedConvertCurrencies;
 
         /// <summary>
-        /// The AssetRequestDelegate
+        /// The AssetRequestDelegate.
         /// </summary>
         private delegate void AssetRequestDelegate();
 
         /// <summary>
-        /// Defines the assetRequestDelegate
+        /// Defines the assetRequestDelegate.
         /// </summary>
         private AssetRequestDelegate assetRequestDelegate;
 
         /// <summary>
-        /// Defines the client
+        /// Defines the client.
         /// </summary>
-        private CoinMarketCapClient client;               
+        private CoinMarketCapClient client;
 
         /// <summary>
         /// Defines the assetUpdateWorker
         /// </summary>
-        private Thread assetUpdateWorker;       
+        private Thread assetUpdateWorker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
+        /// <param name="apiSchema">The apiSchema<see cref="ApiSchema"/></param>
         public Client(ApiSchema apiSchema)
         {
             this.apiSchema = apiSchema;
@@ -65,11 +66,10 @@ namespace ApiCoinmarketcap
             this.subscribedConvertCurrencies = new List<string>();
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            
         }
 
         /// <summary>
-        /// The EnableApi
+        /// Enables the API.
         /// </summary>
         public void Enable()
         {
@@ -92,16 +92,16 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The DisableApi
+        /// Disables the API.
         /// </summary>
         public void Disable()
         {
             this.ApiData.IsEnabled = false;
             this.StopAssetUpdater();
-        }        
+        }
 
         /// <summary>
-        /// The RequestAvailableAssetsAsync
+        /// Requests the available assets of the API.
         /// </summary>
         public void RequestAvailableAssetsAsync()
         {
@@ -114,9 +114,9 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The GetSingleAssetUpdate
+        /// Requests a single asset update.
         /// </summary>
-        /// <param name="asset">The ass<see cref="Asset"/></param>
+        /// <param name="asset">The asset<see cref="Asset"/> to update.</param>
         public void RequestSingleAssetUpdateAsync(Asset asset)
         {
             if (!this.assetUpdateWorker.IsAlive)
@@ -131,20 +131,22 @@ namespace ApiCoinmarketcap
 
             List<Asset> assets = new List<Asset>();
             assets.Add(asset);
-            this.RequestAssetUpdates(assets);
+            this.GetAssetUpdates(assets);
         }
 
         /// <summary>
-        /// The SubscribeAsset
+        /// Subscribes an asset to the asset updater.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/></param>
+        /// <param name="asset">The asset<see cref="Asset"/> to subscribe.</param>
         public void SubscribeAssetToUpdater(Asset asset)
         {
+            // Add the asset to the list of subscribed assets if there doesn't exist one with the same id yet.
             if (!this.subscribedAssets.Exists(sub => sub.AssetId == asset.AssetId))
             {
                 this.subscribedAssets.Add(asset);
             }
 
+            // Add the convert currency to the list of subscribed convert currencies if it is not in the list yet.
             if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
             {
                 this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);
@@ -152,16 +154,16 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The UnsubscribeAsset
+        /// Unsubscribes an asset from the asset updater.
+        /// Not implemented because the number of calls is not dependent on the number of subscribed assets at this API.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/></param>
+        /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
         public void UnsubscribeAssetFromUpdater(Asset asset)
         {
-            // not implemented because at this API the number of calls is not dependent on the number of subscribed assets
         }
 
         /// <summary>
-        /// The WaitForConnection
+        /// Blocks the actual thread until there is a connection to the coinmarketcap website.
         /// </summary>
         private void WaitForConnection()
         {
@@ -188,7 +190,8 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The GetAvailableAssets
+        /// Gets the available assets of the API and fires the OnAvailableAssetsReceived event if successful.
+        /// Fires the OnApiError event if something has gone wrong.
         /// </summary>
         private async void GetAvailableAssets()
         {
@@ -197,7 +200,7 @@ namespace ApiCoinmarketcap
             {
                 var map = await this.client.GetCurrencyMapAsync();
                 this.ApiData.CallCount++;
-                this.FireOnAppDataChanged();                
+                this.FireOnAppDataChanged();
 
                 map.Data.ForEach(c =>
                 {
@@ -216,16 +219,16 @@ namespace ApiCoinmarketcap
             }
             catch (NullReferenceException)
             {
-                // ignore
+                // happened once without further consequences, can be ignored
             }
             catch (Exception e)
             {
                 this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
             }
-        }        
+        }
 
         /// <summary>
-        /// The StartAssetUpdater
+        /// Starts the asset updater.
         /// </summary>
         public void StartAssetUpdater()
         {
@@ -239,7 +242,7 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The StartAssetUpdater
+        /// Stops the asset updater.
         /// </summary>
         private void StopAssetUpdater()
         {
@@ -248,21 +251,27 @@ namespace ApiCoinmarketcap
                 this.assetUpdateWorker.Abort();
             }
             catch (Exception) { }
-        }             
+        }
 
         /// <summary>
-        /// The AssetUpdateWorker
+        /// Requests updates of the subscribed assets while this API is enabled.
         /// </summary>
         private void AssetUpdateWorker()
         {
             while (this.ApiData.IsEnabled)
             {
-                this.RequestAssetUpdates(this.subscribedAssets);
+                this.GetAssetUpdates(this.subscribedAssets);
                 Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
-        }        
+        }
 
-        private async void RequestAssetUpdates(List<Asset> assets)
+        /// <summary>
+        /// Gets updates for a list of assets.
+        /// Fires the OnSingleAssetUpdated event for each updated asset from the list.
+        /// Fires the OnApiError event if something has gone wrong.
+        /// </summary>
+        /// <param name="assets">The assets<see cref="List{Asset}"/> to update.</param>
+        private async void GetAssetUpdates(List<Asset> assets)
         {
             if (assets.Count < 1)
             {
@@ -283,43 +292,47 @@ namespace ApiCoinmarketcap
 
             try
             {
-                var a = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
+                var response = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
                 this.ApiData.CallCount += this.subscribedConvertCurrencies.Count;
                 this.FireOnAppDataChanged();
 
-                if (a.Status.ErrorCode != 0)
+                if (response.Status.ErrorCode != 0)
                 {
-                    // TODO: maybe do something
-                    throw new Exception();
+                    this.FireOnApiError(this.BuildOnApiErrorEventArgs(response.Status.ErrorMessage));
                 }
-
-                assets.ForEach(ass =>
+                else
                 {
-                    var assetUpdate = a.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
-                    ass.Price = (double)assetUpdate.Quote[ass.ConvertCurrency].Price;
-                    ass.LastUpdated = DateTime.Now;
-                    ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
-                    ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
-                    ass.PercentChange24h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
-                    ass.PercentChange7d = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
-                    ass.Rank = assetUpdate.CmcRank;
-                    ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
-                    ass.SupplyTotal = (double)assetUpdate.TotalSupply;
-                    this.FireOnSingleAssetUpdated(ass);
-                });
+                    assets.ForEach(ass =>
+                    {
+                        var assetUpdate = response.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
+                        ass.Price = (double)assetUpdate.Quote[ass.ConvertCurrency].Price;
+                        ass.LastUpdated = DateTime.Now;
+                        ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
+                        ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
+                        ass.PercentChange24h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
+                        ass.PercentChange7d = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
+                        ass.Rank = assetUpdate.CmcRank;
+                        ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
+                        ass.SupplyTotal = (double)assetUpdate.TotalSupply;
+                        this.FireOnSingleAssetUpdated(ass);
+                    });
+                }                
             }
             catch (NullReferenceException)
             {
-                // ignore
+                // happened once without further consequences, can be ignored
             }
-            catch (Exception e)
-            {
-                this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
-            }
-        }     
-        
+        }
+
+        /// <summary>
+        /// Builds the OnApiError event args depending on the error message.
+        /// </summary>
+        /// <param name="message">The message<see cref="string"/></param>
+        /// <returns>The <see cref="OnApiErrorEventArgs"/></returns>
         private OnApiErrorEventArgs BuildOnApiErrorEventArgs(string message)
         {
+            // TODO: handle too many requests error
+
             if (message.Contains("400"))
             {
                 return new OnApiErrorEventArgs
@@ -342,11 +355,11 @@ namespace ApiCoinmarketcap
             {
                 ErrorMessage = message,
                 ErrorType = ErrorType.General
-            };            
+            };
         }
 
         /// <summary>
-        /// The FireOnApiError
+        /// Fires the OnApiError event.
         /// </summary>
         /// <param name="eventArgs">The eventArgs<see cref="OnApiErrorEventArgs"/></param>
         private void FireOnApiError(OnApiErrorEventArgs eventArgs)
@@ -355,7 +368,7 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The FireOnSingleAssetUpdated
+        /// Fires the OnSingleAssetUpdated event.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
         private void FireOnSingleAssetUpdated(Asset asset)
@@ -364,38 +377,45 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// The FireOnAvailableAssetsReceived
+        /// Fires the OnAvailableAssetsReceived event.
         /// </summary>
         private void FireOnAvailableAssetsReceived()
         {
             OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
         }
 
+        /// <summary>
+        /// Fires the OnAppDataChanged event.
+        /// </summary>
         private void FireOnAppDataChanged()
         {
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
         /// <summary>
+        /// Gets or sets the ApiData.
         /// Gets the ApiData
         /// </summary>
         public ApiData ApiData { get; set; }
 
         /// <summary>
-        /// Defines the OnAvailableAssetsReceived
+        /// Defines the OnAvailableAssetsReceived event.
         /// </summary>
         public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
 
         /// <summary>
-        /// Defines the OnSingleAssetUpdated
+        /// Defines the OnSingleAssetUpdated event.
         /// </summary>
         public event EventHandler<Asset> OnSingleAssetUpdated;
 
         /// <summary>
-        /// Defines the OnApiError
+        /// Defines the OnApiError event.
         /// </summary>
         public event EventHandler<OnApiErrorEventArgs> OnApiError;
 
+        /// <summary>
+        /// Defines the OnAppDataChanged event.
+        /// </summary>
         public event EventHandler OnAppDataChanged;
     }
 }

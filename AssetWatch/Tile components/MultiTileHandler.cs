@@ -175,7 +175,10 @@ namespace AssetWatch
             {
                 ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
 
-                // TODO: maybe rethink
+                // TODO: maybe rethink the call counting
+                // get data directly from API instead of counting locally?
+                // add button to check in main settings window?
+
                 // reset call counter every month
                 if ((DateTime.Now - apiData.CallCountStartTime).Days + 1 > 30)
                 {

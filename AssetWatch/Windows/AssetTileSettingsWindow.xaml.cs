@@ -113,6 +113,10 @@ namespace AssetWatch
             }
 
             this.selectedApi = this.readyApis.ElementAt(this.comboBox_Apis.SelectedIndex).Key;
+            if (this.selectedApi == null)
+            {
+                return;
+            }
 
             this.comboBox_ConvertCurrencies.ItemsSource = this.selectedApi.ApiInfo.SupportedConvertCurrencies;
 

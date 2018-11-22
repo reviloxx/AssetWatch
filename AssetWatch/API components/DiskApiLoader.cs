@@ -11,7 +11,7 @@ namespace AssetWatch
     /// </summary>
     public class DiskApiLoader : IApiLoader
     {
-        // TODO: Cryptowatch import
+        // TODO: maybe add Cryptowatch import
 
         /// <summary>
         /// Defines the path which contains the assemblies to load.

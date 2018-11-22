@@ -173,8 +173,8 @@ namespace ApiCryptoCompare
                             ass.LastUpdated = DateTime.Now;
                             ass.MarketCap = (double)data.MarketCap;
                             ass.PercentChange24h = (double)data.ChangePCT24Hour;
-                            ass.PercentChange1h = -101;
-                            ass.PercentChange7d = -101;
+                            //ass.PercentChange1h = -101;
+                            //ass.PercentChange7d = -101;
                             ass.Price = (double)data.Price;
                             ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
                             this.FireOnSingleAssetUpdated(ass);

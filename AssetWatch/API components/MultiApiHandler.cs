@@ -68,6 +68,11 @@ namespace AssetWatch
             this.subscribedAssetTiles.Remove(assetTile);
             IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
 
+            if (api == null)
+            {
+                return;
+            }
+
             if (!this.subscribedAssetTiles.Exists(sub => sub.AssetTileData.ApiName == api.ApiInfo.ApiName &&
                                                          sub.AssetTileData.Asset.AssetId == assetTile.AssetTileData.Asset.AssetId &&
                                                          sub.AssetTileData.Asset.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))

@@ -10,6 +10,8 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
+        // TODO: test behavior when loosing network connection
+
         /// <summary>
         /// Defines the apiHandler
         /// </summary>

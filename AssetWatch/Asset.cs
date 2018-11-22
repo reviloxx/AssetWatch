@@ -84,5 +84,12 @@ namespace AssetWatch
         /// Gets or sets the Volume24hUsd.
         /// </summary>
         public string Volume24hUsd { get; set; }
+
+        public Asset()
+        {
+            this.PercentChange1h = -101;
+            this.PercentChange24h = -101;
+            this.PercentChange7d = -101;
+        }
     }
 }

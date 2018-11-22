@@ -12,10 +12,10 @@
         <ComboBox x:Name="comboBox_Assets" DisplayMemberPath="SymbolName" IsEditable="True" Margin="95,199,9.8,0" VerticalAlignment="Top" Height="23"/>
         <Button x:Name="button_Ok" Content="OK" Click="button_Ok_Click"  Width="75" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom" />
         <Label Content="API:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
-        <Label Content="Investierte Summe:" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
+        <Label Content="Investition:" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_InvestedSum" HorizontalAlignment="Left" Height="23" Margin="10,144,0,0" TextAlignment="Right" TextWrapping="Wrap" Padding="2.4" VerticalAlignment="Top" Width="80"/>
         <TextBox x:Name="textBox_HoldingsCount" HorizontalAlignment="Left" Height="23" Margin="10,199,0,0" TextAlignment="Right" TextWrapping="Wrap" Padding="2.4" VerticalAlignment="Top" Width="80"/>
-        <Label Content="Anzahl:" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top"/>
+        <Label Content="Asset:" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top"/>
         <Label Content="Kachel Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_TileName" HorizontalAlignment="Left" VerticalAlignment="Top" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" Padding="2.4" Width="120"/>
 

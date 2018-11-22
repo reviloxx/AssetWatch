@@ -9,7 +9,7 @@
     <Grid>
         <Label Content="Portfolio Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_PortfolioName" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2.4" Width="120"/>
-        <Label Content="Enthaltene Asset Kacheln:" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top"/>
+        <Label Content="Enthaltene Assets:" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top"/>
         <ListView x:Name="listView_availableAssets" 
                   Height="292" Margin="10,100,10,0" VerticalAlignment="Top"
                   SelectionMode="Multiple"
