@@ -211,6 +211,7 @@ namespace AssetWatch
 
             if (api.ApiData.IsEnabled)
             {
+                // TODO: start asset updater when the API has received it's available assets and 
                 this.apiHandler.EnableApi(api);
                 this.apiHandler.StartAssetUpdater(api);
             }

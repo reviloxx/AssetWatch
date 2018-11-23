@@ -225,7 +225,7 @@ namespace AssetWatch
             PortfolioTileSettingsWindow portfolioTileSettingsWindow = new PortfolioTileSettingsWindow(this.appData, this.PortfolioTileData);
             portfolioTileSettingsWindow.OnPortfolioTileDataChanged += this.PortfolioTileSettingsWindow_OnPortfolioTileDataChanged;            
             portfolioTileSettingsWindow.ShowDialog();
-            // TODO: app crashes when addina an asset tile while a portfolio tile settings window is open
+            // TODO: app crashes when adding an asset tile while a portfolio tile settings window is open
         }
 
         /// <summary>

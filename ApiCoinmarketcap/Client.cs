@@ -1,10 +1,12 @@
 ﻿using AssetWatch;
 using CoinMarketCapPro;
 using CoinMarketCapPro.Types;
+using Flurl.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 
 namespace ApiCoinmarketcap
@@ -14,6 +16,8 @@ namespace ApiCoinmarketcap
     /// </summary>
     public abstract class Client
     {
+        private static int retryDelay = 1000;
+
         /// <summary>
         /// Defines the apiSchema.
         /// </summary>
@@ -163,68 +167,54 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Blocks the actual thread until there is a connection to the coinmarketcap website.
-        /// </summary>
-        private void WaitForConnection()
-        {
-            bool connected = false;
-
-            do
-            {
-                try
-                {
-                    using (var client = new WebClient())
-                    {
-                        using (var stream = client.OpenRead("http://www.coinmarketcap.com"))
-                        {
-                            connected = true;
-                        }
-                    }
-                }
-                catch
-                {
-                    Thread.Sleep(500);
-                }
-            }
-            while (!connected);
-        }
-
-        /// <summary>
         /// Gets the available assets of the API and fires the OnAvailableAssetsReceived event if successful.
         /// Fires the OnApiError event if something has gone wrong.
         /// </summary>
         private async void GetAvailableAssets()
         {
-            this.WaitForConnection();
-            try
-            {
-                var map = await this.client.GetCurrencyMapAsync();
-                this.ApiData.CallCount++;
-                this.FireOnAppDataChanged();
+            bool callFailed;
 
-                map.Data.ForEach(c =>
+            do
+            {
+                callFailed = false;
+
+                try
                 {
-                    this.availableAssets.Add(new Asset
+                    var map = await this.client.GetCurrencyMapAsync();
+                    this.ApiData.CallCount++;
+                    this.FireOnAppDataChanged();
+
+                    map.Data.ForEach(c =>
                     {
-                        AssetId = c.Id.ToString(),
-                        LastUpdated = DateTime.Now,
-                        Name = c.Name,
-                        Symbol = c.Symbol
+                        this.availableAssets.Add(new Asset
+                        {
+                            AssetId = c.Id.ToString(),
+                            LastUpdated = DateTime.Now,
+                            Name = c.Name,
+                            Symbol = c.Symbol
+                        });
                     });
-                });
 
-                this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
+                    this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
 
-                this.FireOnAvailableAssetsReceived();
+                    this.FireOnAvailableAssetsReceived();
+                }
+                catch (NullReferenceException)
+                {
+                    // happened once without further consequences, can be ignored
+                }
+                catch (FlurlHttpException e)
+                {
+                    callFailed = true;
+                    Thread.Sleep(retryDelay);
+                }
+                catch (Exception e)
+                {
+                    this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
+                }
             }
-            catch (NullReferenceException)
-            {
-                // happened once without further consequences, can be ignored
-            }
-            catch (Exception e)
-            {
-                this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
-            }
+            while (callFailed);
+            
         }
 
         /// <summary>
@@ -277,10 +267,10 @@ namespace ApiCoinmarketcap
             {
                 return;
             }
-
-            this.WaitForConnection();
-
+            
             List<int> ids = new List<int>();
+            bool callFailed = false;
+            int timeout = this.ApiData.UpdateInterval * 1000;
 
             assets.ForEach(sub =>
             {
@@ -290,38 +280,52 @@ namespace ApiCoinmarketcap
                 }
             });
 
-            try
+            do
             {
-                var response = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
-                this.ApiData.CallCount += this.subscribedConvertCurrencies.Count;
-                this.FireOnAppDataChanged();
+                callFailed = false;
 
-                if (response.Status.ErrorCode != 0)
+                try
                 {
-                    this.FireOnApiError(this.BuildOnApiErrorEventArgs(response.Status.ErrorMessage));
-                }
-                else
-                {
-                    assets.ForEach(ass =>
+                    var response = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
+                    this.ApiData.CallCount += this.subscribedConvertCurrencies.Count;
+                    this.FireOnAppDataChanged();
+
+                    if (response.Status.ErrorCode != 0)
                     {
-                        var assetUpdate = response.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
-                        ass.Price = (double)assetUpdate.Quote[ass.ConvertCurrency].Price;
-                        ass.LastUpdated = DateTime.Now;
-                        ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
-                        ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
-                        ass.PercentChange24h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
-                        ass.PercentChange7d = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
-                        ass.Rank = assetUpdate.CmcRank;
-                        ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
-                        ass.SupplyTotal = (double)assetUpdate.TotalSupply;
-                        this.FireOnSingleAssetUpdated(ass);
-                    });
-                }                
+                        this.FireOnApiError(this.BuildOnApiErrorEventArgs(response.Status.ErrorMessage));
+                    }
+                    else
+                    {
+                        assets.ForEach(ass =>
+                        {
+                            var assetUpdate = response.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
+                            ass.Price = (double)assetUpdate.Quote[ass.ConvertCurrency].Price;
+                            ass.LastUpdated = DateTime.Now;
+                            ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
+                            ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
+                            ass.PercentChange24h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
+                            ass.PercentChange7d = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
+                            ass.Rank = assetUpdate.CmcRank;
+                            ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
+                            ass.SupplyTotal = (double)assetUpdate.TotalSupply;
+                            this.FireOnSingleAssetUpdated(ass);
+                        });
+                    }
+
+                }
+                catch (NullReferenceException)
+                {
+                    // happened once without further consequences, can be ignored
+                }
+                catch (FlurlHttpException e)
+                {
+                    // no internet connection?
+                    callFailed = true;
+                    Thread.Sleep(retryDelay);
+                    timeout -= retryDelay;
+                }
             }
-            catch (NullReferenceException)
-            {
-                // happened once without further consequences, can be ignored
-            }
+            while (callFailed && timeout >= 0);
         }
 
         /// <summary>

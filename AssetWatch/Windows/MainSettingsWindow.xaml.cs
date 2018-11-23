@@ -101,7 +101,7 @@ namespace AssetWatch
                 System.Windows.MessageBox.Show("Kein API Key gefunden, bitte Key in den API Einstellungen hinzufügen!", "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
+            
             this.apiHandler.EnableApi(selectedApi);
             this.apiHandler.StartAssetUpdater(selectedApi);
             this.listView_loadedApis.SelectedIndex = -1;

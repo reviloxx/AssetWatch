@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 
 namespace AssetWatch
@@ -149,9 +150,8 @@ namespace AssetWatch
             if (e.ErrorType == ErrorType.Unauthorized || e.ErrorType == ErrorType.BadRequest)
             {
                 this.DisableApi(api);
+                MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>

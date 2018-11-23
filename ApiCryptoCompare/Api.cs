@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,9 +14,15 @@ namespace ApiCryptoCompare
 {
     public class Api : IApi
     {
+        private static int retryDelay = 1000;
+
         private CryptoCompareClient client;
 
         private Thread assetUpdateWorker;
+
+        private delegate void AssetRequestDelegate();
+
+        private AssetRequestDelegate assetRequestDelegate;
 
         private List<Asset> availableAssets;
 
@@ -32,6 +39,7 @@ namespace ApiCryptoCompare
         public Api()
         {
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
+            this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssetsAsync);
             this.availableAssets = new List<Asset>();
             this.subscribedAssets = new List<Asset>();
             this.subscribedConvertCurrencies = new List<string>();
@@ -60,7 +68,7 @@ namespace ApiCryptoCompare
 
         public void RequestAvailableAssetsAsync()
         {
-            this.GetAvailableAssetsAsync();
+            this.assetRequestDelegate.BeginInvoke(null, null);
         }
 
         public void RequestSingleAssetUpdateAsync(Asset asset)
@@ -149,54 +157,67 @@ namespace ApiCryptoCompare
                 return;
             }
 
-            this.WaitForConnection();
-
             List<string> fromSymbols = new List<string>();
             assets.ForEach(ass => fromSymbols.Add(ass.Symbol));
 
-            PriceMultiFullResponse response = await this.client.Prices.MultipleSymbolFullDataAsync(fromSymbols, this.subscribedConvertCurrencies);
-            this.ApiData.CallCount++;
-            this.FireOnAppDataChanged();
-            
-            var res = response.Raw;
+            bool callFailed = false;
+            int timeout = this.ApiData.UpdateInterval * 1000;           
 
-            assets.ForEach(ass =>
+            do
             {
-                this.subscribedConvertCurrencies.ForEach(con =>
+                callFailed = false;                
+
+                try
                 {
-                    try
-                    {
-                        CoinFullAggregatedData data = res[ass.Symbol][con];
+                    PriceMultiFullResponse response = await this.client.Prices.MultipleSymbolFullDataAsync(fromSymbols, this.subscribedConvertCurrencies);
+                    this.ApiData.CallCount++;
+                    this.FireOnAppDataChanged();
 
-                        if (ass.ConvertCurrency == con)
-                        {
-                            ass.LastUpdated = DateTime.Now;
-                            ass.MarketCap = (double)data.MarketCap;
-                            ass.PercentChange24h = (double)data.ChangePCT24Hour;
-                            //ass.PercentChange1h = -101;
-                            //ass.PercentChange7d = -101;
-                            ass.Price = (double)data.Price;
-                            ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
-                            this.FireOnSingleAssetUpdated(ass);
-                        }                        
-                    }
-                    catch (KeyNotFoundException)
-                    {
-                        // ignore
-                    }
-                    catch (Exception e)
-                    {
-                        OnApiErrorEventArgs args = new OnApiErrorEventArgs
-                        {
-                            ErrorType = ErrorType.General,
-                            ErrorMessage = e.Message
-                        };
+                    var res = response.Raw;
 
-                        this.FireOnApiError(args);
-                    }
-                });
-            });
-        }
+                    assets.ForEach(ass =>
+                    {
+                        this.subscribedConvertCurrencies.ForEach(con =>
+                        {
+                            CoinFullAggregatedData data = res[ass.Symbol][con];
+
+                            if (ass.ConvertCurrency == con)
+                            {
+                                ass.LastUpdated = DateTime.Now;
+                                ass.MarketCap = (double)data.MarketCap;
+                                ass.PercentChange24h = (double)data.ChangePCT24Hour;
+                                ass.Price = (double)data.Price;
+                                ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
+                                this.FireOnSingleAssetUpdated(ass);
+                            }
+                        });
+                    });
+                }
+                catch (HttpRequestException e)
+                {
+                    // no internet connection?                    
+                    callFailed = true;
+                    Thread.Sleep(retryDelay);
+                    timeout -= retryDelay;
+                }
+                catch (KeyNotFoundException)
+                {
+                    // ignore
+                }
+                catch (Exception e)
+                {
+                    OnApiErrorEventArgs args = new OnApiErrorEventArgs
+                    {
+                        ErrorType = ErrorType.General,
+                        ErrorMessage = e.Message
+                    };
+
+                    this.FireOnApiError(args);
+                }
+            }
+            while (callFailed && timeout >= 0);
+
+}
 
         private void StopAssetUpdater()
         {
@@ -209,24 +230,40 @@ namespace ApiCryptoCompare
 
         private async void GetAvailableAssetsAsync()
         {
-            this.WaitForConnection();
-            CoinListResponse response = await this.client.Coins.ListAsync();
-            this.ApiData.CallCount++;
-            this.FireOnAppDataChanged();
+            bool callFailed = false;
 
-            foreach (KeyValuePair<string, CoinInfo> coin in response.Coins)
+            do
             {
-                this.availableAssets.Add(
-                    new Asset
-                    {
-                        AssetId = coin.Value.Id,
-                        Name = coin.Value.Name,
-                        Symbol = coin.Value.Symbol
-                    });
-            }
+                callFailed = false;
 
-            this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
-            this.FireOnAvailableAssetsReceived();
+                try
+                {
+                    CoinListResponse response = await this.client.Coins.ListAsync();
+                    this.ApiData.CallCount++;
+                    this.FireOnAppDataChanged();
+
+                    foreach (KeyValuePair<string, CoinInfo> coin in response.Coins)
+                    {
+                        this.availableAssets.Add(
+                            new Asset
+                            {
+                                AssetId = coin.Value.Id,
+                                Name = coin.Value.Name,
+                                Symbol = coin.Value.Symbol
+                            });
+                    }
+
+                    this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
+                    this.FireOnAvailableAssetsReceived();
+                }
+                catch (HttpRequestException)
+                {
+                    callFailed = true;
+                    Thread.Sleep(retryDelay);
+                }
+            }
+            while (callFailed); 
+
         }        
 
         private void FireOnAvailableAssetsReceived()
