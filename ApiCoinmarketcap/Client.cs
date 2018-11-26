@@ -159,7 +159,7 @@ namespace ApiCoinmarketcap
 
         /// <summary>
         /// Unsubscribes an asset from the asset updater.
-        /// Not implemented because the number of calls is not dependent on the number of subscribed assets at this API.
+        /// Not implemented because at this API the number of calls is not dependent on the number of subscribed assets.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
         public void UnsubscribeAssetFromUpdater(Asset asset)
@@ -201,9 +201,10 @@ namespace ApiCoinmarketcap
                 }
                 catch (NullReferenceException)
                 {
-                    // happened once without further consequences, can be ignored
+                    callFailed = true;
+                    Thread.Sleep(retryDelay);
                 }
-                catch (FlurlHttpException e)
+                catch (FlurlHttpException)
                 {
                     callFailed = true;
                     Thread.Sleep(retryDelay);
@@ -317,7 +318,7 @@ namespace ApiCoinmarketcap
                 {
                     // happened once without further consequences, can be ignored
                 }
-                catch (FlurlHttpException e)
+                catch (FlurlHttpException)
                 {
                     // no internet connection?
                     callFailed = true;
@@ -335,8 +336,6 @@ namespace ApiCoinmarketcap
         /// <returns>The <see cref="OnApiErrorEventArgs"/></returns>
         private OnApiErrorEventArgs BuildOnApiErrorEventArgs(string message)
         {
-            // TODO: handle too many requests error
-
             if (message.Contains("400"))
             {
                 return new OnApiErrorEventArgs
@@ -350,8 +349,17 @@ namespace ApiCoinmarketcap
             {
                 return new OnApiErrorEventArgs
                 {
-                    ErrorMessage = "API Key ungültig!",
+                    ErrorMessage = message,
                     ErrorType = ErrorType.Unauthorized
+                };
+            }
+
+            if (message.Contains("429"))
+            {
+                return new OnApiErrorEventArgs
+                {
+                    ErrorMessage = message,
+                    ErrorType = ErrorType.TooManyRequests
                 };
             }
 
@@ -398,7 +406,6 @@ namespace ApiCoinmarketcap
 
         /// <summary>
         /// Gets or sets the ApiData.
-        /// Gets the ApiData
         /// </summary>
         public ApiData ApiData { get; set; }
 

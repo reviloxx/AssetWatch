@@ -53,5 +53,13 @@ namespace AssetWatch
         /// Gets or sets a value indicating whether the API is enabled.
         /// </summary>
         public bool IsEnabled { get; set; }
+
+        public ApiData()
+        {
+            this.ApiKey = string.Empty;
+            this.CallCountStartTime = DateTime.Now;
+            this.CallCount = 0;
+            this.IsEnabled = false;
+        }
     }
 }

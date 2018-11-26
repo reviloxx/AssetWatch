@@ -15,29 +15,32 @@ namespace AssetWatch
     public partial class AssetTile : Window
     {
         /// <summary>
-        /// Defines the stickyWindow
+        /// Defines the stickyWindow.
         /// </summary>
         private StickyWindow stickyWindow;
 
+        /// <summary>
+        /// Defines the positionLocked.
+        /// </summary>
         private bool positionLocked;
 
         /// <summary>
-        /// Defines the currentWorth
+        /// Defines the currentWorth.
         /// </summary>
         private double currentWorth;
 
         /// <summary>
-        /// Defines the profitLoss
+        /// Defines the profitLoss.
         /// </summary>
         private double profitLoss;
 
         /// <summary>
-        /// Defines the globalTileStyle
+        /// Defines the globalTileStyle.
         /// </summary>
         private TileStyle globalTileStyle;
 
         /// <summary>
-        /// Defines the readyApis
+        /// Defines the readyApis.
         /// </summary>
         private Dictionary<IApi, List<Asset>> readyApis;
 
@@ -61,10 +64,9 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The UpdateAsset
+        /// Is called by the API handler after it has received an asset update for this asset tile.
         /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="asset">The asset<see cref="Asset"/></param>
+        /// <param name="asset">The asset<see cref="Asset"/> which has received the update.</param>
         public void Update(Asset asset)
         {
             this.AssetTileData.Asset = asset;
@@ -144,14 +146,17 @@ namespace AssetWatch
             this.ChangeFontColor(fontColor);
         }
 
+        /// <summary>
+        /// The LockPosition
+        /// </summary>
+        /// <param name="locked">The locked<see cref="bool"/></param>
         public void LockPosition(bool locked)
         {
             if (this.stickyWindow != null)
             {
-                this.stickyWindow.IsEnabled = !locked;                
+                this.stickyWindow.IsEnabled = !locked;
             }
             this.positionLocked = locked;
-
         }
 
         /// <summary>
@@ -254,7 +259,7 @@ namespace AssetWatch
         private void assetTileSettingsWindow_OnAssetTileSettingsChanged(object sender, OnAssetTileSettingsChangedEventArgs e)
         {
             if (e.NewApiName != this.AssetTileData.ApiName ||
-                e.NewAsset.AssetId != this.AssetTileData.Asset.AssetId || 
+                e.NewAsset.AssetId != this.AssetTileData.Asset.AssetId ||
                 e.NewAsset.ConvertCurrency != this.AssetTileData.Asset.ConvertCurrency)
             {
                 if (this.AssetTileData.Asset != null)
@@ -280,9 +285,9 @@ namespace AssetWatch
                 this.RefreshAssetTextblocks();
                 this.button_Calc.Visibility = Visibility.Visible;
                 this.button_Info.Visibility = Visibility.Visible;
-                
-                this.RefreshTileDataTextblocks();                
-            });            
+
+                this.RefreshTileDataTextblocks();
+            });
         }
 
         /// <summary>
@@ -349,6 +354,9 @@ namespace AssetWatch
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
+        /// <summary>
+        /// The FireOnAssetTileUpdated
+        /// </summary>
         private void FireOnAssetTileUpdated()
         {
             this.OnAssetTileUpdated?.Invoke(this, null);
@@ -383,6 +391,9 @@ namespace AssetWatch
         /// </summary>
         public event EventHandler OnAssetUnselected;
 
+        /// <summary>
+        /// Defines the OnAssetTileUpdated
+        /// </summary>
         public event EventHandler OnAssetTileUpdated;
 
         /// <summary>

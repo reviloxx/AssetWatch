@@ -11,8 +11,6 @@ namespace AssetWatch
     /// </summary>
     public class DiskApiLoader : IApiLoader
     {
-        // TODO: maybe add Cryptowatch import
-
         /// <summary>
         /// Defines the path which contains the assemblies to load.
         /// </summary>
@@ -22,7 +20,7 @@ namespace AssetWatch
         /// Loads all available types which implement the IApi interface.
         /// </summary>
         /// <returns>The <see cref="List{IApi}"/> contains instances of the loaded types.</returns>
-        public List<IApi> GetApis()
+        public List<IApi> LoadApis()
         {
             Assembly ass;
             List<IApi> loadedApis = new List<IApi>();

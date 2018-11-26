@@ -10,6 +10,8 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
+        // TODO: maybe add Cryptowatch import
+
         /// <summary>
         /// Defines the apiHandler
         /// </summary>
@@ -37,12 +39,19 @@ namespace AssetWatch
         {
             this.InitializeComponent();
             this.CheckRunningProcesses();
+
+            fileHandler.OnFileHandlerError += this.FileHandler_OnFileHandlerError;
             this.appData = fileHandler.LoadAppData();
             this.tileHandler = new MultiTileHandler(apiHandler, this.appData);
             this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;
             this.menuItem_HideAssetTiles.IsChecked = this.appData.TileHandlerData.GlobalTileStyle.Hidden;
             this.menuItem_LockTilePositions.IsChecked = this.appData.TileHandlerData.PositionsLocked;
             apiHandler.OnAppDataChanged += this.OnAppDataChanged;
+        }
+
+        private void FileHandler_OnFileHandlerError(object sender, string e)
+        {
+            MessageBox.Show(e, "Fehler beim Laden der Daten!", MessageBoxButton.OK, MessageBoxImage.Error);            
         }
 
         /// <summary>

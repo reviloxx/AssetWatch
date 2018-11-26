@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace AssetWatch
 {
@@ -34,9 +35,8 @@ namespace AssetWatch
         public AssetTileSettingsWindow(Dictionary<IApi, List<Asset>> readyApis, AssetTileData assetTileData)
         {
             this.InitializeComponent();
-            this.readyApis = readyApis;
             this.assetTileData = assetTileData;
-
+            this.readyApis = readyApis;
             this.DataContext = new AssetTileSettingsWindowViewModel { ReadyApis = this.readyApis };
             this.InitializeTextBoxes();
             this.InitializeComboBoxes();
@@ -176,6 +176,14 @@ namespace AssetWatch
             }
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.button_Ok_Click(null, null);
+            }
+        }
+
         /// <summary>
         /// The FireOnAssetChanged
         /// </summary>
@@ -199,6 +207,6 @@ namespace AssetWatch
             /// Gets or sets the ReadyApis
             /// </summary>
             public Dictionary<IApi, List<Asset>> ReadyApis { get; set; }
-        }
+        }        
     }
 }

@@ -68,6 +68,18 @@ namespace AssetWatch
         {
             if (this.PortfolioTileData.AssignedAssetTileIds.Any(id => id == updatedAsset.AssetTileData.AssetTileId))
             {
+                // remove asset if the convert currency has changed
+                if (this.PortfolioTileData.AssignedAssetTileIds.Count > 1)
+                {
+                    int otherAssignedId = this.PortfolioTileData.AssignedAssetTileIds.First(a => a != updatedAsset.AssetTileData.AssetTileId);
+                    
+                    if (this.appData.AssetTileDataSet.First(a => a.AssetTileId == otherAssignedId).Asset.ConvertCurrency != updatedAsset.AssetTileData.Asset.ConvertCurrency)
+                    {
+                        this.PortfolioTileData.AssignedAssetTileIds.Remove(updatedAsset.AssetTileData.AssetTileId);
+                        this.FireOnAppDataChanged();
+                    }
+                }
+
                 this.UpdateTextBlocks(updatedAsset.AssetTileData.Asset.LastUpdated);
                 this.RefreshTileStyle();
             }

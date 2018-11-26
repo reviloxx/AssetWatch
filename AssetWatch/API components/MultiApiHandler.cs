@@ -32,7 +32,7 @@ namespace AssetWatch
         public void LoadApis(IApiLoader apiLoader)
         {
             // look for valid API librarys, load them from the disk and remove duplicates
-            this.LoadedApis = apiLoader.GetApis()
+            this.LoadedApis = apiLoader.LoadApis()
                 .GroupBy(api => api.ApiInfo.ApiName)
                 .Select(g => g.First())
                 .ToList();
@@ -45,7 +45,7 @@ namespace AssetWatch
                 api.OnAppDataChanged += this.Api_OnAppDataChanged;
                 this.FireOnApiLoaded(api);
             });
-        }
+        }        
 
         /// <summary>
         /// Subscribes an asset tile to the API handler and it's asset to the right API.
@@ -96,11 +96,6 @@ namespace AssetWatch
             {
                 api.RequestAvailableAssetsAsync();
             }
-            else
-            {
-                // should never happen
-                throw new Exception();
-            }
         }
 
         /// <summary>
@@ -147,7 +142,19 @@ namespace AssetWatch
         {
             IApi api = (IApi)sender;
 
-            if (e.ErrorType == ErrorType.Unauthorized || e.ErrorType == ErrorType.BadRequest)
+            if (e.ErrorType == ErrorType.TooManyRequests)
+            {
+                this.DisableApi(api);
+                MessageBox.Show("Die erlaubte Anzahl an Aufrufen dieser API wurde überschritten, API deaktiviert.", api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            if (e.ErrorType == ErrorType.Unauthorized)
+            {
+                this.DisableApi(api);
+                MessageBox.Show("API Key ungültig!", api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            if (e.ErrorType == ErrorType.BadRequest || e.ErrorType == ErrorType.General)
             {
                 this.DisableApi(api);
                 MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);

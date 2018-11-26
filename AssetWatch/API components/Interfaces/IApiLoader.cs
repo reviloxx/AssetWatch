@@ -9,10 +9,10 @@ namespace AssetWatch
     public interface IApiLoader
     {
         /// <summary>
-        /// Gets all available APIs.
+        /// Loads the available APIs.
         /// </summary>
         /// <returns>The <see cref="List{IApi}"/> contains all loaded APIs.</returns>
-        List<IApi> GetApis();
+        List<IApi> LoadApis();
 
         /// <summary>
         /// Is fired when any error occurs within the API loader.

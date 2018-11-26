@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssetWatch"
         mc:Ignorable="d"
-        Title="Portfolio Einstellungen" Height="466.143" Width="400" ResizeMode="NoResize">
+        Title="Portfolio Einstellungen" Height="466.143" Width="400" ResizeMode="NoResize"
+        KeyDown="Window_KeyDown">
     <Grid>
         <Label Content="Portfolio Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_PortfolioName" HorizontalAlignment="Left" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Padding="2.4" Width="120"/>

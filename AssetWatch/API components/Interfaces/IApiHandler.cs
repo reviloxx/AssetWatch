@@ -58,7 +58,7 @@ namespace AssetWatch
         void UnsubscribeAssetTile(AssetTile assetTile);
 
         /// <summary>
-        /// Gets a list of APIs which were loaded from assemblies.
+        /// Gets a list of APIs which were loaded by an IApiLoader.
         /// </summary>
         List<IApi> LoadedApis { get; }
 

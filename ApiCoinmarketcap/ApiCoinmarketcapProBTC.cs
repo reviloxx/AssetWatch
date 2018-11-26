@@ -16,11 +16,7 @@ namespace ApiCoinmarketcap
         {
             this.ApiData = new ApiData
             {
-                ApiKey = string.Empty,
                 ApiName = this.ApiInfo.ApiName,
-                CallCountStartTime = DateTime.Now,
-                CallCount = 0,
-                IsEnabled = false,
                 UpdateInterval = 300
             };
         }
@@ -40,7 +36,7 @@ namespace ApiCoinmarketcap
                     ApiClientVersion = "1.0",
                     Market = Market.Cryptocurrencies,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
-                    AssetUrlName = "Auf Coinmarketcap.com anzeigen",
+                    AssetUrlName = "Auf Coinmarketcap.com anzeigen...",
                     GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
                     MaxUpdateInterval = 3600,
                     MinUpdateInterval = 60,

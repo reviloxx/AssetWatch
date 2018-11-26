@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssetWatch"
         mc:Ignorable="d"
-        Title="Kachel Einstellungen" Height="325" Width="230" ResizeMode="NoResize">
+        Title="Kachel Einstellungen" Height="325" Width="230" ResizeMode="NoResize"
+        KeyDown="Window_KeyDown">
     <Grid>
         <ComboBox x:Name="comboBox_Apis" ItemsSource="{Binding ReadyApis}" DisplayMemberPath="Key.ApiInfo.ApiName" SelectionChanged="comboBox_Apis_SelectionChanged" Margin="10,92,9.8,0" VerticalAlignment="Top" />
         <ComboBox x:Name="comboBox_ConvertCurrencies" IsEditable="True" Margin="95,144,9.8,0" VerticalAlignment="Top" Height="23"/>

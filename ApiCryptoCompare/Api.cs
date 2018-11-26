@@ -5,72 +5,102 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace ApiCryptoCompare
 {
+    /// <summary>
+    /// Defines the <see cref="Api" />
+    /// </summary>
     public class Api : IApi
     {
+        /// <summary>
+        /// Defines the retryDelay in case there is no connection.
+        /// </summary>
         private static int retryDelay = 1000;
 
+        /// <summary>
+        /// Defines the client.
+        /// </summary>
         private CryptoCompareClient client;
 
+        /// <summary>
+        /// Defines the assetUpdateWorker thread.
+        /// </summary>
         private Thread assetUpdateWorker;
 
+        /// <summary>
+        /// The AssetRequestDelegate.
+        /// </summary>
         private delegate void AssetRequestDelegate();
 
+        /// <summary>
+        /// Defines the assetRequestDelegate.
+        /// </summary>
         private AssetRequestDelegate assetRequestDelegate;
 
+        /// <summary>
+        /// Defines the list of available assets.
+        /// </summary>
         private List<Asset> availableAssets;
 
         /// <summary>
-        /// Gets the SubscribedAssets
+        /// Defines the list of subscribed assets.
         /// </summary>
         private List<Asset> subscribedAssets;
 
         /// <summary>
-        /// Defines the subscribedConvertCurrencies
+        /// Defines the list of subscribed convert currencies.
         /// </summary>
         private List<string> subscribedConvertCurrencies;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Api"/> class.
+        /// </summary>
         public Api()
         {
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssetsAsync);
+            this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
             this.availableAssets = new List<Asset>();
             this.subscribedAssets = new List<Asset>();
             this.subscribedConvertCurrencies = new List<string>();
             this.ApiData = new ApiData
             {
-                ApiKey = string.Empty,
                 ApiName = this.ApiInfo.ApiName,
-                CallCountStartTime = DateTime.Now,
-                CallCount = 0,
-                IsEnabled = false,
                 UpdateInterval = 15
             };
         }
 
+        /// <summary>
+        /// Disables the API.
+        /// </summary>
         public void Disable()
         {
             this.StopAssetUpdater();
             this.ApiData.IsEnabled = false;
         }
 
+        /// <summary>
+        /// Enables the API.
+        /// </summary>
         public void Enable()
         {
             this.client = new CryptoCompareClient();
             this.ApiData.IsEnabled = true;
         }
 
+        /// <summary>
+        /// Requests the available assets of this API.
+        /// </summary>
         public void RequestAvailableAssetsAsync()
         {
             this.assetRequestDelegate.BeginInvoke(null, null);
         }
 
+        /// <summary>
+        /// Requests a single asset update.
+        /// </summary>
+        /// <param name="asset">The asset<see cref="Asset"/> to update.</param>
         public void RequestSingleAssetUpdateAsync(Asset asset)
         {
             if (!this.assetUpdateWorker.IsAlive)
@@ -85,9 +115,12 @@ namespace ApiCryptoCompare
 
             List<Asset> assets = new List<Asset>();
             assets.Add(asset);
-            this.RequestAssetUpdates(assets);
+            this.GetAssetUpdates(assets);
         }
 
+        /// <summary>
+        /// Starts the asset updater.
+        /// </summary>
         public void StartAssetUpdater()
         {
             if (this.assetUpdateWorker.IsAlive)
@@ -99,12 +132,16 @@ namespace ApiCryptoCompare
             this.assetUpdateWorker.Start();
         }
 
+        /// <summary>
+        /// Subscribes an asset to the updater.
+        /// </summary>
+        /// <param name="asset">The asset<see cref="Asset"/> to subscribe.</param>
         public void SubscribeAssetToUpdater(Asset asset)
         {
             if (!this.subscribedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
             {
                 this.subscribedAssets.Add(asset);
-            }                 
+            }
 
             if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
             {
@@ -112,45 +149,34 @@ namespace ApiCryptoCompare
             }
         }
 
+        /// <summary>
+        /// Unsubscribes an asset from the updater.
+        /// Not implemented because at this API the number of calls is not dependent on the number of subscribed assets.
+        /// </summary>
+        /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
         public void UnsubscribeAssetFromUpdater(Asset asset)
         {
-            // not implemented because at this API the number of calls is not dependent on the number of subscribed assets
         }
 
-        private void WaitForConnection()
-        {
-            bool connected = false;
-
-            do
-            {
-                try
-                {
-                    using (var client = new WebClient())
-                    {
-                        using (var stream = client.OpenRead("https://www.cryptocompare.com/"))
-                        {
-                            connected = true;
-                        }
-                    }
-                }
-                catch
-                {
-                    Thread.Sleep(500);
-                }
-            }
-            while (!connected);
-        }
-
+        /// <summary>
+        /// Requests updates of the subscribed assets while this API is enabled.
+        /// </summary>
         private void AssetUpdateWorker()
         {
             while (this.ApiData.IsEnabled)
             {
-                this.RequestAssetUpdates(this.subscribedAssets);
+                this.GetAssetUpdates(this.subscribedAssets);
                 Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
         }
 
-        private async void RequestAssetUpdates(List<Asset> assets)
+        /// <summary>
+        /// Gets updates for a list of assets.
+        /// Fires the OnSingleAssetUpdated event for each updated asset from the list.
+        /// Fires the OnApiError event if something has gone wrong.
+        /// </summary>
+        /// <param name="assets">The assets<see cref="List{Asset}"/> to update.</param>
+        private async void GetAssetUpdates(List<Asset> assets)
         {
             if (assets.Count < 1)
             {
@@ -161,11 +187,11 @@ namespace ApiCryptoCompare
             assets.ForEach(ass => fromSymbols.Add(ass.Symbol));
 
             bool callFailed = false;
-            int timeout = this.ApiData.UpdateInterval * 1000;           
+            int timeout = this.ApiData.UpdateInterval * 1000;
 
             do
             {
-                callFailed = false;                
+                callFailed = false;
 
                 try
                 {
@@ -175,34 +201,42 @@ namespace ApiCryptoCompare
 
                     var res = response.Raw;
 
+                    if (res == null)
+                    {
+                        return;
+                    }
+
                     assets.ForEach(ass =>
                     {
                         this.subscribedConvertCurrencies.ForEach(con =>
                         {
-                            CoinFullAggregatedData data = res[ass.Symbol][con];
-
-                            if (ass.ConvertCurrency == con)
+                            try
                             {
-                                ass.LastUpdated = DateTime.Now;
-                                ass.MarketCap = (double)data.MarketCap;
-                                ass.PercentChange24h = (double)data.ChangePCT24Hour;
-                                ass.Price = (double)data.Price;
-                                ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
-                                this.FireOnSingleAssetUpdated(ass);
+                                CoinFullAggregatedData data = res[ass.Symbol][con];
+
+                                if (ass.ConvertCurrency == con)
+                                {
+                                    ass.LastUpdated = DateTime.Now;
+                                    ass.MarketCap = (double)data.MarketCap;
+                                    ass.PercentChange24h = (double)data.ChangePCT24Hour;
+                                    ass.Price = (double)data.Price;
+                                    ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
+                                    this.FireOnSingleAssetUpdated(ass);
+                                }
                             }
+                            catch (KeyNotFoundException)
+                            {
+                                // ignore
+                            }                            
                         });
                     });
                 }
-                catch (HttpRequestException e)
+                catch (HttpRequestException)
                 {
                     // no internet connection?                    
                     callFailed = true;
                     Thread.Sleep(retryDelay);
                     timeout -= retryDelay;
-                }
-                catch (KeyNotFoundException)
-                {
-                    // ignore
                 }
                 catch (Exception e)
                 {
@@ -216,9 +250,11 @@ namespace ApiCryptoCompare
                 }
             }
             while (callFailed && timeout >= 0);
+        }
 
-}
-
+        /// <summary>
+        /// Stops the asset updater.
+        /// </summary>
         private void StopAssetUpdater()
         {
             try
@@ -228,7 +264,11 @@ namespace ApiCryptoCompare
             catch (Exception) { }
         }
 
-        private async void GetAvailableAssetsAsync()
+        /// <summary>
+        /// Gets the available assets of the API and fires the OnAvailableAssetsReceived event if successful.
+        /// Fires the OnApiError event if something has gone wrong.
+        /// </summary>
+        private async void GetAvailableAssets()
         {
             bool callFailed = false;
 
@@ -262,32 +302,51 @@ namespace ApiCryptoCompare
                     Thread.Sleep(retryDelay);
                 }
             }
-            while (callFailed); 
+            while (callFailed);
+        }
 
-        }        
-
+        /// <summary>
+        /// Fires the OnAvailableAssetsReceived event.
+        /// </summary>
         private void FireOnAvailableAssetsReceived()
         {
             this.OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
         }
 
-        private void FireOnSingleAssetUpdated(Asset updatedAsset)
+        /// <summary>
+        /// Fires the OnSingleAssetUpdated event.
+        /// </summary>
+        /// <param name="asset">The asset<see cref="Asset"/></param>
+        private void FireOnSingleAssetUpdated(Asset asset)
         {
-            this.OnSingleAssetUpdated?.Invoke(this, updatedAsset);
+            this.OnSingleAssetUpdated?.Invoke(this, asset);
         }
 
+        /// <summary>
+        /// Fires the OnApiError event.
+        /// </summary>
+        /// <param name="eventArgs">The eventArgs<see cref="OnApiErrorEventArgs"/></param>
         private void FireOnApiError(OnApiErrorEventArgs onApiErrorEventArgs)
         {
             this.OnApiError?.Invoke(this, onApiErrorEventArgs);
         }
 
+        /// <summary>
+        /// Fires the OnAppDataChanged event.
+        /// </summary>
         private void FireOnAppDataChanged()
         {
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
+        /// <summary>
+        /// Gets or sets the ApiData.
+        /// </summary>
         public ApiData ApiData { get; set; }
 
+        /// <summary>
+        /// Gets the ApiInfo.
+        /// </summary>
         public ApiInfo ApiInfo
         {
             get
@@ -311,9 +370,24 @@ namespace ApiCryptoCompare
             }
         }
 
+        /// <summary>
+        /// Defines the OnAvailableAssetsReceived event.
+        /// </summary>
         public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
+
+        /// <summary>
+        /// Defines the OnSingleAssetUpdated event.
+        /// </summary>
         public event EventHandler<Asset> OnSingleAssetUpdated;
+
+        /// <summary>
+        /// Defines the OnApiError event.
+        /// </summary>
         public event EventHandler<OnApiErrorEventArgs> OnApiError;
+
+        /// <summary>
+        /// Defines the OnAppDataChanged event.
+        /// </summary>
         public event EventHandler OnAppDataChanged;
     }
 }

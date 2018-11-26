@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace AssetWatch
 {
@@ -31,6 +32,12 @@ namespace AssetWatch
         {
             this.InitializeComponent();
             this.portfolioTileData = portfolioTileData;
+
+            appData.AssetTileDataSet = appData.AssetTileDataSet
+                .OrderBy(a => a.Asset.ConvertCurrency)
+                .ThenBy(a => a.AssetTileName)
+                .ToList();
+
             this.appData = appData;
 
             this.DataContext = this.appData;
@@ -109,6 +116,14 @@ namespace AssetWatch
             this.Close();
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                this.button_OK_Click(null, null);
+            }
+        }
+
         /// <summary>
         /// Fires the OnPortfolioTileDataChanged event.
         /// </summary>
@@ -120,6 +135,6 @@ namespace AssetWatch
         /// <summary>
         /// Defines the OnPortfolioTileDataChanged event.
         /// </summary>
-        public event EventHandler OnPortfolioTileDataChanged;
+        public event EventHandler OnPortfolioTileDataChanged;        
     }
 }
