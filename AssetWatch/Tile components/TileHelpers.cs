@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AssetWatch
-{ 
+{
+    /// <summary>
+    /// Defines the <see cref="TileHelpers" />
+    /// </summary>
     public static class TileHelpers
     {
+        /// <summary>
+        /// The GetValueString
+        /// </summary>
+        /// <param name="value">The value<see cref="double"/></param>
+        /// <param name="forceSign">The forceSign<see cref="bool"/></param>
+        /// <returns>The <see cref="string"/></returns>
         public static string GetValueString(double value, bool forceSign)
         {
             string sign = value > 0 ? "+" : string.Empty;
@@ -39,46 +45,12 @@ namespace AssetWatch
 
             return valueString;
         }
-
-        public static string FormatValueString(string value, bool forceSign)
-        {
-            double val;
-
-            if (!double.TryParse(value, out val))
-            {
-                return string.Empty;
-            }
-
-            string sign = val > 0 ? "+" : string.Empty;
-            string valueString;
-
-            if (Math.Abs(val) < 10)
-            {
-                valueString = string.Format("{0:F4}", val);
-            }
-            else if (Math.Abs(val) < 1)
-            {
-                valueString = string.Format("{0:F5}", val);
-            }
-            else if (Math.Abs(val) < 0.1)
-            {
-                valueString = string.Format("{0:F6}", val);
-            }
-            else
-            {
-                valueString = string.Format("{0:N}", val);
-            }
-
-            if (forceSign)
-            {
-                valueString = valueString.Insert(0, sign);
-            }
-
-            valueString = valueString.TrimEnd('0').TrimEnd(',');
-
-            return valueString;
-        }
-
+                
+        /// <summary>
+        /// The CalculateInvest
+        /// </summary>
+        /// <param name="assetTileDataSet">The assetTileDataSet<see cref="List{AssetTileData}"/></param>
+        /// <returns>The <see cref="double"/></returns>
         public static double CalculateInvest(List<AssetTileData> assetTileDataSet)
         {
             double investTotal = 0;
@@ -91,24 +63,36 @@ namespace AssetWatch
             return investTotal;
         }
 
+        /// <summary>
+        /// The CalculateWorth
+        /// </summary>
+        /// <param name="assetTilesDataSet">The assetTilesDataSet<see cref="List{AssetTileData}"/></param>
+        /// <returns>The <see cref="double"/></returns>
         public static double CalculateWorth(List<AssetTileData> assetTilesDataSet)
         {
             double worthTotal = 0;
 
             assetTilesDataSet.ForEach(asstiledata =>
             {
-                worthTotal += asstiledata.HoldingsCount * asstiledata.Asset.Price;                               
+                worthTotal += asstiledata.HoldingsCount * asstiledata.Asset.Price;
             });
 
             return worthTotal;
         }
 
+        /// <summary>
+        /// The Calculate24hPercentage
+        /// </summary>
+        /// <param name="assetTilesDataSet">The assetTilesDataSet<see cref="List{AssetTileData}"/></param>
+        /// <param name="worthTotal">The worthTotal<see cref="double"/></param>
+        /// <returns>The <see cref="double"/></returns>
         public static double Calculate24hPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
         {
             double percentage = 0;
-            bool calculationValid = true;                       
+            bool calculationValid = true;
 
-            assetTilesDataSet.ForEach(ass => {
+            assetTilesDataSet.ForEach(ass =>
+            {
                 if (ass.Asset.PercentChange24h < -100)
                 {
                     calculationValid = false;
@@ -116,18 +100,25 @@ namespace AssetWatch
 
                 double worth = ass.HoldingsCount * ass.Asset.Price;
                 double weight = worth / worthTotal;
-                percentage += ass.Asset.PercentChange24h * weight;                
+                percentage += ass.Asset.PercentChange24h * weight;
             });
 
             return calculationValid ? Math.Round(percentage, 2) : 0;
         }
 
+        /// <summary>
+        /// The Calculate7dPercentage
+        /// </summary>
+        /// <param name="assetTilesDataSet">The assetTilesDataSet<see cref="List{AssetTileData}"/></param>
+        /// <param name="worthTotal">The worthTotal<see cref="double"/></param>
+        /// <returns>The <see cref="double"/></returns>
         public static double Calculate7dPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
         {
             double percentage = 0;
             bool calculationValid = true;
 
-            assetTilesDataSet.ForEach(ass => {
+            assetTilesDataSet.ForEach(ass =>
+            {
                 if (ass.Asset.PercentChange7d < -100)
                 {
                     calculationValid = false;
@@ -135,12 +126,18 @@ namespace AssetWatch
 
                 double worth = ass.HoldingsCount * ass.Asset.Price;
                 double weight = worth / worthTotal;
-                percentage += ass.Asset.PercentChange7d * weight;                
+                percentage += ass.Asset.PercentChange7d * weight;
             });
 
             return calculationValid ? Math.Round(percentage, 2) : 0;
         }
 
+        /// <summary>
+        /// The CalculateWinLoss
+        /// </summary>
+        /// <param name="percentage">The percentage<see cref="double"/></param>
+        /// <param name="worthTotal">The worthTotal<see cref="double"/></param>
+        /// <returns>The <see cref="double"/></returns>
         public static double CalculateWinLoss(double percentage, double worthTotal)
         {
             double mult = percentage / 100;

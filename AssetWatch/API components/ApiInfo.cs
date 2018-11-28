@@ -88,7 +88,7 @@ namespace AssetWatch
         /// <summary>
         /// Defines the market Cryptocurrencies.
         /// </summary>
-        Cryptocurrencies,
+        Crypto,
         /// <summary>
         /// Defines market the Stocks.
         /// </summary>

@@ -24,42 +24,67 @@ namespace AssetWatch
         public string ApiKey { get; set; }
 
         /// <summary>
-        /// Gets or sets the time when the current average call count period started.
-        /// Gets reset every 30 days.
+        /// Gets or sets the date when the current call count per day started.
         /// </summary>
-        public DateTime CallCountStartTime { get; set; }
+        public DateTime CallCountDayStartTime { get; set; }
 
         /// <summary>
-        /// Gets or sets the count of the calls in the current period.
-        /// Gets reset every 30 days.
+        /// Gets or sets the date when the current call count per month started.
         /// </summary>
-        public int CallCount { get; set; }
+        public DateTime CallCountMonthStartTime { get; set; }
 
         /// <summary>
-        /// Gets the average daily call count for the current month.
+        /// Gets or sets the count of the calls at the current day.
         /// </summary>
-        public int CallCountDailyAverage1m
-        {
-            get
-            {
-                int daysCount = Math.Max((DateTime.Now - this.CallCountStartTime).Days + 1, 1);
-                
+        public int CallCountDay { get; set; }
 
-                return this.CallCount / daysCount;
-            }
-        }
+        /// <summary>
+        /// Gets or sets the count of the calls in the current month.
+        /// </summary>
+        public int CallCountMonth { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the API is enabled.
         /// </summary>
         public bool IsEnabled { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiData"/> class.
+        /// </summary>
         public ApiData()
         {
             this.ApiKey = string.Empty;
-            this.CallCountStartTime = DateTime.Now;
-            this.CallCount = 0;
+            this.CallCountDayStartTime = DateTime.Today;
+            this.CallCountMonthStartTime = DateTime.Today;
             this.IsEnabled = false;
+        }
+
+        /// <summary>
+        /// Increases the call counters or resets them if a new counting period has started.
+        /// </summary>
+        /// <param name="increaseSum">The increaseSum<see cref="int"/> contains the value to add to the counters.</param>
+        public void IncreaseCounter(int increaseSum)
+        {
+            if (DateTime.Today.Date != this.CallCountDayStartTime.Date)
+            {
+                this.CallCountDayStartTime = DateTime.Today;
+                this.CallCountDay = increaseSum;
+            }
+            else
+            {
+                this.CallCountDay += increaseSum;
+            }
+
+            if (DateTime.Today.Year != this.CallCountMonthStartTime.Year ||
+                DateTime.Today.Month != this.CallCountMonthStartTime.Month)
+            {
+                this.CallCountMonthStartTime = DateTime.Today;
+                this.CallCountMonth = increaseSum;
+            }
+            else
+            {
+                this.CallCountMonth += increaseSum;
+            }
         }
     }
 }

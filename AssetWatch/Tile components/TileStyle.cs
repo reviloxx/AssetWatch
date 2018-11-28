@@ -13,8 +13,8 @@ namespace AssetWatch
         /// </summary>
         public TileStyle()
         {
-            this.BackgroundColorProfit = "#FF000000";
-            this.BackgroundColorLoss = "#FF000000";
+            this.BackgroundColorProfit = "#3200FF00";
+            this.BackgroundColorLoss = "#32FF0000";
 
             this.FontColorProfit = "#FFFFFFFF";
             this.FontColorLoss = "#FFFFFFFF";
@@ -32,6 +32,7 @@ namespace AssetWatch
         /// </summary>
         public string BackgroundColorLoss { get; set; }
 
+        // TODO: add adjustable tile sizes
         /// <summary>
         /// Gets or sets the Size of the tile.
         /// </summary>

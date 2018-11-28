@@ -181,7 +181,7 @@ namespace ApiCoinmarketcap
                 try
                 {
                     var map = await this.client.GetCurrencyMapAsync();
-                    this.ApiData.CallCount++;
+                    this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
 
                     map.Data.ForEach(c =>
@@ -288,7 +288,7 @@ namespace ApiCoinmarketcap
                 try
                 {
                     var response = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
-                    this.ApiData.CallCount += this.subscribedConvertCurrencies.Count;
+                    this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
 
                     if (response.Status.ErrorCode != 0)

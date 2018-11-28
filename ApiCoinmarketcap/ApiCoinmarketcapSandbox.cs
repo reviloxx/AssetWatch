@@ -18,9 +18,6 @@ namespace ApiCoinmarketcap
             {
                 ApiKey = string.Empty,
                 ApiName = this.ApiInfo.ApiName,
-                CallCountStartTime = DateTime.Now,
-                CallCount = 0,
-                IsEnabled = false,
                 UpdateInterval = 300
             };
         }
@@ -38,7 +35,7 @@ namespace ApiCoinmarketcap
                     ApiKeyRequired = false,
                     ApiName = "Coinmarketcap Sandbox",
                     ApiClientVersion = "1.0",
-                    Market = Market.Cryptocurrencies,
+                    Market = Market.Crypto,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen",
                     MaxUpdateInterval = 3600,

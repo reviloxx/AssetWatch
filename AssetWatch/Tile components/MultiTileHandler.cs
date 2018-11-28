@@ -178,14 +178,7 @@ namespace AssetWatch
                 // TODO: maybe rethink the call counting
                 // get data directly from API instead of counting locally?
                 // add button to check in main settings window?
-
-                // reset call counter every month
-                if ((DateTime.Now - apiData.CallCountStartTime).Days + 1 > 30)
-                {
-                    apiData.CallCountStartTime = DateTime.Now;
-                    apiData.CallCount = 0;
-                }
-
+                
                 api.ApiData = apiData;
             }
             else
@@ -211,7 +204,6 @@ namespace AssetWatch
 
             if (api.ApiData.IsEnabled)
             {
-                // TODO: start asset updater when the API has received it's available assets and 
                 this.apiHandler.EnableApi(api);
                 this.apiHandler.StartAssetUpdater(api);
             }

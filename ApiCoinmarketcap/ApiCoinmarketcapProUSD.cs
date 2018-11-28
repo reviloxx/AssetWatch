@@ -34,7 +34,7 @@ namespace ApiCoinmarketcap
                     ApiKeyRequired = true,
                     ApiName = "Coinmarketcap Pro - USD",
                     ApiClientVersion = "1.0",
-                    Market = Market.Cryptocurrencies,
+                    Market = Market.Crypto,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen...",
                     GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",

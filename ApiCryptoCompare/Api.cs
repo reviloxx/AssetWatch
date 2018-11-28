@@ -196,7 +196,7 @@ namespace ApiCryptoCompare
                 try
                 {
                     PriceMultiFullResponse response = await this.client.Prices.MultipleSymbolFullDataAsync(fromSymbols, this.subscribedConvertCurrencies);
-                    this.ApiData.CallCount++;
+                    this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
 
                     var res = response.Raw;
@@ -279,7 +279,7 @@ namespace ApiCryptoCompare
                 try
                 {
                     CoinListResponse response = await this.client.Coins.ListAsync();
-                    this.ApiData.CallCount++;
+                    this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
 
                     foreach (KeyValuePair<string, CoinInfo> coin in response.Coins)
@@ -357,7 +357,7 @@ namespace ApiCryptoCompare
                     ApiKeyRequired = false,
                     ApiName = "CryptoCompare",
                     ApiClientVersion = "1.0",
-                    Market = Market.Cryptocurrencies,
+                    Market = Market.Crypto,
                     AssetUrl = "https://www.cryptocompare.com/coins/#SYMBOL#/overview",
                     AssetUrlName = "Auf cryptocompare.com anzeigen...",
                     GetApiKeyUrl = "",
