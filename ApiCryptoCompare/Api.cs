@@ -353,11 +353,11 @@ namespace ApiCryptoCompare
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert alle 15 Sekunden Daten zu den meisten Kryptowährungen. Unterstützt keine 7-Tage Preisentwicklung in Prozent.",
+                    ApiInfoText = "Liefert alle 15 Sekunden Daten zu den meisten Kryptowährungen. Unterstützt keine prozentuale 7-Tage Preisentwicklung.",
                     ApiKeyRequired = false,
                     ApiName = "CryptoCompare",
                     ApiClientVersion = "1.0",
-                    Market = Market.Crypto,
+                    Market = Market.Kryptowährungen,
                     AssetUrl = "https://www.cryptocompare.com/coins/#SYMBOL#/overview",
                     AssetUrlName = "Auf cryptocompare.com anzeigen...",
                     GetApiKeyUrl = "",

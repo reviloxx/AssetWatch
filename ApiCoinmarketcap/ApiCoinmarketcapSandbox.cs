@@ -7,7 +7,7 @@ namespace ApiCoinmarketcap
     /// <summary>
     /// Defines the <see cref="ApiCoinmarketcapSandbox" />
     /// </summary>
-    public class ApiCoinmarketcapSandbox : Client, IApi
+    public class ApiCoinmarketcapSandbox : Client
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiCoinmarketcapSandbox"/> class.
@@ -35,7 +35,7 @@ namespace ApiCoinmarketcap
                     ApiKeyRequired = false,
                     ApiName = "Coinmarketcap Sandbox",
                     ApiClientVersion = "1.0",
-                    Market = Market.Crypto,
+                    Market = Market.Kryptowährungen,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen",
                     MaxUpdateInterval = 3600,

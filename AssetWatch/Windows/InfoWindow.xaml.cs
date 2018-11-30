@@ -16,6 +16,7 @@ namespace AssetWatch
         /// <param name="asset">The asset<see cref="Asset"/></param>
         public InfoWindow(ApiInfo apiInfo, Asset asset)
         {
+            // TODO: ADD FEATURE: longer-term percent changes
             this.InitializeComponent();
             this.Title = asset.Name;
             this.textblock_Symbol.Text = asset.Symbol;
@@ -28,7 +29,11 @@ namespace AssetWatch
             this.textblock_MarketCap.Text = TileHelpers.GetValueString(asset.MarketCap, false);
             this.textblock_AvailableSupply.Text = TileHelpers.GetValueString(asset.SupplyAvailable, false);
             this.textblock_TotalSupply.Text = TileHelpers.GetValueString(asset.SupplyTotal, false);
-            this.textblock_PercentChange24h.Text = TileHelpers.GetValueString(asset.PercentChange24h, true) + "%";
+
+            if (asset.PercentChange24h > -101)
+            {
+                this.textblock_PercentChange24h.Text = TileHelpers.GetValueString(asset.PercentChange24h, true) + "%";
+            }            
 
             if (apiInfo.AssetUrl != string.Empty)
             {

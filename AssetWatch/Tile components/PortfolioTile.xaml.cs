@@ -109,7 +109,7 @@ namespace AssetWatch
 
                 if (this.PortfolioTileData.HasCustomTileStyle)
                 {
-                    // TODO: maybe add custom tile styles
+                    // TODO: ADD FEATURE: custom tile styles
                 }
                 else
                 {
@@ -237,7 +237,7 @@ namespace AssetWatch
             PortfolioTileSettingsWindow portfolioTileSettingsWindow = new PortfolioTileSettingsWindow(this.appData, this.PortfolioTileData);
             portfolioTileSettingsWindow.OnPortfolioTileDataChanged += this.PortfolioTileSettingsWindow_OnPortfolioTileDataChanged;            
             portfolioTileSettingsWindow.ShowDialog();
-            // TODO: app crashes when adding an asset tile while a portfolio tile settings window is open
+            // TODO: FIX BUG: app crashes when adding an asset tile while a portfolio tile settings window is open
         }
 
         /// <summary>

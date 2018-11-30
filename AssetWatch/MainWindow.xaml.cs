@@ -10,7 +10,8 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
-        // TODO: maybe add Cryptowatch import
+        // TODO: ADD FEATURE: Cryptowatch import
+        // TODO: FINISH: headers, comments, code clean-up
 
         /// <summary>
         /// Defines the apiHandler

@@ -174,11 +174,6 @@ namespace AssetWatch
             if (this.appData.ApiDataSet.Exists(apiData => apiData.ApiName == api.ApiInfo.ApiName))
             {
                 ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
-
-                // TODO: maybe rethink the call counting
-                // get data directly from API instead of counting locally?
-                // add button to check in main settings window?
-                
                 api.ApiData = apiData;
             }
             else

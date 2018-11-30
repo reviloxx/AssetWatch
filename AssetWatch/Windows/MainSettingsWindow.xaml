@@ -6,11 +6,43 @@
         xmlns:local="clr-namespace:AssetWatch"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Einstellungen" Height="350" Width="637"
+        Title="Einstellungen" Height="400" Width="700"
         ResizeMode="NoResize"
         >
     <Grid>
-        <TabControl>
+        <TabControl>            
+            <TabItem Header="APIs">
+                <Grid Background="WhiteSmoke" Margin="0,0,0,30">
+                    <ListView 
+            x:Name="listView_loadedApis"
+            ItemsSource="{Binding Path=LoadedApis}" 
+            SelectionChanged="listView_loadedApis_SelectionChanged"
+            SelectionMode="Single" Margin="10,40,211.4,22.2">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="API Name" DisplayMemberBinding="{Binding Path=ApiInfo.ApiName}" Width="183"/>
+                                <GridViewColumn Header="Markt" DisplayMemberBinding="{Binding Path=ApiInfo.Market}" Width="125"/>
+                                <GridViewColumn Header="heute" DisplayMemberBinding="{Binding Path=ApiData.CallCountDay}" Width="70"/>
+                                <GridViewColumn Header="Monat" DisplayMemberBinding="{Binding Path=ApiData.CallCountMonth}" Width="70"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button x:Name="button_ApiSettings" Click="button_ApiSettings_Click" IsEnabled="False" 
+                Margin="0,0,9.4,22.2" VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Right" Width="27">
+                        <Image Source="..\Icons\settings_black.png" Width="14"/>
+                    </Button>
+                    <Button x:Name="button_EnableApi" Content="Aktivieren" FontWeight="DemiBold" Click="button_EnableApi_Click" IsEnabled="False" 
+                Margin="0,0,126.4,22.2" Background="#9ff799" HorizontalAlignment="Right" Width="80" Height="20" VerticalAlignment="Bottom"/>
+                    <Button x:Name="button_disableApi" Content="Deaktivieren" FontWeight="DemiBold" Click="button_disableApi_Click" IsEnabled="False" HorizontalAlignment="Right" 
+                Margin="0,0,41.4,22.2" VerticalAlignment="Bottom" Width="80" Height="20" Background="#ff8e8e" RenderTransformOrigin="0.242,0.331"/>
+                    <TextBlock x:Name="textBlock_API_Info" 
+                   Margin="0,45,15,53.2" TextWrapping="Wrap" HorizontalAlignment="Right" Width="185" />
+                    <Label Content="Verfügbare APIs" Margin="10,10,367.8,0" VerticalAlignment="Top" Height="26"/>
+                    <Frame BorderBrush="#FF7F9DB9" Margin="0,40,9.4,48.2" BorderThickness="0.7" HorizontalAlignment="Right" Width="197"/>
+                    <Label Content="API Info" HorizontalAlignment="Right" Margin="0,10,9.2,0" VerticalAlignment="Top" Width="197" Height="26"/>
+                    <Label Content="Aufrufe" HorizontalAlignment="Right" Margin="0,10,225.4,0" VerticalAlignment="Top" Width="142" Height="26"/>
+                </Grid>
+            </TabItem>
             <TabItem Header="Allgemein">
                 <Grid Background="WhiteSmoke" Margin="0,0,0,30">
                     <Label Content="Farben" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
@@ -36,40 +68,8 @@
                                   ShowStandardColors="False" ShowAvailableColors="True" SelectedColorChanged="clrPcker_FontLoss_SelectedColorChanged" 
                                   Margin="180,175,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="156"/>
 
-                    <CheckBox x:Name="checkBox_Autostart" Checked="checkBox_Autostart_Checked" Unchecked="checkBox_Autostart_Unchecked" Content="Mit Windows starten" HorizontalAlignment="Left" Margin="426,61,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="checkBox_Autostart" Checked="checkBox_Autostart_Checked" Unchecked="checkBox_Autostart_Unchecked" Content="Mit Windows starten" HorizontalAlignment="Left" Margin="464,61,0,0" VerticalAlignment="Top"/>
 
-                </Grid>
-            </TabItem>
-            <TabItem Header="APIs">
-                <Grid Background="WhiteSmoke" Margin="0,0,0,30">
-                    <ListView 
-            x:Name="listView_loadedApis"
-            ItemsSource="{Binding Path=LoadedApis}" 
-            SelectionChanged="listView_loadedApis_SelectionChanged"
-            SelectionMode="Single" Margin="10,40,211.4,22.2">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="API Name" DisplayMemberBinding="{Binding Path=ApiInfo.ApiName}" Width="155"/>
-                                <GridViewColumn Header="Markt" DisplayMemberBinding="{Binding Path=ApiInfo.Market}" Width="90"/>
-                                <GridViewColumn Header="heute" DisplayMemberBinding="{Binding Path=ApiData.CallCountDay}" Width="70"/>
-                                <GridViewColumn Header="Monat" DisplayMemberBinding="{Binding Path=ApiData.CallCountMonth}" Width="70"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button x:Name="button_ApiSettings" Click="button_ApiSettings_Click" IsEnabled="False" 
-                Margin="0,0,9.4,22.2" VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Right" Width="27">
-                        <Image Source="..\Icons\settings_black.png" Width="14"/>
-                    </Button>
-                    <Button x:Name="button_EnableApi" Content="Aktivieren" FontWeight="DemiBold" Click="button_EnableApi_Click" IsEnabled="False" 
-                Margin="0,0,126.4,22.2" Background="#9ff799" HorizontalAlignment="Right" Width="80" Height="20" VerticalAlignment="Bottom"/>
-                    <Button x:Name="button_disableApi" Content="Deaktivieren" FontWeight="DemiBold" Click="button_disableApi_Click" IsEnabled="False" HorizontalAlignment="Right" 
-                Margin="0,0,41.4,22.2" VerticalAlignment="Bottom" Width="80" Height="20" Background="#ff8e8e" RenderTransformOrigin="0.242,0.331"/>
-                    <TextBlock x:Name="textBlock_API_Info" 
-                   Margin="0,45,15,53.2" TextWrapping="Wrap" HorizontalAlignment="Right" Width="185" />
-                    <Label Content="Verfügbare APIs" Margin="10,10,367.8,0" VerticalAlignment="Top" Height="26"/>
-                    <Frame BorderBrush="#FF7F9DB9" Margin="0,40,9.4,48.2" BorderThickness="0.7" HorizontalAlignment="Right" Width="197"/>
-                    <Label Content="API Info" HorizontalAlignment="Right" Margin="0,10,9.2,0" VerticalAlignment="Top" Width="197" Height="26"/>
-                    <Label Content="Aufrufe" HorizontalAlignment="Right" Margin="0,10,225.4,0" VerticalAlignment="Top" Width="142" Height="26"/>
                 </Grid>
             </TabItem>
         </TabControl>

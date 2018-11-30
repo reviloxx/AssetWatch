@@ -17,7 +17,7 @@ namespace ApiCoinmarketcap
             this.ApiData = new ApiData
             {
                 ApiName = this.ApiInfo.ApiName,
-                UpdateInterval = 300
+                UpdateInterval = 180
             };
         }
 
@@ -34,7 +34,7 @@ namespace ApiCoinmarketcap
                     ApiKeyRequired = true,
                     ApiName = "Coinmarketcap Pro - EUR",
                     ApiClientVersion = "1.0",
-                    Market = Market.Crypto,
+                    Market = Market.Kryptowährungen,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen...",
                     GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",

@@ -85,13 +85,11 @@ namespace AssetWatch
     /// </summary>
     public enum Market
     {
-        /// <summary>
-        /// Defines the market Cryptocurrencies.
-        /// </summary>
-        Crypto,
-        /// <summary>
-        /// Defines market the Stocks.
-        /// </summary>
-        Stocks
+        Kryptowährungen,
+        Währungen,
+        ETFs,        
+        Aktien,
+        Indizes,
+        Rohstoffe
     }
 }

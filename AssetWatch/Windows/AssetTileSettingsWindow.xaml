@@ -16,7 +16,7 @@
         <Label Content="Investition:" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_InvestedSum" HorizontalAlignment="Left" Height="23" Margin="10,144,0,0" TextAlignment="Right" TextWrapping="Wrap" Padding="2.4" VerticalAlignment="Top" Width="80"/>
         <TextBox x:Name="textBox_HoldingsCount" HorizontalAlignment="Left" Height="23" Margin="10,199,0,0" TextAlignment="Right" TextWrapping="Wrap" Padding="2.4" VerticalAlignment="Top" Width="80"/>
-        <Label Content="Asset:" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top"/>
+        <Label Content="Anteile:" HorizontalAlignment="Left" Margin="10,173,0,0" VerticalAlignment="Top"/>
         <Label Content="Kachel Name:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_TileName" HorizontalAlignment="Left" VerticalAlignment="Top" Height="23" Margin="10,36,0,0" TextWrapping="Wrap" Padding="2.4" Width="120"/>
 
