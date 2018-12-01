@@ -353,7 +353,14 @@ namespace ApiCryptoCompare
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert alle 15 Sekunden Daten zu den meisten Kryptowährungen. Unterstützt keine prozentuale 7-Tage Preisentwicklung.",
+                    ApiInfoText = "Liefert aktuelle Daten zu den meisten Kryptowährungen.\n\n" +
+                    "+ unterstützt kurzes Update\n" +
+                    "  Intervall (15 Sekunden)\n\n" +
+                    "+ unterstützt prozentuale\n" +
+                    "  24h Preisentwicklung\n\n" +
+                    "- unterstützt keine prozentuale\n" +
+                    "  7-Tage Preisentwicklung\n\n" +
+                    "Basiswährungen: USD, EUR, BTC",
                     ApiKeyRequired = false,
                     ApiName = "CryptoCompare",
                     ApiClientVersion = "1.0",

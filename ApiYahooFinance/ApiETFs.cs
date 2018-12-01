@@ -11,6 +11,7 @@ namespace ApiYahooFinance
     {
         public ApiETFs()
         {
+            // TODO: ADD FEATURE: more ETFs
             this.ApiData = new ApiData
             {
                 ApiName = this.ApiInfo.ApiName,
@@ -21,9 +22,9 @@ namespace ApiYahooFinance
             {
                 new Asset()
                 {
-                    AssetId = "H4ZJ.DE",
-                    Symbol = "H4ZJ.DE",
-                    Name = "HSBC MSCI World"
+                    AssetId = "H4Z3.SG",
+                    Symbol = "H4Z3.SG",
+                    Name = "HSBC MSCI WORLD UCITS"
                 },
                 new Asset()
                 {
@@ -52,7 +53,13 @@ namespace ApiYahooFinance
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu den wichtigsten ETFs. Unterstützt keine prozentuale 24 Stunden / 7-Tage Preisentwicklung.",
+                    ApiInfoText = "Liefert aktuelle Daten zu den wichtigsten ETFs.\n\n" +
+                    "+ Update Intervall ab 30 Minuten\n\n" +
+                    "- unterstützt keine prozentuale\n" +
+                    "  24h Preisentwicklung\n\n" +
+                    "- unterstützt keine prozentuale\n" +
+                    "  7-Tage Preisentwicklung\n\n" +
+                    "Basiswährungen: USD, EUR",
                     ApiKeyRequired = false,
                     ApiName = "Yahoo! Finance - Top ETFs",
                     ApiClientVersion = "1.0",
@@ -63,7 +70,7 @@ namespace ApiYahooFinance
                     MaxUpdateInterval = 7200,
                     MinUpdateInterval = 1800,
                     UpdateIntervalStepSize = 1800,
-                    SupportedConvertCurrencies = new List<string>() { "USD" },
+                    SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
                     UpdateIntervalInfoText = ""
                 };
             }

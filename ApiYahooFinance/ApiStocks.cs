@@ -11,6 +11,7 @@ namespace ApiYahooFinance
     {
         public ApiStocks()
         {
+            // TODO: ADD FEATURE: more stocks
             this.ApiData = new ApiData
             {
                 ApiName = this.ApiInfo.ApiName,
@@ -335,7 +336,13 @@ namespace ApiYahooFinance
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu den wichtigsten Aktien. Unterstützt keine prozentuale 24 Stunden / 7-Tage Preisentwicklung.",
+                    ApiInfoText = "Liefert aktuelle Daten zu den wichtigsten Aktien.\n\n" +
+                    "+ Update Intervall ab 30 Minuten\n\n" +
+                    "- unterstützt keine prozentuale\n" +
+                    "  24h Preisentwicklung\n\n" +
+                    "- unterstützt keine prozentuale\n" +
+                    "  7-Tage Preisentwicklung\n\n" +
+                    "Basiswährungen: USD, EUR",
                     ApiKeyRequired = false,
                     ApiName = "Yahoo! Finance - Top Stocks",
                     ApiClientVersion = "1.0",
@@ -346,7 +353,7 @@ namespace ApiYahooFinance
                     MaxUpdateInterval = 7200,
                     MinUpdateInterval = 1800,
                     UpdateIntervalStepSize = 1800,
-                    SupportedConvertCurrencies = new List<string>() { "USD" },
+                    SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
                     UpdateIntervalInfoText = ""
                 };
             }

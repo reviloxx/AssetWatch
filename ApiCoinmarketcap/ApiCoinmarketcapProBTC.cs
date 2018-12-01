@@ -30,7 +30,13 @@ namespace ApiCoinmarketcap
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Diese API bietet minütlich aktuelle Daten über die wichtigsten Kryptowährungen. Unterstützt nur BTC als Basiswährung.",
+                    ApiInfoText = "Liefert aktuelle Daten zu den meisten Kryptowährungen.\n\n" +
+                    "+ unterstützt kurzes Update\n" +
+                    "  Intervall (1 Minute)\n\n" +
+                    "+ unterstützt prozentuale 24h\n" +
+                    "  und 7-Tage Preisentwicklung\n\n" +
+                    "- Registrierung und API Key nötig\n\n" +
+                    "Basiswährung: BTC",
                     ApiKeyRequired = true,
                     ApiName = "Coinmarketcap Pro - BTC",
                     ApiClientVersion = "1.0",

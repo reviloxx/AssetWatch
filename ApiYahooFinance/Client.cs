@@ -12,18 +12,22 @@ namespace ApiYahooFinance
 {
     public abstract class Client
     {
+        /// <summary>
+        /// Defines the retryDelay in case there is no connection.
+        /// </summary>
+        private static int retryDelay = 1000;
         private Thread assetUpdateWorker;
         protected List<Asset> availableAssets;
         private List<Asset> subscribedAssets;
         private List<string> subscribedConvertCurrencies;
+        private double eurConvert;
 
         public Client()
         {
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
             this.availableAssets = new List<Asset>();
             this.subscribedAssets = new List<Asset>();
-            this.subscribedConvertCurrencies = new List<string>();
-            
+            this.subscribedConvertCurrencies = new List<string>();            
         }
 
         private void AssetUpdateWorker()
@@ -44,6 +48,8 @@ namespace ApiYahooFinance
         public void Enable()
         {
             this.ApiData.IsEnabled = true;
+            // get EUR convert price
+            this.RequestSingleAssetUpdateAsync(new Asset { Symbol = "EUR=X" });
         }
 
         public void RequestAvailableAssetsAsync()
@@ -53,14 +59,9 @@ namespace ApiYahooFinance
 
         public void RequestSingleAssetUpdateAsync(Asset asset)
         {
-            if (!this.assetUpdateWorker.IsAlive)
-            {
-                return;
-            }
-
             if (!this.ApiData.IsEnabled)
             {
-                throw new Exception("API is not enabled!");
+                return;
             }
 
             List<Asset> assets = new List<Asset>();
@@ -88,7 +89,7 @@ namespace ApiYahooFinance
 
             if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
             {
-                this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);
+                this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);                
             }
         }
 
@@ -114,34 +115,103 @@ namespace ApiYahooFinance
             {
                 return;
             }
-
-            // TODO: FINISH: API error handling
+            
             string[] symbols = new string[assets.Count];
+            bool callFailed = false;
+            int timeout = this.ApiData.UpdateInterval * 1000;
 
             for (int i = 0; i < assets.Count; i++)
             {
                 symbols[i] = assets[i].Symbol;
             }
-            
-            var response = await Yahoo.Symbols(symbols).Fields(Field.Symbol, Field.RegularMarketPrice, Field.MarketCap).QueryAsync();
-            this.ApiData.IncreaseCounter(1);
 
-            foreach(Asset asset in assets)
+            do
             {
-                var assetResponse = response[asset.Symbol];
+                callFailed = false;                
 
-                Asset updatedAsset = new Asset()
+                try
                 {
-                    AssetId = assetResponse.Symbol,
-                    Symbol = assetResponse.Symbol,
-                    Name = asset.Name,
-                    ConvertCurrency = asset.ConvertCurrency,
-                    LastUpdated = DateTime.Now,
-                    Price = assetResponse.RegularMarketPrice
-                };
+                    var response = await Yahoo.Symbols(symbols).Fields(Field.Symbol, Field.RegularMarketPrice, Field.Currency).QueryAsync();
+                    this.ApiData.IncreaseCounter(1);                    
 
-                this.FireOnSingleAssetUpdated(updatedAsset);
+                    foreach (Asset asset in assets)
+                    {
+                        if (asset.ConvertCurrency == "EUR" && this.eurConvert == 0)
+                        {
+                            throw new NullReferenceException();
+                        }
+
+                        try
+                        {
+                            var assetResponse = response[asset.Symbol];                            
+
+                            if (asset.Symbol == "EUR=X")
+                            {
+                                this.eurConvert = assetResponse.RegularMarketPrice;
+                                continue;
+                            }
+
+                            Asset updatedAsset = null;
+
+                            if (assetResponse.Currency == "USD")
+                            {
+                                updatedAsset = new Asset()
+                                {
+                                    AssetId = assetResponse.Symbol,
+                                    Symbol = assetResponse.Symbol,
+                                    Name = asset.Name,
+                                    ConvertCurrency = asset.ConvertCurrency,
+                                    LastUpdated = DateTime.Now,
+                                    Price = asset.ConvertCurrency == "USD" ? assetResponse.RegularMarketPrice : assetResponse.RegularMarketPrice * this.eurConvert
+                                };
+                            }
+                            else if (assetResponse.Currency == "EUR")
+                            {
+                                // response in EUR
+                                updatedAsset = new Asset()
+                                {
+                                    AssetId = assetResponse.Symbol,
+                                    Symbol = assetResponse.Symbol,
+                                    Name = asset.Name,
+                                    ConvertCurrency = asset.ConvertCurrency,
+                                    LastUpdated = DateTime.Now,
+                                    Price = asset.ConvertCurrency == "EUR" ? assetResponse.RegularMarketPrice : assetResponse.RegularMarketPrice / this.eurConvert
+                                };
+                            }     
+                            else
+                            {
+                                throw new Exception("Die API antwortete mit einer ungültigen Basiswährung!");
+                            }
+
+                            this.FireOnSingleAssetUpdated(updatedAsset);
+                            
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            // ignore
+                        }                        
+                    }
+                }
+                catch (NullReferenceException)
+                {
+                    // no internet connection?                    
+                    callFailed = true;
+                    Thread.Sleep(retryDelay);
+                    timeout -= retryDelay;
+                }
+                catch (Exception e)
+                {
+                    OnApiErrorEventArgs args = new OnApiErrorEventArgs
+                    {
+                        ErrorType = ErrorType.General,
+                        ErrorMessage = e.Message
+                    };
+
+                    this.FireOnApiError(args);
+                }
             }
+            while (callFailed && timeout >= 0);
+           
         }
 
         public ApiData ApiData { get; set; }        

@@ -11,6 +11,7 @@ namespace ApiYahooFinance
     {
         public ApiCommodities()
         {
+            // TODO: ADD FEATURE: more commodities
             this.ApiData = new ApiData
             {
                 ApiName = this.ApiInfo.ApiName,
@@ -52,7 +53,14 @@ namespace ApiYahooFinance
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu den wichtigsten Rohstoffen. Unterstützt keine prozentuale 24 Stunden / 7-Tage Preisentwicklung.",
+                    ApiInfoText = "Liefert aktuelle Daten zu den wichtigsten Rohstoffen.\n\n" +
+                    "+ Update Intervall ab 30 Minuten\n\n" +
+                    "- unterstützt keine prozentuale\n" +
+                    "  24h Preisentwicklung\n\n" +
+                    "- unterstützt keine prozentuale\n" +
+                    "  7-Tage Preisentwicklung\n\n" +
+                    "Basiswährungen: USD, EUR",
+
                     ApiKeyRequired = false,
                     ApiName = "Yahoo! Finance - Commodities",
                     ApiClientVersion = "1.0",
@@ -63,7 +71,7 @@ namespace ApiYahooFinance
                     MaxUpdateInterval = 7200,
                     MinUpdateInterval = 1800,
                     UpdateIntervalStepSize = 1800,
-                    SupportedConvertCurrencies = new List<string>() { "USD" },
+                    SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
                     UpdateIntervalInfoText = ""
                 };
             }
