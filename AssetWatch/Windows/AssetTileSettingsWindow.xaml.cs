@@ -36,7 +36,7 @@ namespace AssetWatch
         {
             this.InitializeComponent();
             this.assetTileData = assetTileData;
-            this.readyApis = readyApis;
+            this.readyApis = readyApis.OrderBy(r => r.Key.ApiInfo.ApiName).ToDictionary(pair => pair.Key, pair => pair.Value);            
             this.DataContext = new AssetTileSettingsWindowViewModel { ReadyApis = this.readyApis };
             this.InitializeTextBoxes();
             this.InitializeComboBoxes();

@@ -28,6 +28,18 @@ namespace ApiYahooFinance
                 },
                 new Asset()
                 {
+                    AssetId = "IQQ6.SG",
+                    Symbol = "IQQ6.SG",
+                    Name = "iShares Dev Mkts Prpty Yld"
+                },
+                new Asset()
+                {
+                    AssetId = "IQQ4.SG",
+                    Symbol = "IQQ4.SG",
+                    Name = "iShares Asia Property Yield"
+                },
+                new Asset()
+                {
                     AssetId = "IDX",
                     Symbol = "IDX",
                     Name = "VanEck Vectors Indonesia"
@@ -43,6 +55,18 @@ namespace ApiYahooFinance
                     AssetId = "SPY",
                     Symbol = "SPY",
                     Name = "SPDR S&P 500"
+                },
+                new Asset()
+                {
+                    AssetId = "ISPA.DE",
+                    Symbol = "ISPA.DE",
+                    Name = "iShares STOXX Global Sel Div 100"
+                },
+                new Asset()
+                {
+                    AssetId = "IUS7.SG",
+                    Symbol = "IUS7.SG",
+                    Name = "iShares J.P. Morgan Em Mkts Bond"
                 },
             }.OrderBy(a => a.Symbol).ToList();            
         }

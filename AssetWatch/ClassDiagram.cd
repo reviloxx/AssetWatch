@@ -66,7 +66,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="AssetWatch.PortfolioTile">
-    <Position X="13" Y="10.5" Width="2" />
+    <Position X="13.5" Y="10.5" Width="2" />
     <TypeIdentifier>
       <HashCode>ACQABAAAACAQVgUAAAAAAAiAAAABAEAoAAAggCDAAAA=</HashCode>
       <FileName>Tile components\PortfolioTile.xaml.cs</FileName>
@@ -88,14 +88,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.PortfolioTileData">
-    <Position X="15.5" Y="10.5" Width="2" />
+    <Position X="16" Y="10.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAEEIAAQAAAAAAA=</HashCode>
       <FileName>Tile components\PortfolioTileData.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AssetWatch.OnApiReadyEventArgs">
-    <Position X="0.5" Y="7.75" Width="2" />
+    <Position X="0.5" Y="8.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAgAAA=</HashCode>
       <FileName>EventArgs\OnApiReadyEventArgs.cs</FileName>
@@ -104,7 +104,7 @@
   <Class Name="AssetWatch.ApiData">
     <Position X="0.5" Y="4.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAAAAAAAEQggAAAgAACAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>CDAAAAAAAAAIAAAAAAEAgAAQAgAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>API components\ApiData.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -163,7 +163,7 @@
   <Class Name="AssetWatch.TileHelpers">
     <Position X="10.25" Y="13.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAECIIAAAAAAAAABAAAAAAAAAAAAEAA=</HashCode>
+      <HashCode>AAAAABAAAAAAAAEAIIAAAAAAAAABAAAAAAAAAAAAEAA=</HashCode>
       <FileName>Tile components\TileHelpers.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -212,7 +212,7 @@
   <Enum Name="AssetWatch.Market">
     <Position X="16" Y="7.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAACAAAAAAAAAAA=</HashCode>
+      <HashCode>QAAAAAAAABAAAAIBAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
       <FileName>API components\ApiInfo.cs</FileName>
     </TypeIdentifier>
   </Enum>

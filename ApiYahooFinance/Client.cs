@@ -15,11 +15,10 @@ namespace ApiYahooFinance
         /// <summary>
         /// Defines the retryDelay in case there is no connection.
         /// </summary>
-        private static int retryDelay = 1000;
+        private static readonly int retryDelay = 1000;
         private Thread assetUpdateWorker;
         protected List<Asset> availableAssets;
-        private List<Asset> subscribedAssets;
-        private List<string> subscribedConvertCurrencies;
+        private readonly List<Asset> subscribedAssets;
         private double eurConvert;
 
         public Client()
@@ -27,7 +26,6 @@ namespace ApiYahooFinance
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
             this.availableAssets = new List<Asset>();
             this.subscribedAssets = new List<Asset>();
-            this.subscribedConvertCurrencies = new List<string>();            
         }
 
         private void AssetUpdateWorker()
@@ -49,7 +47,7 @@ namespace ApiYahooFinance
         {
             this.ApiData.IsEnabled = true;
             // get EUR convert price
-            this.RequestSingleAssetUpdateAsync(new Asset { Symbol = "EUR=X" });
+            this.GetAssetUpdates(new List<Asset> { new Asset { Symbol = "EUR=X" } });
         }
 
         public void RequestAvailableAssetsAsync()
@@ -59,7 +57,7 @@ namespace ApiYahooFinance
 
         public void RequestSingleAssetUpdateAsync(Asset asset)
         {
-            if (!this.ApiData.IsEnabled)
+            if (!this.ApiData.IsEnabled || !this.assetUpdateWorker.IsAlive) 
             {
                 return;
             }
@@ -85,11 +83,6 @@ namespace ApiYahooFinance
             if (!this.subscribedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
             {
                 this.subscribedAssets.Add(asset);
-            }
-
-            if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
-            {
-                this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);                
             }
         }
 
@@ -180,7 +173,7 @@ namespace ApiYahooFinance
                             }     
                             else
                             {
-                                throw new Exception("Die API antwortete mit einer ungültigen Basiswährung!");
+                                throw new Exception("Die API antwortete mit einem ungültigen Tradingpaar: " + assetResponse.Currency + "/" + assetResponse.Symbol);
                             }
 
                             this.FireOnSingleAssetUpdated(updatedAsset);
@@ -210,8 +203,7 @@ namespace ApiYahooFinance
                     this.FireOnApiError(args);
                 }
             }
-            while (callFailed && timeout >= 0);
-           
+            while (callFailed && timeout >= 0);           
         }
 
         public ApiData ApiData { get; set; }        

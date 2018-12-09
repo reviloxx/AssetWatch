@@ -174,6 +174,7 @@ namespace AssetWatch
             if (this.appData.ApiDataSet.Exists(apiData => apiData.ApiName == api.ApiInfo.ApiName))
             {
                 ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
+                apiData.IncreaseCounter(0);
                 api.ApiData = apiData;
             }
             else

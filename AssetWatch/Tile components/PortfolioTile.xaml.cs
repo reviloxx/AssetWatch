@@ -182,7 +182,7 @@ namespace AssetWatch
         /// <summary>
         /// The UpdateTextBlocks
         /// </summary>
-        public void UpdateTextBlocks(DateTime? updatedTime)
+        public void UpdateTextBlocks(DateTime? updateTime)
         {
             List<AssetTileData> assignedAssetTileDatas = this.appData.AssetTileDataSet
                 .Where(ass => this.PortfolioTileData.AssignedAssetTileIds.Contains(ass.AssetTileId))
@@ -207,9 +207,9 @@ namespace AssetWatch
             {
                 this.textBlock_PortfolioName.Text = this.PortfolioTileData.PortfolioTileName;
 
-                if (updatedTime != null)
+                if (updateTime != null)
                 {
-                    this.textBlock_last_Refresh.Text = "@" + ((DateTime)updatedTime).ToString("HH:mm");
+                    this.textBlock_last_Refresh.Text = "@" + ((DateTime)updateTime).ToString("HH:mm");
                 }
                 
                 this.textBlock_Invest.Text = TileHelpers.GetValueString(investTotal, false) + convertCurrency;
