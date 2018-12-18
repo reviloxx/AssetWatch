@@ -39,11 +39,6 @@ namespace AssetWatch
         ApiInfo ApiInfo { get; }
 
         /// <summary>
-        /// Starts the asset update thread.
-        /// </summary>
-        void StartAssetUpdater();
-
-        /// <summary>
         /// Subscribes an asset to the API which then will be updated in the currently defined update interval.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>

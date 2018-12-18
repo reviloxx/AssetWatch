@@ -10,9 +10,9 @@ using System.Threading;
 namespace ApiCryptoCompare
 {
     /// <summary>
-    /// Defines the <see cref="Api" />
+    /// Defines the <see cref="ApiCryptoCompare" />
     /// </summary>
-    public class Api : IApi
+    public class ApiCryptoCompare : IApi
     {
         /// <summary>
         /// Defines the retryDelay in case there is no connection.
@@ -55,9 +55,9 @@ namespace ApiCryptoCompare
         private List<string> subscribedConvertCurrencies;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Api"/> class.
+        /// Initializes a new instance of the <see cref="ApiCryptoCompare"/> class.
         /// </summary>
-        public Api()
+        public ApiCryptoCompare()
         {
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
@@ -87,6 +87,7 @@ namespace ApiCryptoCompare
         {
             this.client = new CryptoCompareClient();
             this.ApiData.IsEnabled = true;
+            this.StartAssetUpdater();
         }
 
         /// <summary>
@@ -108,11 +109,6 @@ namespace ApiCryptoCompare
                 return;
             }
 
-            if (!this.ApiData.IsEnabled)
-            {
-                throw new Exception("API is not enabled!");
-            }
-
             List<Asset> assets = new List<Asset>();
             assets.Add(asset);
             this.GetAssetUpdates(assets);
@@ -121,7 +117,7 @@ namespace ApiCryptoCompare
         /// <summary>
         /// Starts the asset updater.
         /// </summary>
-        public void StartAssetUpdater()
+        private void StartAssetUpdater()
         {
             if (this.assetUpdateWorker.IsAlive)
             {

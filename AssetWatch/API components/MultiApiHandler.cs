@@ -12,16 +12,16 @@ namespace AssetWatch
     public class MultiApiHandler : IApiHandler
     {
         /// <summary>
-        /// Contains the currently subscribed asset tiles.
+        /// Contains the currently asset tiles which are attached to the api handler.
         /// </summary>
-        private List<AssetTile> subscribedAssetTiles;
+        private List<AssetTile> attachedAssetTiles;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
         /// </summary>
         public MultiApiHandler()
         {
-            this.subscribedAssetTiles = new List<AssetTile>();
+            this.attachedAssetTiles = new List<AssetTile>();
             this.ReadyApis = new Dictionary<IApi, List<Asset>>();
         }
 
@@ -45,28 +45,34 @@ namespace AssetWatch
                 api.OnAppDataChanged += this.Api_OnAppDataChanged;
                 this.FireOnApiLoaded(api);
             });
-        }        
+        }
 
         /// <summary>
-        /// Subscribes an asset tile to the API handler and it's asset to the right API.
+        /// Attaches an asset tile to the API handler and it's asset to the right API.
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to subscribe.</param>
-        public void SubscribeAssetTile(AssetTile assetTile)
+        /// <param name="requestUpdate">If true, the API will request an update for this asset instantly.</param>
+        public void AttachAssetTile(AssetTile assetTile, bool requestUpdate)
         {
             // search the API to subscribe in the dictionary
             IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
             api.SubscribeAssetToUpdater(assetTile.AssetTileData.Asset);
-            api.RequestSingleAssetUpdateAsync(assetTile.AssetTileData.Asset);
-            this.subscribedAssetTiles.Add(assetTile);
+
+            if (api.ApiData.IsEnabled && requestUpdate)
+            {
+                api.RequestSingleAssetUpdateAsync(assetTile.AssetTileData.Asset);
+            }
+            
+            this.attachedAssetTiles.Add(assetTile);
         }
 
         /// <summary>
-        /// Unsubscribes an asset tile from the API handler.
+        /// Detaches an asset tile from the API handler.
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe</param>
-        public void UnsubscribeAssetTile(AssetTile assetTile)
+        public void DetachAssetTile(AssetTile assetTile)
         {
-            this.subscribedAssetTiles.Remove(assetTile);
+            this.attachedAssetTiles.Remove(assetTile);
             IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
 
             if (api == null)
@@ -74,7 +80,7 @@ namespace AssetWatch
                 return;
             }
 
-            if (!this.subscribedAssetTiles.Exists(sub => sub.AssetTileData.ApiName == api.ApiInfo.ApiName &&
+            if (!this.attachedAssetTiles.Exists(sub => sub.AssetTileData.ApiName == api.ApiInfo.ApiName &&
                                                          sub.AssetTileData.Asset.AssetId == assetTile.AssetTileData.Asset.AssetId &&
                                                          sub.AssetTileData.Asset.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
             {
@@ -110,15 +116,6 @@ namespace AssetWatch
             }
 
             api.Disable();
-        }
-
-        /// <summary>
-        /// Starts the asset updater of an API.
-        /// </summary>
-        /// <param name="api">The api<see cref="IApi"/> to start the asset updater.</param>
-        public void StartAssetUpdater(IApi api)
-        {
-            api.StartAssetUpdater();
         }
 
         /// <summary>
@@ -170,7 +167,7 @@ namespace AssetWatch
         private void Api_OnSingleAssetUpdated(object sender, Asset updatedAsset)
         {
             IApi api = (IApi)sender;
-            List<AssetTile> toNotify = this.subscribedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName &&
+            List<AssetTile> toNotify = this.attachedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName &&
                                                                                 at.AssetTileData.Asset.AssetId == updatedAsset.AssetId &&
                                                                                 at.AssetTileData.Asset.ConvertCurrency == updatedAsset.ConvertCurrency);
 

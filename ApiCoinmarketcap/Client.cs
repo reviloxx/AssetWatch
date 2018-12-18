@@ -93,6 +93,7 @@ namespace ApiCoinmarketcap
             }
 
             this.ApiData.IsEnabled = true;
+            this.StartAssetUpdater();
         }
 
         /// <summary>
@@ -109,11 +110,6 @@ namespace ApiCoinmarketcap
         /// </summary>
         public void RequestAvailableAssetsAsync()
         {
-            if (!this.ApiData.IsEnabled)
-            {
-                throw new Exception("API is not enabled!");
-            }
-
             this.assetRequestDelegate.BeginInvoke(null, null);
         }
 
@@ -123,16 +119,6 @@ namespace ApiCoinmarketcap
         /// <param name="asset">The asset<see cref="Asset"/> to update.</param>
         public void RequestSingleAssetUpdateAsync(Asset asset)
         {
-            if (!this.assetUpdateWorker.IsAlive)
-            {
-                return;
-            }
-
-            if (!this.ApiData.IsEnabled)
-            {
-                throw new Exception("API is not enabled!");
-            }
-
             List<Asset> assets = new List<Asset>();
             assets.Add(asset);
             this.GetAssetUpdates(assets);
@@ -221,7 +207,7 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// Starts the asset updater.
         /// </summary>
-        public void StartAssetUpdater()
+        private void StartAssetUpdater()
         {
             if (this.assetUpdateWorker.IsAlive)
             {

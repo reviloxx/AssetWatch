@@ -22,14 +22,14 @@ namespace AssetWatch
         /// <summary>
         /// Defines the handledAssetTiles.
         /// </summary>
-        private List<AssetTile> handledAssetTiles;
+        private List<AssetTile> activeAssetTiles;
 
-        private List<PortfolioTile> handledPortfolioTiles;
+        private List<PortfolioTile> activePortfolioTiles;
 
         /// <summary>
-        /// Defines the assetTilesToSubscribe.
+        /// Contains asset tiles which are waiting for the API to be ready.
         /// </summary>
-        private List<AssetTile> assetTilesToSubscribe;
+        private List<AssetTile> unattachedAssetTiles;
 
         /// <summary>
         /// Defines the appData.
@@ -39,7 +39,7 @@ namespace AssetWatch
         /// <summary>
         /// The random number generator for asset tile ids.
         /// </summary>
-        private Random rand;
+        private Random random;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiTileHandler"/> class.
@@ -49,11 +49,11 @@ namespace AssetWatch
         public MultiTileHandler(IApiHandler apiHandler, AppData appData)
         {
             this.apiHandler = apiHandler;
-            this.handledAssetTiles = new List<AssetTile>();
-            this.handledPortfolioTiles = new List<PortfolioTile>();
-            this.assetTilesToSubscribe = new List<AssetTile>();
+            this.activeAssetTiles = new List<AssetTile>();
+            this.activePortfolioTiles = new List<PortfolioTile>();
+            this.unattachedAssetTiles = new List<AssetTile>();
             this.appData = appData;
-            this.rand = new Random();
+            this.random = new Random();
 
             this.OpenLoadedAssetTiles();
             this.OpenLoadedPortfolioTiles();
@@ -68,8 +68,8 @@ namespace AssetWatch
         /// </summary>
         public void RefreshTileStyles()
         {
-            this.handledAssetTiles.ForEach(ass => ass.RefreshTileStyle());
-            this.handledPortfolioTiles.ForEach(port => port.RefreshTileStyle());
+            this.activeAssetTiles.ForEach(ass => ass.RefreshTileStyle());
+            this.activePortfolioTiles.ForEach(port => port.RefreshTileStyle());
         }
 
         /// <summary>
@@ -78,30 +78,24 @@ namespace AssetWatch
         /// </summary>
         public void OpenNewAssetTile()
         {
-            AssetTile assetTile = new AssetTile(new AssetTileData(this.rand), this.appData, this.apiHandler.ReadyApis);
+            AssetTile assetTile = new AssetTile(new AssetTileData(this.random), this.appData, this.apiHandler.ReadyApis);
             assetTile.OnAssetTileClosed += this.AssetTile_OnAssetTileClosed;
             assetTile.OnAssetSelected += this.AssetTile_OnAssetSelected;
             assetTile.OnAssetUnselected += this.AssetTile_OnAssetUnselected;
             assetTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
             assetTile.OnAssetTileUpdated += this.AssetTile_OnAssetTileUpdated;
-            this.handledAssetTiles.Add(assetTile);
+            this.activeAssetTiles.Add(assetTile);
             this.appData.AssetTileDataSet.Add(assetTile.AssetTileData);
             this.FireOnAppDataChanged();
             assetTile.Show();
-        }
-
-        private void AssetTile_OnAssetTileUpdated(object sender, EventArgs e)
-        {
-            AssetTile updatedAssetTile = (AssetTile)sender;
-            this.handledPortfolioTiles.ForEach(port => port.Update(updatedAssetTile));
-        }
+        }        
 
         public void OpenNewPortfolioTile()
         {
             PortfolioTile portfolioTile = new PortfolioTile(new PortfolioTileData(), this.appData);
             portfolioTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
             portfolioTile.OnPortfolioTileClosed += this.PortfolioTile_OnPortfolioTileClosed;
-            this.handledPortfolioTiles.Add(portfolioTile);
+            this.activePortfolioTiles.Add(portfolioTile);
             this.appData.PortfolioTileDataSet.Add(portfolioTile.PortfolioTileData);
             this.FireOnAppDataChanged();
             portfolioTile.Show();
@@ -122,11 +116,11 @@ namespace AssetWatch
                 assetTile.OnAssetSelected += this.AssetTile_OnAssetSelected;
                 assetTile.OnAssetUnselected += this.AssetTile_OnAssetUnselected;
                 assetTile.OnAssetTileUpdated += this.AssetTile_OnAssetTileUpdated;
-                this.handledAssetTiles.Add(assetTile);
+                this.activeAssetTiles.Add(assetTile);
 
                 if (assetTile.AssetTileData.ApiName != null && assetTile.AssetTileData.ApiName != string.Empty)
                 {
-                    this.assetTilesToSubscribe.Add(assetTile);
+                    this.unattachedAssetTiles.Add(assetTile);
                 }
                 
                 if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
@@ -143,7 +137,7 @@ namespace AssetWatch
                 PortfolioTile portfolioTile = new PortfolioTile(portfoliotiledata, this.appData);
                 portfolioTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
                 portfolioTile.OnPortfolioTileClosed += this.PortfolioTile_OnPortfolioTileClosed;
-                this.handledPortfolioTiles.Add(portfolioTile);
+                this.activePortfolioTiles.Add(portfolioTile);
 
                 if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
@@ -154,8 +148,8 @@ namespace AssetWatch
 
         public void LockTilePositions(bool locked)
         {
-            this.handledAssetTiles.ForEach(ass => ass.LockPosition(locked));
-            this.handledPortfolioTiles.ForEach(port => port.LockPosition(locked));
+            this.activeAssetTiles.ForEach(ass => ass.LockPosition(locked));
+            this.activePortfolioTiles.ForEach(port => port.LockPosition(locked));
             this.appData.TileHandlerData.PositionsLocked = locked;
             this.FireOnAppDataChanged();
         }
@@ -186,22 +180,21 @@ namespace AssetWatch
             List<AssetTile> toRemove = new List<AssetTile>();
 
             // subscribe all asset tiles which were waiting for this API to be loaded
-            this.assetTilesToSubscribe.ForEach(assToSub =>
+            this.unattachedAssetTiles.ForEach(assToSub =>
             {
                 if (assToSub.AssetTileData.ApiName == api.ApiInfo.ApiName)
                 {
-                    this.apiHandler.SubscribeAssetTile(assToSub);
+                    this.apiHandler.AttachAssetTile(assToSub, false);
                     toRemove.Add(assToSub);
                 }
             });
 
             // remove the subscribed asset tiles from the waiting list
-            toRemove.ForEach(rm => this.assetTilesToSubscribe.Remove(rm));
+            toRemove.ForEach(rm => this.unattachedAssetTiles.Remove(rm));
 
             if (api.ApiData.IsEnabled)
             {
                 this.apiHandler.EnableApi(api);
-                this.apiHandler.StartAssetUpdater(api);
             }
         }
 
@@ -215,6 +208,12 @@ namespace AssetWatch
             this.FireOnAppDataChanged();
         }
 
+        private void AssetTile_OnAssetTileUpdated(object sender, EventArgs e)
+        {
+            AssetTile updatedAssetTile = (AssetTile)sender;
+            this.activePortfolioTiles.ForEach(port => port.Update(updatedAssetTile));
+        }
+
         /// <summary>
         /// The Asstile_OnAssetSelected calls the API handler to subscribe the asset tile after a new asset was selected.
         /// </summary>
@@ -222,7 +221,7 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="EventArgs"/></param>
         private void AssetTile_OnAssetSelected(object sender, EventArgs e)
         {
-            this.apiHandler.SubscribeAssetTile((AssetTile)sender);
+            this.apiHandler.AttachAssetTile((AssetTile)sender, true);
         }
 
         /// <summary>
@@ -232,7 +231,7 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="EventArgs"/></param>
         private void AssetTile_OnAssetUnselected(object sender, EventArgs e)
         {
-            this.apiHandler.UnsubscribeAssetTile((AssetTile)sender);
+            this.apiHandler.DetachAssetTile((AssetTile)sender);
         }
 
         /// <summary>
@@ -245,8 +244,8 @@ namespace AssetWatch
         {
             AssetTile closedAssetTile = (AssetTile)sender;
 
-            this.apiHandler.UnsubscribeAssetTile(closedAssetTile);
-            this.handledAssetTiles.Remove(closedAssetTile);
+            this.apiHandler.DetachAssetTile(closedAssetTile);
+            this.activeAssetTiles.Remove(closedAssetTile);
             this.appData.AssetTileDataSet.Remove(closedAssetTile.AssetTileData);
 
             // remove this asset tile from all portfolio tiles
@@ -255,7 +254,7 @@ namespace AssetWatch
                 port.AssignedAssetTileIds.Remove(closedAssetTile.AssetTileData.AssetTileId);
             });
 
-            this.handledPortfolioTiles.ForEach(portt =>
+            this.activePortfolioTiles.ForEach(portt =>
             {
                 portt.UpdateTextBlocks(null);                
                 portt.RefreshTileStyle();
@@ -267,7 +266,7 @@ namespace AssetWatch
         private void PortfolioTile_OnPortfolioTileClosed(object sender, EventArgs e)
         {
             PortfolioTile closedPortfolioTile = (PortfolioTile)sender;
-            this.handledPortfolioTiles.Remove(closedPortfolioTile);
+            this.activePortfolioTiles.Remove(closedPortfolioTile);
             this.appData.PortfolioTileDataSet.Remove(closedPortfolioTile.PortfolioTileData);
 
             this.FireOnAppDataChanged();

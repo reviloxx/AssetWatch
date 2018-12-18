@@ -82,11 +82,7 @@ namespace AssetWatch
 
                 this.UpdateTextBlocks(updatedAsset.AssetTileData.Asset.LastUpdated);
                 this.RefreshTileStyle();
-            }
-            else
-            {
-                return;
-            }            
+            }         
         }
 
         /// <summary>

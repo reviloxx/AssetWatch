@@ -44,9 +44,9 @@ namespace ApiCoinmarketcap
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen...",
                     GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
-                    MaxUpdateInterval = 3600,
+                    MaxUpdateInterval = 1800,
                     MinUpdateInterval = 60,
-                    UpdateIntervalStepSize = 60,
+                    UpdateIntervalStepSize = 30,
                     SupportedConvertCurrencies = new List<string>() { "EUR" },
                     UpdateIntervalInfoText = "Diese API stellt einmal pro Minute aktualisierte Daten bereit."
                 };

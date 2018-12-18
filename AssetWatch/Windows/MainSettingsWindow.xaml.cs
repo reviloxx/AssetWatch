@@ -103,7 +103,6 @@ namespace AssetWatch
             }
             
             this.apiHandler.EnableApi(selectedApi);
-            this.apiHandler.StartAssetUpdater(selectedApi);
             this.listView_loadedApis.SelectedIndex = -1;
             this.listView_loadedApis.SelectedIndex = selectedIndex;
         }

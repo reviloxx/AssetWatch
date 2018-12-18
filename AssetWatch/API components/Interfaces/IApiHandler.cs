@@ -38,24 +38,19 @@ namespace AssetWatch
         void DisableApi(IApi api);
 
         /// <summary>
-        /// Starts the asset update thread of a specific API.
-        /// </summary>
-        /// <param name="api">The API to start the asset update thread.<see cref="IApi"/></param>
-        void StartAssetUpdater(IApi api);
-
-        /// <summary>
-        /// Subscribes an asset tile to the API handler.
-        /// A subscribed asset tile gets informed everytime it's asset is updated by calling the asset tile's "UpdateAsset" function.
+        /// Attaches an asset tile to the API handler.
+        /// An attached asset tile gets informed about price changes by calling it's update function.
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to subscribe.</param>
-        void SubscribeAssetTile(AssetTile assetTile);
+        /// <param name="requestUpdate">If true, the API will request an update for this asset instantly.</param>
+        void AttachAssetTile(AssetTile assetTile, bool requestUpdate);
 
         /// <summary>
-        /// Unsubscribes an asset tile from the API handler.
-        /// An unsubscribed asset tile will no longer receive updates of it's asset.
+        /// Detaches an asset tile from the API handler.
+        /// A detached asset tile will no longer receive price updates.
         /// </summary>
         /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe.</param>
-        void UnsubscribeAssetTile(AssetTile assetTile);
+        void DetachAssetTile(AssetTile assetTile);
 
         /// <summary>
         /// Gets a list of APIs which were loaded by an IApiLoader.

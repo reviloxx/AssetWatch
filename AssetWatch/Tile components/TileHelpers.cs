@@ -93,7 +93,7 @@ namespace AssetWatch
 
             assetTilesDataSet.ForEach(ass =>
             {
-                if (ass.Asset.PercentChange24h < -100)
+                if (ass.Asset.PercentChange24h < -100 || worthTotal <= 0)
                 {
                     calculationValid = false;
                 }

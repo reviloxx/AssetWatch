@@ -48,6 +48,7 @@ namespace ApiYahooFinance
             this.ApiData.IsEnabled = true;
             // get EUR convert price
             this.GetAssetUpdates(new List<Asset> { new Asset { Symbol = "EUR=X" } });
+            this.StartAssetUpdater();
         }
 
         public void RequestAvailableAssetsAsync()
@@ -57,7 +58,7 @@ namespace ApiYahooFinance
 
         public void RequestSingleAssetUpdateAsync(Asset asset)
         {
-            if (!this.ApiData.IsEnabled || !this.assetUpdateWorker.IsAlive) 
+            if (!this.assetUpdateWorker.IsAlive) 
             {
                 return;
             }
@@ -67,7 +68,7 @@ namespace ApiYahooFinance
             this.GetAssetUpdates(assets);
         }
 
-        public void StartAssetUpdater()
+        private void StartAssetUpdater()
         {
             if (this.assetUpdateWorker.IsAlive)
             {
