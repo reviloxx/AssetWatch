@@ -79,7 +79,7 @@ namespace ApiYahooFinance
             this.assetUpdateWorker.Start();
         }
 
-        public void SubscribeAssetToUpdater(Asset asset)
+        public void AttachAsset(Asset asset)
         {
             if (!this.subscribedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
             {
@@ -87,7 +87,7 @@ namespace ApiYahooFinance
             }
         }
 
-        public void UnsubscribeAssetFromUpdater(Asset asset)
+        public void DetachAsset(Asset asset)
         {
         }
 

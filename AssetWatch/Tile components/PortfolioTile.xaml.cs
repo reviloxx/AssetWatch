@@ -39,9 +39,9 @@ namespace AssetWatch
         private double percentage24h;
 
         /// <summary>
-        /// Defines the percentage1W
+        /// Defines the percentage7d
         /// </summary>
-        private double percentage1W;        
+        private double percentage7d;        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PortfolioTile"/> class.
@@ -114,7 +114,7 @@ namespace AssetWatch
                     rectangle_foot.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
 
                     rectangle_24h.Fill = this.percentage24h >= 0 ? posBackgroundColor : negBackgroundColor;
-                    rectangle_1W.Fill = this.percentage1W >= 0 ? posBackgroundColor : negBackgroundColor;
+                    rectangle_7d.Fill = this.percentage7d >= 0 ? posBackgroundColor : negBackgroundColor;
 
                     this.ChangeFontColor();
                 }
@@ -131,7 +131,7 @@ namespace AssetWatch
 
             Brush brushMain = this.winTotal >= 0 ? posFontColor : negFontColor;
             Brush brush24h = this.percentage24h >= 0 ? posFontColor : negFontColor;
-            Brush brush1W = this.percentage1W >= 0 ? posFontColor : negFontColor;
+            Brush brush1W = this.percentage7d >= 0 ? posFontColor : negFontColor;
 
             textBlock_PortfolioName.Foreground = brushMain;
             textBlock_last_Refresh.Foreground = brushMain;
@@ -146,10 +146,10 @@ namespace AssetWatch
             textBlock_24hWin.Foreground = brush24h;
             rectangle_24h.Stroke = brushMain;
 
-            label_1W.Foreground = brush1W;
-            textBlock_1WPercentage.Foreground = brush1W;
-            textBlock_1WWin.Foreground = brush1W;
-            rectangle_1W.Stroke = brush1W;
+            label_7d.Foreground = brush1W;
+            textBlock_7dPercentage.Foreground = brush1W;
+            textBlock_7dWin.Foreground = brush1W;
+            rectangle_7d.Stroke = brush1W;
 
             string color = brushMain.ToString() == "#FFFFFFFF" ? "white" : "black";
 
@@ -187,10 +187,12 @@ namespace AssetWatch
             double investTotal = TileHelpers.CalculateInvest(assignedAssetTileDatas);
             double worthTotal = TileHelpers.CalculateWorth(assignedAssetTileDatas);
             this.winTotal = worthTotal - investTotal;
-            this.percentage24h = TileHelpers.Calculate24hPercentage(assignedAssetTileDatas, worthTotal);
+
+            bool percentage24hValid = TileHelpers.Calculate24hPercentage(assignedAssetTileDatas, worthTotal, out this.percentage24h);
             double win24h = TileHelpers.CalculateWinLoss(this.percentage24h, worthTotal);
-            this.percentage1W = TileHelpers.Calculate7dPercentage(assignedAssetTileDatas, worthTotal);
-            double win1W = TileHelpers.CalculateWinLoss(this.percentage1W, worthTotal);
+
+            bool percentage7dValid = TileHelpers.Calculate7dPercentage(assignedAssetTileDatas, worthTotal, out this.percentage7d);
+            double win1W = TileHelpers.CalculateWinLoss(this.percentage7d, worthTotal);
 
             string convertCurrency = string.Empty;
 
@@ -211,11 +213,11 @@ namespace AssetWatch
                 this.textBlock_Invest.Text = TileHelpers.GetValueString(investTotal, false) + convertCurrency;
                 this.textBlock_Worth.Text = TileHelpers.GetValueString(worthTotal, false) + convertCurrency;
                 
-                this.textBlock_24hPercentage.Text = TileHelpers.GetValueString(this.percentage24h, true) + " %";
-                this.textBlock_24hWin.Text = TileHelpers.GetValueString(win24h, true) + convertCurrency;
+                this.textBlock_24hPercentage.Text = percentage24hValid ? TileHelpers.GetValueString(Math.Round(this.percentage24h, 2), true) + " %" : "-";
+                this.textBlock_24hWin.Text = percentage24hValid ? TileHelpers.GetValueString(win24h, true) + convertCurrency : "-";
                 
-                this.textBlock_1WPercentage.Text = TileHelpers.GetValueString(this.percentage1W, true) + " %";
-                this.textBlock_1WWin.Text = TileHelpers.GetValueString(win1W, true) + convertCurrency;
+                this.textBlock_7dPercentage.Text = percentage7dValid ? TileHelpers.GetValueString(Math.Round(this.percentage7d, 2), true) + " %" : "-";
+                this.textBlock_7dWin.Text = percentage7dValid ? TileHelpers.GetValueString(win1W, true) + convertCurrency : "-";
                 
                 this.textBlock_ATWin.Text = TileHelpers.GetValueString(winTotal, true) + convertCurrency;
             });

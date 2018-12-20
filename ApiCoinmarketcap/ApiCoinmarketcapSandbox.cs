@@ -14,12 +14,6 @@ namespace ApiCoinmarketcap
         /// </summary>
         public ApiCoinmarketcapSandbox() : base(CoinMarketCapPro.Types.ApiSchema.Sandbox)
         {
-            this.ApiData = new ApiData
-            {
-                ApiKey = string.Empty,
-                ApiName = this.ApiInfo.ApiName,
-                UpdateInterval = 300
-            };
         }
 
         /// <summary>
@@ -38,6 +32,7 @@ namespace ApiCoinmarketcap
                     Market = Market.Kryptowährungen,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen",
+                    StdUpdateInterval = 300,
                     MaxUpdateInterval = 1800,
                     MinUpdateInterval = 60,
                     UpdateIntervalStepSize = 30,

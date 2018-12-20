@@ -86,9 +86,9 @@ namespace AssetWatch
         /// <param name="assetTilesDataSet">The assetTilesDataSet<see cref="List{AssetTileData}"/></param>
         /// <param name="worthTotal">The worthTotal<see cref="double"/></param>
         /// <returns>The <see cref="double"/></returns>
-        public static double Calculate24hPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
+        public static bool Calculate24hPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal, out double pctChange)
         {
-            double percentage = 0;
+            double tempPctChange = 0;
             bool calculationValid = true;
 
             assetTilesDataSet.ForEach(ass =>
@@ -100,10 +100,11 @@ namespace AssetWatch
 
                 double worth = ass.HoldingsCount * ass.Asset.Price;
                 double weight = worth / worthTotal;
-                percentage += ass.Asset.PercentChange24h * weight;
+                tempPctChange += ass.Asset.PercentChange24h * weight;
             });
 
-            return calculationValid ? Math.Round(percentage, 2) : 0;
+            pctChange = tempPctChange;
+            return calculationValid;
         }
 
         /// <summary>
@@ -112,9 +113,9 @@ namespace AssetWatch
         /// <param name="assetTilesDataSet">The assetTilesDataSet<see cref="List{AssetTileData}"/></param>
         /// <param name="worthTotal">The worthTotal<see cref="double"/></param>
         /// <returns>The <see cref="double"/></returns>
-        public static double Calculate7dPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal)
+        public static bool Calculate7dPercentage(List<AssetTileData> assetTilesDataSet, double worthTotal, out double pctChange)
         {
-            double percentage = 0;
+            double tempPctChange = 0;
             bool calculationValid = true;
 
             assetTilesDataSet.ForEach(ass =>
@@ -126,10 +127,11 @@ namespace AssetWatch
 
                 double worth = ass.HoldingsCount * ass.Asset.Price;
                 double weight = worth / worthTotal;
-                percentage += ass.Asset.PercentChange7d * weight;
+                tempPctChange += ass.Asset.PercentChange7d * weight;
             });
 
-            return calculationValid ? Math.Round(percentage, 2) : 0;
+            pctChange = tempPctChange;
+            return calculationValid;
         }
 
         /// <summary>

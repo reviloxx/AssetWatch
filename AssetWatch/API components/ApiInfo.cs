@@ -8,6 +8,12 @@ namespace AssetWatch
     public class ApiInfo
     {
         /// <summary>
+        /// Gets or sets the StdUpdateInterval.
+        /// Contains the standard update interval of the API.
+        /// </summary>
+        public int StdUpdateInterval { get; set; }
+
+        /// <summary>
         /// Gets or sets the MinUpdateInterval.
         /// Contains the minimum supported update interval of the API.
         /// </summary>

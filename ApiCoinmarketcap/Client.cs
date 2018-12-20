@@ -91,8 +91,7 @@ namespace ApiCoinmarketcap
                 string apiKey = "29bc6cc3-7219-42f6-af87-f0147e9ee089";
                 this.client = new CoinMarketCapClient(this.apiSchema, apiKey);
             }
-
-            this.ApiData.IsEnabled = true;
+            
             this.StartAssetUpdater();
         }
 
@@ -101,7 +100,6 @@ namespace ApiCoinmarketcap
         /// </summary>
         public void Disable()
         {
-            this.ApiData.IsEnabled = false;
             this.StopAssetUpdater();
         }
 
@@ -128,7 +126,7 @@ namespace ApiCoinmarketcap
         /// Subscribes an asset to the asset updater.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/> to subscribe.</param>
-        public void SubscribeAssetToUpdater(Asset asset)
+        public void AttachAsset(Asset asset)
         {
             // Add the asset to the list of subscribed assets if there doesn't exist one with the same id yet.
             if (!this.subscribedAssets.Exists(sub => sub.AssetId == asset.AssetId))
@@ -148,7 +146,7 @@ namespace ApiCoinmarketcap
         /// Not implemented because at this API the number of calls is not dependent on the number of subscribed assets.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
-        public void UnsubscribeAssetFromUpdater(Asset asset)
+        public void DetachAsset(Asset asset)
         {
         }
 

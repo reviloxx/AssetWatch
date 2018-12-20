@@ -14,11 +14,6 @@ namespace ApiCoinmarketcap
         /// </summary>
         public ApiCoinmarketcapProUSD() : base(CoinMarketCapPro.Types.ApiSchema.Pro)
         {
-            this.ApiData = new ApiData
-            {
-                ApiName = this.ApiInfo.ApiName,
-                UpdateInterval = 180
-            };
         }
 
         /// <summary>
@@ -44,6 +39,7 @@ namespace ApiCoinmarketcap
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
                     AssetUrlName = "Auf Coinmarketcap.com anzeigen...",
                     GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
+                    StdUpdateInterval = 180,
                     MaxUpdateInterval = 1800,
                     MinUpdateInterval = 60,
                     UpdateIntervalStepSize = 30,

@@ -64,11 +64,6 @@ namespace ApiCryptoCompare
             this.availableAssets = new List<Asset>();
             this.subscribedAssets = new List<Asset>();
             this.subscribedConvertCurrencies = new List<string>();
-            this.ApiData = new ApiData
-            {
-                ApiName = this.ApiInfo.ApiName,
-                UpdateInterval = 15
-            };
         }
 
         /// <summary>
@@ -77,7 +72,6 @@ namespace ApiCryptoCompare
         public void Disable()
         {
             this.StopAssetUpdater();
-            this.ApiData.IsEnabled = false;
         }
 
         /// <summary>
@@ -86,7 +80,6 @@ namespace ApiCryptoCompare
         public void Enable()
         {
             this.client = new CryptoCompareClient();
-            this.ApiData.IsEnabled = true;
             this.StartAssetUpdater();
         }
 
@@ -132,7 +125,7 @@ namespace ApiCryptoCompare
         /// Subscribes an asset to the updater.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/> to subscribe.</param>
-        public void SubscribeAssetToUpdater(Asset asset)
+        public void AttachAsset(Asset asset)
         {
             if (!this.subscribedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
             {
@@ -150,7 +143,7 @@ namespace ApiCryptoCompare
         /// Not implemented because at this API the number of calls is not dependent on the number of subscribed assets.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
-        public void UnsubscribeAssetFromUpdater(Asset asset)
+        public void DetachAsset(Asset asset)
         {
         }
 
@@ -364,6 +357,7 @@ namespace ApiCryptoCompare
                     AssetUrl = "https://www.cryptocompare.com/coins/#SYMBOL#/overview",
                     AssetUrlName = "Auf cryptocompare.com anzeigen...",
                     GetApiKeyUrl = "",
+                    StdUpdateInterval = 15,
                     MaxUpdateInterval = 300,
                     MinUpdateInterval = 15,
                     UpdateIntervalStepSize = 15,

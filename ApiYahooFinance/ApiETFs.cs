@@ -12,12 +12,6 @@ namespace ApiYahooFinance
         public ApiETFs()
         {
             // TODO: ADD FEATURE: more ETFs
-            this.ApiData = new ApiData
-            {
-                ApiName = this.ApiInfo.ApiName,
-                UpdateInterval = 3600
-            };
-
             this.availableAssets = new List<Asset>()
             {
                 new Asset()
@@ -91,9 +85,10 @@ namespace ApiYahooFinance
                     AssetUrl = "https://finance.yahoo.com/quote/#SYMBOL#",
                     AssetUrlName = "Auf finance.yahoo.com anzeigen...",
                     GetApiKeyUrl = "",
+                    StdUpdateInterval = 1800,
                     MaxUpdateInterval = 7200,
-                    MinUpdateInterval = 1800,
-                    UpdateIntervalStepSize = 1800,
+                    MinUpdateInterval = 900,
+                    UpdateIntervalStepSize = 900,
                     SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
                     UpdateIntervalInfoText = ""
                 };

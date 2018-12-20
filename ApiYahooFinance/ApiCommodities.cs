@@ -12,12 +12,6 @@ namespace ApiYahooFinance
         public ApiCommodities()
         {
             // TODO: ADD FEATURE: more commodities
-            this.ApiData = new ApiData
-            {
-                ApiName = this.ApiInfo.ApiName,
-                UpdateInterval = 3600
-            };
-
             this.availableAssets = new List<Asset>()
             {
                 new Asset()
@@ -60,7 +54,6 @@ namespace ApiYahooFinance
                     "- unterstützt keine prozentuale\n" +
                     "  7-Tage Preisentwicklung\n\n" +
                     "Basiswährungen: USD, EUR",
-
                     ApiKeyRequired = false,
                     ApiName = "Yahoo! Finance - Commodities",
                     ApiClientVersion = "1.0",
@@ -68,9 +61,10 @@ namespace ApiYahooFinance
                     AssetUrl = "https://finance.yahoo.com/quote/#SYMBOL#",
                     AssetUrlName = "Auf finance.yahoo.com anzeigen...",
                     GetApiKeyUrl = "",
+                    StdUpdateInterval = 1800,
                     MaxUpdateInterval = 7200,
-                    MinUpdateInterval = 1800,
-                    UpdateIntervalStepSize = 1800,
+                    MinUpdateInterval = 900,
+                    UpdateIntervalStepSize = 900,
                     SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
                     UpdateIntervalInfoText = ""
                 };

@@ -164,19 +164,6 @@ namespace AssetWatch
         /// <param name="api">The api<see cref="IApi"/> which was loaded.</param>
         private void ApiHandler_OnApiLoaded(object sender, IApi api)
         {
-            // Apply loaded save data to API
-            if (this.appData.ApiDataSet.Exists(apiData => apiData.ApiName == api.ApiInfo.ApiName))
-            {
-                ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
-                apiData.IncreaseCounter(0);
-                api.ApiData = apiData;
-            }
-            else
-            {
-                this.appData.ApiDataSet.Add(api.ApiData);
-                this.FireOnAppDataChanged();
-            }
-
             List<AssetTile> toRemove = new List<AssetTile>();
 
             // subscribe all asset tiles which were waiting for this API to be loaded
@@ -190,12 +177,7 @@ namespace AssetWatch
             });
 
             // remove the subscribed asset tiles from the waiting list
-            toRemove.ForEach(rm => this.unattachedAssetTiles.Remove(rm));
-
-            if (api.ApiData.IsEnabled)
-            {
-                this.apiHandler.EnableApi(api);
-            }
+            toRemove.ForEach(rm => this.unattachedAssetTiles.Remove(rm));            
         }
 
         /// <summary>

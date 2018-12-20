@@ -23,7 +23,7 @@ namespace AssetWatch
             this.InitializeComponent();
             this.DataContext = this;
             this.api = api;
-            this.UpdateInterval = this.api.ApiData.UpdateInterval / 60;
+            this.UpdateInterval = (double)this.api.ApiData.UpdateInterval / 60.0;
 
             textbox_API_key.IsEnabled = api.ApiInfo.ApiKeyRequired && !api.ApiData.IsEnabled;
 
@@ -48,7 +48,7 @@ namespace AssetWatch
         private void button_SaveExit_Click(object sender, RoutedEventArgs e)
         {
             this.api.ApiData.ApiKey = this.textbox_API_key.Text;
-            this.api.ApiData.UpdateInterval = (int)this.UpdateInterval * 60;
+            this.api.ApiData.UpdateInterval = (int)(this.UpdateInterval * 60);
             this.Close();
         }
 

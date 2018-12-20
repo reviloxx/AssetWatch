@@ -16,7 +16,7 @@ namespace AssetWatch
         /// <summary>
         /// Defines the apiHandler
         /// </summary>
-        private static IApiHandler apiHandler = new MultiApiHandler();
+        private IApiHandler apiHandler;
 
         /// <summary>
         /// Defines the fileHandler
@@ -43,11 +43,12 @@ namespace AssetWatch
 
             fileHandler.OnFileHandlerError += this.FileHandler_OnFileHandlerError;
             this.appData = fileHandler.LoadAppData();
-            this.tileHandler = new MultiTileHandler(apiHandler, this.appData);
+            this.apiHandler = new MultiApiHandler(this.appData);
+            this.tileHandler = new MultiTileHandler(this.apiHandler, this.appData);
             this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;
             this.menuItem_HideAssetTiles.IsChecked = this.appData.TileHandlerData.GlobalTileStyle.Hidden;
             this.menuItem_LockTilePositions.IsChecked = this.appData.TileHandlerData.PositionsLocked;
-            apiHandler.OnAppDataChanged += this.OnAppDataChanged;
+            this.apiHandler.OnAppDataChanged += this.OnAppDataChanged;
         }
 
         private void FileHandler_OnFileHandlerError(object sender, string e)

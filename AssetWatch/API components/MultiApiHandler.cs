@@ -11,6 +11,8 @@ namespace AssetWatch
     /// </summary>
     public class MultiApiHandler : IApiHandler
     {
+        private AppData appData;
+
         /// <summary>
         /// Contains the currently asset tiles which are attached to the api handler.
         /// </summary>
@@ -19,8 +21,9 @@ namespace AssetWatch
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
         /// </summary>
-        public MultiApiHandler()
+        public MultiApiHandler(AppData appData)
         {
+            this.appData = appData;
             this.attachedAssetTiles = new List<AssetTile>();
             this.ReadyApis = new Dictionary<IApi, List<Asset>>();
         }
@@ -39,11 +42,39 @@ namespace AssetWatch
 
             this.LoadedApis.ForEach(api =>
             {
+                // Apply loaded save data to API
+                if (this.appData.ApiDataSet.Exists(apiData => apiData.ApiName == api.ApiInfo.ApiName))
+                {
+                    ApiData apiData = this.appData.ApiDataSet.Find(a => a.ApiName == api.ApiInfo.ApiName);
+                    apiData.IncreaseCounter(0);
+                    api.ApiData = apiData;
+                }
+                else
+                {
+                    ApiData newApiData = new ApiData()
+                    {
+                        ApiName = api.ApiInfo.ApiName,
+                        UpdateInterval = api.ApiInfo.StdUpdateInterval
+                    };
+
+                    api.ApiData = newApiData;
+                    this.appData.ApiDataSet.Add(newApiData);
+
+                    this.FireOnAppDataChanged();
+                }
+
+                // subscribe to events
                 api.OnAvailableAssetsReceived += this.Api_OnAvailableAssetsReceived;
                 api.OnSingleAssetUpdated += this.Api_OnSingleAssetUpdated;
                 api.OnApiError += this.Api_OnApiError;
                 api.OnAppDataChanged += this.Api_OnAppDataChanged;
+
                 this.FireOnApiLoaded(api);
+
+                if (api.ApiData.IsEnabled)
+                {
+                    this.EnableApi(api);
+                }
             });
         }
 
@@ -56,7 +87,7 @@ namespace AssetWatch
         {
             // search the API to subscribe in the dictionary
             IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
-            api.SubscribeAssetToUpdater(assetTile.AssetTileData.Asset);
+            api.AttachAsset(assetTile.AssetTileData.Asset);
 
             if (api.ApiData.IsEnabled && requestUpdate)
             {
@@ -80,12 +111,12 @@ namespace AssetWatch
                 return;
             }
 
-            if (!this.attachedAssetTiles.Exists(sub => sub.AssetTileData.ApiName == api.ApiInfo.ApiName &&
-                                                         sub.AssetTileData.Asset.AssetId == assetTile.AssetTileData.Asset.AssetId &&
-                                                         sub.AssetTileData.Asset.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
+            if (!this.attachedAssetTiles.Exists(att => att.AssetTileData.ApiName == api.ApiInfo.ApiName &&
+                                                         att.AssetTileData.Asset.AssetId == assetTile.AssetTileData.Asset.AssetId &&
+                                                         att.AssetTileData.Asset.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
             {
                 // unsunscribe asset from API if it is not needed anymore
-                api.UnsubscribeAssetFromUpdater(assetTile.AssetTileData.Asset);
+                api.DetachAsset(assetTile.AssetTileData.Asset);
             }
         }        
 
@@ -96,6 +127,7 @@ namespace AssetWatch
         public void EnableApi(IApi api)
         {
             api.Enable();
+            api.ApiData.IsEnabled = true;
 
             // if this API has not received it's available assets yet, request it
             if (!this.ReadyApis.Any(k => k.Key.ApiInfo.ApiName == api.ApiInfo.ApiName))
@@ -116,6 +148,7 @@ namespace AssetWatch
             }
 
             api.Disable();
+            api.ApiData.IsEnabled = false;
         }
 
         /// <summary>
