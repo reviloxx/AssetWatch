@@ -16,7 +16,10 @@ namespace ApiCoinmarketcap
     /// </summary>
     public abstract class Client
     {
-        private static int retryDelay = 1000;
+        /// <summary>
+        /// Defines the delay to try again in case there is no connection.
+        /// </summary>
+        private static readonly int retryDelay = 1000;
 
         /// <summary>
         /// Defines the apiSchema.
@@ -31,12 +34,12 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// Gets the SubscribedAssets.
         /// </summary>
-        private List<Asset> subscribedAssets;
+        private List<Asset> attachedAssets;
 
         /// <summary>
         /// Defines the subscribedConvertCurrencies.
         /// </summary>
-        private List<string> subscribedConvertCurrencies;
+        private List<string> attachedConvertCurrencies;
 
         /// <summary>
         /// The AssetRequestDelegate.
@@ -66,8 +69,8 @@ namespace ApiCoinmarketcap
         {
             this.apiSchema = apiSchema;
             this.availableAssets = new List<Asset>();
-            this.subscribedAssets = new List<Asset>();
-            this.subscribedConvertCurrencies = new List<string>();
+            this.attachedAssets = new List<Asset>();
+            this.attachedConvertCurrencies = new List<string>();
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
         }
@@ -91,8 +94,14 @@ namespace ApiCoinmarketcap
                 string apiKey = "29bc6cc3-7219-42f6-af87-f0147e9ee089";
                 this.client = new CoinMarketCapClient(this.apiSchema, apiKey);
             }
-            
-            this.StartAssetUpdater();
+
+            if (this.assetUpdateWorker.IsAlive)
+            {
+                throw new Exception("Already running!");
+            }
+
+            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
+            this.assetUpdateWorker.Start();
         }
 
         /// <summary>
@@ -100,7 +109,11 @@ namespace ApiCoinmarketcap
         /// </summary>
         public void Disable()
         {
-            this.StopAssetUpdater();
+            try
+            {
+                this.assetUpdateWorker.Abort();
+            }
+            catch (Exception) { }
         }
 
         /// <summary>
@@ -123,29 +136,29 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Subscribes an asset to the asset updater.
+        /// Attaches an asset to the asset updater.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to subscribe.</param>
+        /// <param name="asset">The asset<see cref="Asset"/> to attach.</param>
         public void AttachAsset(Asset asset)
         {
             // Add the asset to the list of subscribed assets if there doesn't exist one with the same id yet.
-            if (!this.subscribedAssets.Exists(sub => sub.AssetId == asset.AssetId))
+            if (!this.attachedAssets.Exists(sub => sub.AssetId == asset.AssetId))
             {
-                this.subscribedAssets.Add(asset);
+                this.attachedAssets.Add(asset);
             }
 
             // Add the convert currency to the list of subscribed convert currencies if it is not in the list yet.
-            if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
+            if (!this.attachedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
             {
-                this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);
+                this.attachedConvertCurrencies.Add(asset.ConvertCurrency);
             }
         }
 
         /// <summary>
-        /// Unsubscribes an asset from the asset updater.
-        /// Not implemented because at this API the number of calls is not dependent on the number of subscribed assets.
+        /// Detaches an asset from the asset updater.
+        /// Not implemented because at this API the number of calls is not dependent on the number of attached assets.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
+        /// <param name="asset">The asset<see cref="Asset"/> to detach.</param>
         public void DetachAsset(Asset asset)
         {
         }
@@ -203,39 +216,13 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Starts the asset updater.
-        /// </summary>
-        private void StartAssetUpdater()
-        {
-            if (this.assetUpdateWorker.IsAlive)
-            {
-                throw new Exception("Already running!");
-            }
-
-            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.assetUpdateWorker.Start();
-        }
-
-        /// <summary>
-        /// Stops the asset updater.
-        /// </summary>
-        private void StopAssetUpdater()
-        {
-            try
-            {
-                this.assetUpdateWorker.Abort();
-            }
-            catch (Exception) { }
-        }
-
-        /// <summary>
         /// Requests updates of the subscribed assets while this API is enabled.
         /// </summary>
         private void AssetUpdateWorker()
         {
             while (this.ApiData.IsEnabled)
             {
-                this.GetAssetUpdates(this.subscribedAssets);
+                this.GetAssetUpdates(this.attachedAssets);
                 Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
         }
@@ -271,7 +258,7 @@ namespace ApiCoinmarketcap
 
                 try
                 {
-                    var response = await this.client.GetCurrencyMarketQuotesAsync(ids, this.subscribedConvertCurrencies);
+                    var response = await this.client.GetCurrencyMarketQuotesAsync(ids, this.attachedConvertCurrencies);
                     this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
 
@@ -285,14 +272,23 @@ namespace ApiCoinmarketcap
                         {
                             var assetUpdate = response.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
                             ass.Price = (double)assetUpdate.Quote[ass.ConvertCurrency].Price;
-                            ass.LastUpdated = DateTime.Now;
-                            ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
-                            ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
+                            ass.LastUpdated = DateTime.Now;                            
                             ass.PercentChange24h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
                             ass.PercentChange7d = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
-                            ass.Rank = assetUpdate.CmcRank;
-                            ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
-                            ass.SupplyTotal = (double)assetUpdate.TotalSupply;
+
+                            try
+                            {
+                                ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
+                                ass.Rank = assetUpdate.CmcRank;
+                                ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
+                                ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
+                                ass.SupplyTotal = (double)assetUpdate.TotalSupply;
+                            }
+                            catch(InvalidOperationException)
+                            {
+                                // properties of response data might be null
+                            }
+                            
                             this.FireOnSingleAssetUpdated(ass);
                         });
                     }
@@ -308,6 +304,10 @@ namespace ApiCoinmarketcap
                     callFailed = true;
                     Thread.Sleep(retryDelay);
                     timeout -= retryDelay;
+                }
+                catch (Exception e)
+                {
+                    this.FireOnApiError(this.BuildOnApiErrorEventArgs(e.Message));
                 }
             }
             while (callFailed && timeout >= 0);
@@ -355,12 +355,11 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Fires the OnApiError event.
+        /// Fires the OnAvailableAssetsReceived event.
         /// </summary>
-        /// <param name="eventArgs">The eventArgs<see cref="OnApiErrorEventArgs"/></param>
-        private void FireOnApiError(OnApiErrorEventArgs eventArgs)
+        private void FireOnAvailableAssetsReceived()
         {
-            this.OnApiError?.Invoke(this, eventArgs);
+            OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
         }
 
         /// <summary>
@@ -373,12 +372,13 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Fires the OnAvailableAssetsReceived event.
+        /// Fires the OnApiError event.
         /// </summary>
-        private void FireOnAvailableAssetsReceived()
+        /// <param name="eventArgs">The eventArgs<see cref="OnApiErrorEventArgs"/></param>
+        private void FireOnApiError(OnApiErrorEventArgs eventArgs)
         {
-            OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
-        }
+            this.OnApiError?.Invoke(this, eventArgs);
+        }              
 
         /// <summary>
         /// Fires the OnAppDataChanged event.

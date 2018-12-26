@@ -15,19 +15,24 @@ namespace ApiCryptoCompare
     public class ApiCryptoCompare : IApi
     {
         /// <summary>
-        /// Defines the retryDelay in case there is no connection.
+        /// Defines the delay to try again in case there is no connection.
         /// </summary>
-        private static int retryDelay = 1000;
+        private static readonly int retryDelay = 1000;
 
         /// <summary>
-        /// Defines the client.
+        /// Defines the CryptoCompare client.
         /// </summary>
         private CryptoCompareClient client;
 
         /// <summary>
-        /// Defines the assetUpdateWorker thread.
+        /// Defines the list of attached assets.
         /// </summary>
-        private Thread assetUpdateWorker;
+        private readonly List<Asset> attachedAssets;
+
+        /// <summary>
+        /// Defines the list of attached convert currencies.
+        /// </summary>
+        private readonly List<string> attachedConvertCurrencies;
 
         /// <summary>
         /// The AssetRequestDelegate.
@@ -37,22 +42,12 @@ namespace ApiCryptoCompare
         /// <summary>
         /// Defines the assetRequestDelegate.
         /// </summary>
-        private AssetRequestDelegate assetRequestDelegate;
+        private readonly AssetRequestDelegate assetRequestDelegate;        
 
         /// <summary>
-        /// Defines the list of available assets.
+        /// Defines the assetUpdateWorker thread.
         /// </summary>
-        private List<Asset> availableAssets;
-
-        /// <summary>
-        /// Defines the list of subscribed assets.
-        /// </summary>
-        private List<Asset> subscribedAssets;
-
-        /// <summary>
-        /// Defines the list of subscribed convert currencies.
-        /// </summary>
-        private List<string> subscribedConvertCurrencies;
+        private Thread assetUpdateWorker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiCryptoCompare"/> class.
@@ -61,17 +56,8 @@ namespace ApiCryptoCompare
         {
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
-            this.availableAssets = new List<Asset>();
-            this.subscribedAssets = new List<Asset>();
-            this.subscribedConvertCurrencies = new List<string>();
-        }
-
-        /// <summary>
-        /// Disables the API.
-        /// </summary>
-        public void Disable()
-        {
-            this.StopAssetUpdater();
+            this.attachedAssets = new List<Asset>();
+            this.attachedConvertCurrencies = new List<string>();
         }
 
         /// <summary>
@@ -80,8 +66,27 @@ namespace ApiCryptoCompare
         public void Enable()
         {
             this.client = new CryptoCompareClient();
-            this.StartAssetUpdater();
+
+            if (this.assetUpdateWorker.IsAlive)
+            {
+                throw new Exception("Already running!");
+            }
+
+            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
+            this.assetUpdateWorker.Start();
         }
+
+        /// <summary>
+        /// Disables the API.
+        /// </summary>
+        public void Disable()
+        {
+            try
+            {
+                this.assetUpdateWorker.Abort();
+            }
+            catch (Exception) { }
+        }        
 
         /// <summary>
         /// Requests the available assets of this API.
@@ -108,43 +113,71 @@ namespace ApiCryptoCompare
         }
 
         /// <summary>
-        /// Starts the asset updater.
+        /// Attaches an asset to the updater.
         /// </summary>
-        private void StartAssetUpdater()
-        {
-            if (this.assetUpdateWorker.IsAlive)
-            {
-                throw new Exception("Already running!");
-            }
-
-            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.assetUpdateWorker.Start();
-        }
-
-        /// <summary>
-        /// Subscribes an asset to the updater.
-        /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to subscribe.</param>
+        /// <param name="asset">The asset<see cref="Asset"/> to attach.</param>
         public void AttachAsset(Asset asset)
         {
-            if (!this.subscribedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
+            if (!this.attachedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
             {
-                this.subscribedAssets.Add(asset);
+                this.attachedAssets.Add(asset);
             }
 
-            if (!this.subscribedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
+            if (!this.attachedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
             {
-                this.subscribedConvertCurrencies.Add(asset.ConvertCurrency);
+                this.attachedConvertCurrencies.Add(asset.ConvertCurrency);
             }
         }
 
         /// <summary>
-        /// Unsubscribes an asset from the updater.
-        /// Not implemented because at this API the number of calls is not dependent on the number of subscribed assets.
+        /// Detaches an asset from the updater.
+        /// Not implemented because at this API the number of calls is not dependent on the number of attached assets.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
         public void DetachAsset(Asset asset)
         {
+        }
+
+        /// <summary>
+        /// Gets the available assets of the API and fires the OnAvailableAssetsReceived event if successful.
+        /// Fires the OnApiError event if something has gone wrong.
+        /// </summary>
+        private async void GetAvailableAssets()
+        {
+            bool callFailed = false;
+            List<Asset> availableAssets = new List<Asset>();
+
+            do
+            {
+                callFailed = false;
+
+                try
+                {
+                    CoinListResponse response = await this.client.Coins.ListAsync();
+                    this.ApiData.IncreaseCounter(1);
+                    this.FireOnAppDataChanged();
+
+                    foreach (KeyValuePair<string, CoinInfo> coin in response.Coins)
+                    {
+                        availableAssets.Add(
+                            new Asset
+                            {
+                                AssetId = coin.Value.Id,
+                                Name = coin.Value.Name,
+                                Symbol = coin.Value.Symbol
+                            });
+                    }
+
+                    availableAssets = availableAssets.OrderBy(ass => ass.SymbolName).ToList();
+                    this.FireOnAvailableAssetsReceived(availableAssets);
+                }
+                catch (HttpRequestException)
+                {
+                    callFailed = true;
+                    Thread.Sleep(retryDelay);
+                }
+            }
+            while (callFailed);
         }
 
         /// <summary>
@@ -154,7 +187,7 @@ namespace ApiCryptoCompare
         {
             while (this.ApiData.IsEnabled)
             {
-                this.GetAssetUpdates(this.subscribedAssets);
+                this.GetAssetUpdates(this.attachedAssets);
                 Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
         }
@@ -184,7 +217,7 @@ namespace ApiCryptoCompare
 
                 try
                 {
-                    PriceMultiFullResponse response = await this.client.Prices.MultipleSymbolFullDataAsync(fromSymbols, this.subscribedConvertCurrencies);
+                    PriceMultiFullResponse response = await this.client.Prices.MultipleSymbolFullDataAsync(fromSymbols, this.attachedConvertCurrencies);
                     this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
 
@@ -197,7 +230,7 @@ namespace ApiCryptoCompare
 
                     assets.ForEach(ass =>
                     {
-                        this.subscribedConvertCurrencies.ForEach(con =>
+                        this.attachedConvertCurrencies.ForEach(con =>
                         {
                             try
                             {
@@ -206,10 +239,19 @@ namespace ApiCryptoCompare
                                 if (ass.ConvertCurrency == con)
                                 {
                                     ass.LastUpdated = DateTime.Now;
-                                    ass.MarketCap = (double)data.MarketCap;
-                                    ass.PercentChange24h = (double)data.ChangePCT24Hour;
                                     ass.Price = (double)data.Price;
-                                    ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
+                                    ass.PercentChange24h = (double)data.ChangePCT24Hour;
+
+                                    try
+                                    {                                        
+                                        ass.MarketCap = (double)data.MarketCap;
+                                        ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
+                                    }
+                                    catch (InvalidOperationException)
+                                    {
+                                        // properties of CoinFullAggregatedData might be null
+                                    }
+
                                     this.FireOnSingleAssetUpdated(ass);
                                 }
                             }
@@ -239,67 +281,14 @@ namespace ApiCryptoCompare
                 }
             }
             while (callFailed && timeout >= 0);
-        }
-
-        /// <summary>
-        /// Stops the asset updater.
-        /// </summary>
-        private void StopAssetUpdater()
-        {
-            try
-            {
-                this.assetUpdateWorker.Abort();
-            }
-            catch (Exception) { }
-        }
-
-        /// <summary>
-        /// Gets the available assets of the API and fires the OnAvailableAssetsReceived event if successful.
-        /// Fires the OnApiError event if something has gone wrong.
-        /// </summary>
-        private async void GetAvailableAssets()
-        {
-            bool callFailed = false;
-
-            do
-            {
-                callFailed = false;
-
-                try
-                {
-                    CoinListResponse response = await this.client.Coins.ListAsync();
-                    this.ApiData.IncreaseCounter(1);
-                    this.FireOnAppDataChanged();
-
-                    foreach (KeyValuePair<string, CoinInfo> coin in response.Coins)
-                    {
-                        this.availableAssets.Add(
-                            new Asset
-                            {
-                                AssetId = coin.Value.Id,
-                                Name = coin.Value.Name,
-                                Symbol = coin.Value.Symbol
-                            });
-                    }
-
-                    this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
-                    this.FireOnAvailableAssetsReceived();
-                }
-                catch (HttpRequestException)
-                {
-                    callFailed = true;
-                    Thread.Sleep(retryDelay);
-                }
-            }
-            while (callFailed);
-        }
+        }        
 
         /// <summary>
         /// Fires the OnAvailableAssetsReceived event.
         /// </summary>
-        private void FireOnAvailableAssetsReceived()
+        private void FireOnAvailableAssetsReceived(List<Asset> availableAssets)
         {
-            this.OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
+            this.OnAvailableAssetsReceived?.Invoke(this, availableAssets);
         }
 
         /// <summary>
@@ -342,13 +331,13 @@ namespace ApiCryptoCompare
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu den meisten Kryptowährungen.\n\n" +
-                    "+ unterstützt kurzes Update\n" +
-                    "  Intervall (15 Sekunden)\n\n" +
+                    ApiInfoText = "Liefert aktuelle Daten zu Kryptowährungen.\n\n" +
+                    "+ unterstützt kurze Update\n" +
+                    "  Intervalle (ab 15 Sekunden)\n\n" +
                     "+ unterstützt prozentuale\n" +
-                    "  24h Preisentwicklung\n\n" +
+                    "  24h Preisänderung\n\n" +
                     "- unterstützt keine prozentuale\n" +
-                    "  7-Tage Preisentwicklung\n\n" +
+                    "  7-Tage Preisänderung\n\n" +
                     "Basiswährungen: USD, EUR, BTC",
                     ApiKeyRequired = false,
                     ApiName = "CryptoCompare",
@@ -362,7 +351,7 @@ namespace ApiCryptoCompare
                     MinUpdateInterval = 15,
                     UpdateIntervalStepSize = 15,
                     SupportedConvertCurrencies = new List<string>() { "EUR", "USD", "BTC" },
-                    UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall von 15 Sekunden - 5 Minuten und erlaubt 100.000 Aufrufe pro Monat."
+                    UpdateIntervalInfoText = "Diese API unterstützt Update Intervalle ab 15 Sekunden."
                 };
             }
         }

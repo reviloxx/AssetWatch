@@ -10,7 +10,6 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
-        // TODO: ADD FEATURE: Cryptowatch import
         // TODO: FINISH: headers, comments, code clean-up
 
         /// <summary>
@@ -27,6 +26,8 @@ namespace AssetWatch
         /// Defines the tileHandler
         /// </summary>
         private ITileHandler tileHandler;
+
+        private MainSettingsWindow mainSettingsWindow;
 
         /// <summary>
         /// Defines the appData to store on the hard disk.
@@ -45,10 +46,11 @@ namespace AssetWatch
             this.appData = fileHandler.LoadAppData();
             this.apiHandler = new MultiApiHandler(this.appData);
             this.tileHandler = new MultiTileHandler(this.apiHandler, this.appData);
+            this.mainSettingsWindow = new MainSettingsWindow(this.apiHandler, this.appData.TileHandlerData.GlobalTileStyle);
             this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;
             this.menuItem_HideAssetTiles.IsChecked = this.appData.TileHandlerData.GlobalTileStyle.Hidden;
             this.menuItem_LockTilePositions.IsChecked = this.appData.TileHandlerData.PositionsLocked;
-            this.apiHandler.OnAppDataChanged += this.OnAppDataChanged;
+            this.apiHandler.OnAppDataChanged += this.OnAppDataChanged;            
         }
 
         private void FileHandler_OnFileHandlerError(object sender, string e)
@@ -151,9 +153,15 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void menuItem_Settings_Click(object sender, RoutedEventArgs e)
         {
-            MainSettingsWindow mainSettingsWindow = new MainSettingsWindow(apiHandler, this.appData.TileHandlerData.GlobalTileStyle);
-            mainSettingsWindow.Closed += this.OnAppDataChanged;
-            mainSettingsWindow.OnGlobalTileStyleChanged += this.MainSettingsWindow_OnGlobalTileStyleChanged;
+            if (this.mainSettingsWindow.IsVisible)
+            {
+                return;
+            }
+
+            this.mainSettingsWindow = new MainSettingsWindow(this.apiHandler, this.appData.TileHandlerData.GlobalTileStyle);
+            this.mainSettingsWindow.OnAppDataChanged += this.OnAppDataChanged;
+            this.mainSettingsWindow.OnGlobalTileStyleChanged += this.MainSettingsWindow_OnGlobalTileStyleChanged;
+
             mainSettingsWindow.ShowDialog();
         }
 

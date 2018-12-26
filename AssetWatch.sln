@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCryptoCompare", "ApiCryp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiYahooFinance", "ApiYahooFinance\ApiYahooFinance.csproj", "{E6F4BBE0-9B45-4B55-8E9E-F7EB4E1BC5FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiNewdex", "ApiNewdex\ApiNewdex.csproj", "{5E97EB03-81A8-47AF-9E16-6DC024C70B39}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{E6F4BBE0-9B45-4B55-8E9E-F7EB4E1BC5FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6F4BBE0-9B45-4B55-8E9E-F7EB4E1BC5FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6F4BBE0-9B45-4B55-8E9E-F7EB4E1BC5FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5E97EB03-81A8-47AF-9E16-6DC024C70B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E97EB03-81A8-47AF-9E16-6DC024C70B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5E97EB03-81A8-47AF-9E16-6DC024C70B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5E97EB03-81A8-47AF-9E16-6DC024C70B39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,20 +9,19 @@ namespace AssetWatch
     public interface IApiHandler
     {
         /// <summary>
-        /// Is fired after an assembly which contains an IApi object was loaded.
-        /// The event args contain the loaded API.
+        /// Is fired after an assembly which contains an implementation of the IApi interface was loaded.
         /// </summary>
         event EventHandler<IApi> OnApiLoaded;
 
         /// <summary>
-        /// Is fired after the AppData was changed.
+        /// Is fired after the AppData has been changed.
         /// </summary>
         event EventHandler OnAppDataChanged;
 
         /// <summary>
         /// Loads IApi objects by using an IApiLoader instance.
         /// </summary>
-        /// <param name="apiLoader">The apiLoader<see cref="IApiLoader"/> to load the IApi objects.</param>
+        /// <param name="apiLoader">The apiLoader<see cref="IApiLoader"/></param>
         void LoadApis(IApiLoader apiLoader);
 
         /// <summary>

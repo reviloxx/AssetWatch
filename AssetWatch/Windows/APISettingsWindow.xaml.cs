@@ -37,7 +37,7 @@ namespace AssetWatch
             slider_UpdateInterval.Minimum = api.ApiInfo.MinUpdateInterval / 60;
             slider_UpdateInterval.Maximum = api.ApiInfo.MaxUpdateInterval / 60;
             slider_UpdateInterval.TickFrequency = api.ApiInfo.UpdateIntervalStepSize / 60;
-            textbox_API_key.Text = api.ApiData.ApiKey;
+            textbox_API_key.Text = api.ApiInfo.ApiKeyRequired ? api.ApiData.ApiKey : "nicht erforderlich";
         }
 
         /// <summary>

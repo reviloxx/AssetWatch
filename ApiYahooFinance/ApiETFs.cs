@@ -11,7 +11,7 @@ namespace ApiYahooFinance
     {
         public ApiETFs()
         {
-            // TODO: ADD FEATURE: more ETFs
+            // TODO: ADD more ETFs
             this.availableAssets = new List<Asset>()
             {
                 new Asset()
@@ -71,8 +71,8 @@ namespace ApiYahooFinance
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu den wichtigsten ETFs.\n\n" +
-                    "+ Update Intervall ab 30 Minuten\n\n" +
+                    ApiInfoText = "Liefert aktuelle Daten zu ETFs.\n\n" +
+                    "+ Update Intervall ab 15 Minuten\n\n" +
                     "- unterstützt keine prozentuale\n" +
                     "  24h Preisentwicklung\n\n" +
                     "- unterstützt keine prozentuale\n" +
@@ -90,7 +90,7 @@ namespace ApiYahooFinance
                     MinUpdateInterval = 900,
                     UpdateIntervalStepSize = 900,
                     SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
-                    UpdateIntervalInfoText = ""
+                    UpdateIntervalInfoText = "Diese API erlaubt Update Intervalle ab 15 Minuten."
                 };
             }
         }        

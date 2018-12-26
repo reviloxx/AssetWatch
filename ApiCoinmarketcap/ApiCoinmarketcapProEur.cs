@@ -12,9 +12,7 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// Initializes a new instance of the <see cref="ApiCoinmarketcapProEUR"/> class.
         /// </summary>
-        public ApiCoinmarketcapProEUR() : base(CoinMarketCapPro.Types.ApiSchema.Pro)
-        {
-        }
+        public ApiCoinmarketcapProEUR() : base(CoinMarketCapPro.Types.ApiSchema.Pro) { }
 
         /// <summary>
         /// Gets the ApiInfo
@@ -25,11 +23,11 @@ namespace ApiCoinmarketcap
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu den meisten Kryptowährungen.\n\n" +
-                    "+ unterstützt kurzes Update\n" +
-                    "  Intervall (1 Minute)\n\n" +
+                    ApiInfoText = "Liefert aktuelle Daten zu Kryptowährungen.\n\n" +
+                    "+ unterstützt kurze Update\n" +
+                    "  Intervalle (ab 1 Minute)\n\n" +
                     "+ unterstützt prozentuale 24h\n" +
-                    "  und 7-Tage Preisentwicklung\n\n" +
+                    "  und 7-Tage Preisänderung\n\n" +
                     "- Registrierung und API Key nötig\n\n" +
                     "Basiswährung: EUR",
                     ApiKeyRequired = true,
@@ -44,7 +42,7 @@ namespace ApiCoinmarketcap
                     MinUpdateInterval = 60,
                     UpdateIntervalStepSize = 30,
                     SupportedConvertCurrencies = new List<string>() { "EUR" },
-                    UpdateIntervalInfoText = "Diese API stellt einmal pro Minute aktualisierte Daten bereit."
+                    UpdateIntervalInfoText = "Diese API erlaubt Update Intervalle ab 1 Minute."
                 };
             }
         }

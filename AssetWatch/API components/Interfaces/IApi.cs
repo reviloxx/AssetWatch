@@ -9,37 +9,37 @@ namespace AssetWatch
     public interface IApi
     {
         /// <summary>
-        /// Is fired after the API has received it's available assets.
+        /// Must be fired after the API has received it's available assets.
         /// </summary>
         event EventHandler<List<Asset>> OnAvailableAssetsReceived;
 
         /// <summary>
-        /// Is fired after the API has received new data for a single asset.
+        /// Must be fired after the API has received new data for a single asset.
         /// </summary>
         event EventHandler<Asset> OnSingleAssetUpdated;
 
         /// <summary>
-        /// Is fired after something went wrong.
+        /// Should be fired after something went wrong.
         /// </summary>
         event EventHandler<OnApiErrorEventArgs> OnApiError;
 
         /// <summary>
-        /// Is fired after the AppData was changed.
+        /// Should be fired after the counter in the ApiData has been increased.
         /// </summary>
         event EventHandler OnAppDataChanged;
 
         /// <summary>
-        /// Gets the serializable ApiData which contains the current update interval of the API.
+        /// Gets the serializable ApiData which contains modifiable data for the API.
         /// </summary>
         ApiData ApiData { get; set; }
 
         /// <summary>
-        /// Gets the ApiInfo which contains all neccessary information about the API.
+        /// Gets the ApiInfo which contains general information about the API.
         /// </summary>
         ApiInfo ApiInfo { get; }
 
         /// <summary>
-        /// Attaches an asset to the API which then will be updated in the currently defined update interval.
+        /// Attaches an asset to the API which then should be updated in the currently defined update interval if the API is enabled.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
         void AttachAsset(Asset asset);
@@ -52,23 +52,21 @@ namespace AssetWatch
 
         /// <summary>
         /// Requests the available assets of the API.
-        /// Fires the OnAvailableAssetsReceived event if successful.
         /// </summary>
         void RequestAvailableAssetsAsync();
 
         /// <summary>
         /// Requests a single asset update.
-        /// Useful to get the data immediately when subscribing a new asset.
         /// </summary>
         void RequestSingleAssetUpdateAsync(Asset asset);
 
         /// <summary>
-        /// Enables the API and starts the asset update thread if there are any subscribed assets.
+        /// The client expects regulary updates for the attached assets after this function was called.
         /// </summary>
         void Enable();
 
         /// <summary>
-        /// Disables the API and suspends the asset update thread.
+        /// The client no longer expects updates for the attached assets after this function was called.
         /// </summary>
         void Disable();
     }

@@ -143,6 +143,17 @@ namespace AssetWatch
         }
 
         /// <summary>
+        /// The button_OK_Click closes the settings window.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+        private void button_OK_Click(object sender, RoutedEventArgs e)
+        {
+            this.FireOnAppDataChanged();
+            this.Close();
+        }
+
+        /// <summary>
         /// The listView_loadedApis_SelectionChanged sets the values of the user interface depending on the selected API.
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
@@ -253,20 +264,17 @@ namespace AssetWatch
             this.OnGlobalTileStyleChanged?.Invoke(this, null);
         }
 
+        private void FireOnAppDataChanged()
+        {
+            this.OnAppDataChanged?.Invoke(this, null);
+        }
+
         /// <summary>
         /// Defines the OnGlobalTileStyleChanged event.
         /// </summary>
         public event EventHandler OnGlobalTileStyleChanged;
 
-        /// <summary>
-        /// The button_OK_Click closes the settings window.
-        /// </summary>
-        /// <param name="sender">The sender<see cref="object"/></param>
-        /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_OK_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        public event EventHandler OnAppDataChanged;        
     }
 
     /// <summary>
@@ -291,6 +299,6 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets the GlobalTileStyle
         /// </summary>
-        public TileStyle GlobalTileStyle { get; set; }
+        public TileStyle GlobalTileStyle { get; set; }       
     }
 }
