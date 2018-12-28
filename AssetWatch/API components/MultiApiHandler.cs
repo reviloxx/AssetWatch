@@ -16,7 +16,7 @@ namespace AssetWatch
         /// <summary>
         /// Contains the currently asset tiles which are attached to the api handler.
         /// </summary>
-        private List<AssetTile> attachedAssetTiles;
+        private readonly List<IAssetTile> attachedAssetTiles;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
@@ -24,7 +24,7 @@ namespace AssetWatch
         public MultiApiHandler(AppData appData)
         {
             this.appData = appData;
-            this.attachedAssetTiles = new List<AssetTile>();
+            this.attachedAssetTiles = new List<IAssetTile>();
             this.ReadyApis = new Dictionary<IApi, List<Asset>>();
         }
 
@@ -81,9 +81,9 @@ namespace AssetWatch
         /// <summary>
         /// Attaches an asset tile to the API handler and it's asset to the right API.
         /// </summary>
-        /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to subscribe.</param>
+        /// <param name="assetTile">The assetTile<see cref="WpfAssetTile"/> to subscribe.</param>
         /// <param name="requestUpdate">If true, the API will request an update for this asset instantly.</param>
-        public void AttachAssetTile(AssetTile assetTile, bool requestUpdate)
+        public void AttachAssetTile(IAssetTile assetTile, bool requestUpdate)
         {
             // search the API to subscribe in the dictionary
             IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
@@ -100,8 +100,8 @@ namespace AssetWatch
         /// <summary>
         /// Detaches an asset tile from the API handler.
         /// </summary>
-        /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe</param>
-        public void DetachAssetTile(AssetTile assetTile)
+        /// <param name="assetTile">The assetTile<see cref="WpfAssetTile"/> to unsubscribe</param>
+        public void DetachAssetTile(IAssetTile assetTile)
         {
             this.attachedAssetTiles.Remove(assetTile);
             IApi api = this.LoadedApis.FirstOrDefault(a => a.ApiInfo.ApiName == assetTile.AssetTileData.ApiName);
@@ -200,7 +200,7 @@ namespace AssetWatch
         private void Api_OnSingleAssetUpdated(object sender, Asset updatedAsset)
         {
             IApi api = (IApi)sender;
-            List<AssetTile> toNotify = this.attachedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName &&
+            List<IAssetTile> toNotify = this.attachedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName &&
                                                                                 at.AssetTileData.Asset.AssetId == updatedAsset.AssetId &&
                                                                                 at.AssetTileData.Asset.ConvertCurrency == updatedAsset.ConvertCurrency);
 

@@ -158,7 +158,7 @@ namespace AssetWatch
                     Symbol = selectedAsset.Symbol
                 };
 
-                this.FireOnAssetChanged(new OnAssetTileSettingsChangedEventArgs
+                this.FireOnAssetTileSettingsChanged(new OnAssetTileSettingsChangedEventArgs
                 {
                     NewApiName = this.selectedApi.ApiInfo.ApiName,
                     NewAsset = newAsset
@@ -185,10 +185,10 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The FireOnAssetChanged
+        /// Fires the OnAssetTileSettingsChanged event.
         /// </summary>
         /// <param name="newAsset">The newAsset<see cref="Asset"/></param>
-        private void FireOnAssetChanged(OnAssetTileSettingsChangedEventArgs onAssetTileSettingsChangedEventArgs)
+        private void FireOnAssetTileSettingsChanged(OnAssetTileSettingsChangedEventArgs onAssetTileSettingsChangedEventArgs)
         {
             this.OnAssetTileSettingsChanged?.Invoke(this, onAssetTileSettingsChangedEventArgs);
         }

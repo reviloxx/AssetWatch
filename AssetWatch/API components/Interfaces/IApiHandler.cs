@@ -40,16 +40,16 @@ namespace AssetWatch
         /// Attaches an asset tile to the API handler.
         /// An attached asset tile gets informed about price changes by calling it's update function.
         /// </summary>
-        /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to subscribe.</param>
+        /// <param name="assetTile">The assetTile<see cref="IAssetTile"/> to subscribe.</param>
         /// <param name="requestUpdate">If true, the API will request an update for this asset instantly.</param>
-        void AttachAssetTile(AssetTile assetTile, bool requestUpdate);
+        void AttachAssetTile(IAssetTile assetTile, bool requestUpdate);
 
         /// <summary>
         /// Detaches an asset tile from the API handler.
         /// A detached asset tile will no longer receive price updates.
         /// </summary>
-        /// <param name="assetTile">The assetTile<see cref="AssetTile"/> to unsubscribe.</param>
-        void DetachAssetTile(AssetTile assetTile);
+        /// <param name="assetTile">The assetTile<see cref="WpfAssetTile"/> to unsubscribe.</param>
+        void DetachAssetTile(IAssetTile assetTile);
 
         /// <summary>
         /// Gets a list of APIs which were loaded by an IApiLoader.

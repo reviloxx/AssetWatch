@@ -95,7 +95,6 @@ namespace AssetWatch
         Währungen,
         ETFs,        
         Aktien,
-        Indizes,
         Rohstoffe
     }
 }

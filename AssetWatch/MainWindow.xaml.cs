@@ -11,6 +11,7 @@ namespace AssetWatch
     public partial class MainWindow
     {
         // TODO: FINISH: headers, comments, code clean-up
+        // TODO: ADD english UI localization
 
         /// <summary>
         /// Defines the apiHandler
@@ -45,7 +46,7 @@ namespace AssetWatch
             fileHandler.OnFileHandlerError += this.FileHandler_OnFileHandlerError;
             this.appData = fileHandler.LoadAppData();
             this.apiHandler = new MultiApiHandler(this.appData);
-            this.tileHandler = new MultiTileHandler(this.apiHandler, this.appData);
+            this.tileHandler = new WpfTileHandler(this.apiHandler, this.appData);
             this.mainSettingsWindow = new MainSettingsWindow(this.apiHandler, this.appData.TileHandlerData.GlobalTileStyle);
             this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;
             this.menuItem_HideAssetTiles.IsChecked = this.appData.TileHandlerData.GlobalTileStyle.Hidden;

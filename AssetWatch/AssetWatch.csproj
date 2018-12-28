@@ -137,6 +137,9 @@
     <Compile Include="EventArgs\OnApiReadyEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiLoader.cs" />
     <Compile Include="API components\ApiData.cs" />
+    <Compile Include="Tile components\Interfaces\IAssetTile.cs" />
+    <Compile Include="Tile components\Interfaces\IPortfolioTile.cs" />
+    <Compile Include="Tile components\Interfaces\ITile.cs" />
     <Compile Include="Tile components\TileHelpers.cs" />
     <Compile Include="Windows\APISettingsWindow.xaml.cs">
       <DependentUpon>APISettingsWindow.xaml</DependentUpon>
@@ -150,7 +153,7 @@
     <Compile Include="System IO\AppData.cs" />
     <Compile Include="System IO\IFileHandler.cs" />
     <Compile Include="System IO\StandardFileHandler.cs" />
-    <Compile Include="Tile components\MultiTileHandler.cs" />
+    <Compile Include="Tile components\WpfTileHandler.cs" />
     <Compile Include="Tile components\Interfaces\ITileHandler.cs" />
     <Compile Include="Windows\MainSettingsWindow.xaml.cs">
       <DependentUpon>MainSettingsWindow.xaml</DependentUpon>
@@ -164,11 +167,11 @@
       <DependentUpon>AssetTileSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tile components\PortfolioTileData.cs" />
-    <Compile Include="Tile components\AssetTile.xaml.cs">
-      <DependentUpon>AssetTile.xaml</DependentUpon>
+    <Compile Include="Tile components\WpfAssetTile.xaml.cs">
+      <DependentUpon>WpfAssetTile.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tile components\PortfolioTile.xaml.cs">
-      <DependentUpon>PortfolioTile.xaml</DependentUpon>
+    <Compile Include="Tile components\WpfPortfolioTile.xaml.cs">
+      <DependentUpon>WpfPortfolioTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tile components\TileStyle.cs" />
     <Compile Include="Windows\CalculatorWindow.xaml.cs">
@@ -191,7 +194,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tile components\AssetTile.xaml">
+    <Page Include="Tile components\WpfAssetTile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -216,7 +219,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tile components\PortfolioTile.xaml">
+    <Page Include="Tile components\WpfPortfolioTile.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

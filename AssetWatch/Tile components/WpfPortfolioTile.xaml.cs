@@ -12,7 +12,7 @@ namespace AssetWatch
     /// <summary>
     /// Interaction logic for PortfolioTile.xaml
     /// </summary>
-    public partial class PortfolioTile : Window
+    public partial class WpfPortfolioTile : Window, IPortfolioTile
     {
         /// <summary>
         /// Defines the stickyWindow
@@ -44,11 +44,11 @@ namespace AssetWatch
         private double percentage7d;        
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PortfolioTile"/> class.
+        /// Initializes a new instance of the <see cref="WpfPortfolioTile"/> class.
         /// </summary>
         /// <param name="portfolioTileData">The portfolioTileData<see cref="PortfolioTileData"/></param>
         /// <param name="appData">The appData<see cref="AppData"/></param>
-        public PortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
+        public WpfPortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
             this.InitializeComponent();            
             this.availableAssets = new List<Asset>();
@@ -64,7 +64,7 @@ namespace AssetWatch
         /// The Update
         /// </summary>
         /// <param name="updatedAsset">The updatedAsset<see cref="Asset"/></param>
-        public void Update(AssetTile updatedAsset)
+        public void Update(IAssetTile updatedAsset)
         {
             if (this.PortfolioTileData.AssignedAssetTileIds.Any(id => id == updatedAsset.AssetTileData.AssetTileId))
             {
@@ -83,6 +83,30 @@ namespace AssetWatch
                 this.UpdateTextBlocks(updatedAsset.AssetTileData.Asset.LastUpdated);
                 this.RefreshTileStyle();
             }         
+        }
+
+        public new void Show()
+        {
+            base.Show();
+        }
+
+        public void LockPosition(bool locked)
+        {
+            if (this.stickyWindow != null)
+            {
+                this.stickyWindow.IsEnabled = !locked;
+            }
+            this.positionLocked = locked;
+        }
+
+        public void RemoveAssetTile(int assetTileId)
+        {
+            if (this.PortfolioTileData.AssignedAssetTileIds.Any(id => id == assetTileId))
+            {
+                this.PortfolioTileData.AssignedAssetTileIds.Remove(assetTileId);
+                this.UpdateTextBlocks(null);
+                this.RefreshTileStyle();
+            }
         }
 
         /// <summary>
@@ -164,21 +188,12 @@ namespace AssetWatch
                 Uri uri = new Uri(@"../Icons/remove-icon-" + color + ".png", UriKind.Relative);
                 this.close_Image.Source = new BitmapImage(uri);
             }
-        }
-
-        public void LockPosition(bool locked)
-        {
-            if (this.stickyWindow != null)
-            {
-                this.stickyWindow.IsEnabled = !locked;
-            }
-            this.positionLocked = locked;
-        }
+        }        
 
         /// <summary>
         /// The UpdateTextBlocks
         /// </summary>
-        public void UpdateTextBlocks(DateTime? updateTime)
+        private void UpdateTextBlocks(DateTime? updateTime)
         {
             List<AssetTileData> assignedAssetTileDatas = this.appData.AssetTileDataSet
                 .Where(ass => this.PortfolioTileData.AssignedAssetTileIds.Contains(ass.AssetTileId))
@@ -221,9 +236,7 @@ namespace AssetWatch
                 
                 this.textBlock_ATWin.Text = TileHelpers.GetValueString(winTotal, true) + convertCurrency;
             });
-        }             
-        
-
+        }                    
 
         /// <summary>
         /// The button_Settings_Click
@@ -262,7 +275,7 @@ namespace AssetWatch
 
             if (result == MessageBoxResult.OK)
             {
-                this.FireOnPortfolioTileClosed();
+                this.FireOnTileClosed();
                 this.Close();
             }
         }
@@ -302,21 +315,21 @@ namespace AssetWatch
             this.OnAppDataChanged?.Invoke(this, null);
         }
 
-        private void FireOnPortfolioTileClosed()
+        private void FireOnTileClosed()
         {
-            this.OnPortfolioTileClosed?.Invoke(this, null);
+            this.OnTileClosed?.Invoke(this, null);
         }
 
         /// <summary>
         /// Gets the PortfolioTileData
         /// </summary>
-        public PortfolioTileData PortfolioTileData { get; private set; }
+        public PortfolioTileData PortfolioTileData { get; set; }
 
         /// <summary>
         /// Defines the OnAppDataChanged
         /// </summary>
         public event EventHandler OnAppDataChanged;
 
-        public event EventHandler OnPortfolioTileClosed;
+        public event EventHandler OnTileClosed;
     }
 }

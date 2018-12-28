@@ -12,7 +12,7 @@ namespace AssetWatch
     /// <summary>
     /// Interaction logic for AssetTile.xaml
     /// </summary>
-    public partial class AssetTile : Window
+    public partial class WpfAssetTile : Window, IAssetTile
     {
         /// <summary>
         /// Defines the stickyWindow.
@@ -45,18 +45,18 @@ namespace AssetWatch
         private Dictionary<IApi, List<Asset>> readyApis;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AssetTile"/> class.
+        /// Initializes a new instance of the <see cref="WpfAssetTile"/> class.
         /// </summary>
         /// <param name="assetTileData">The assetTileData<see cref="AssetTileData"/></param>
         /// <param name="appData">The appData<see cref="AppData"/></param>
         /// <param name="readyApis">The readyApis<see cref="Dictionary{IApi, List{Asset}}"/></param>
-        public AssetTile(AssetTileData assetTileData, AppData appData, Dictionary<IApi, List<Asset>> readyApis)
+        public WpfAssetTile(AssetTileData assetTileData, AppData appData, Dictionary<IApi, List<Asset>> readyApis)
         {
             this.positionLocked = false;
             this.readyApis = readyApis;
             this.globalTileStyle = appData.TileHandlerData.GlobalTileStyle;
             this.AssetTileData = assetTileData;
-            this.Loaded += this.walletWindow_Loaded;
+            this.Loaded += this.assetTile_Loaded;
             this.InitializeComponent();
             this.Left = this.AssetTileData.TilePosition.FromLeft;
             this.Top = this.AssetTileData.TilePosition.FromTop;
@@ -86,6 +86,14 @@ namespace AssetWatch
         }
 
         /// <summary>
+        /// Shows the AssetTile.
+        /// </summary>
+        public new void Show()
+        {
+            base.Show();
+        }
+
+        /// <summary>
         /// The RefreshAssetTextblocks
         /// </summary>
         private void RefreshAssetTextblocks()
@@ -110,7 +118,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The RefreshTileStyle
+        /// Refreshes the tile style.
         /// </summary>
         public void RefreshTileStyle()
         {
@@ -147,7 +155,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The LockPosition
+        /// Locks or unlocks the position of the tile.
         /// </summary>
         /// <param name="locked">The locked<see cref="bool"/></param>
         public void LockPosition(bool locked)
@@ -160,7 +168,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The ChangeFontColor
+        /// Changes the font color of the asset tile.
         /// </summary>
         /// <param name="brush">The brush<see cref="Brush"/></param>
         private void ChangeFontColor(Brush brush)
@@ -203,7 +211,7 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The CalculateProfit
+        /// Calculates the profit of the asset tile.
         /// </summary>
         private void CalculateProfit()
         {
@@ -212,11 +220,11 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The walletWindow_Loaded
+        /// Initializes the stickyWindow after the asset tile was loaded.
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void walletWindow_Loaded(object sender, RoutedEventArgs e)
+        private void assetTile_Loaded(object sender, RoutedEventArgs e)
         {
             this.stickyWindow = new StickyWindow(this);
             this.stickyWindow.StickToScreen = true;
@@ -247,8 +255,7 @@ namespace AssetWatch
         {
             AssetTileSettingsWindow assetTileSettingsWindow = new AssetTileSettingsWindow(this.readyApis, this.AssetTileData);
             assetTileSettingsWindow.OnAssetTileSettingsChanged += this.assetTileSettingsWindow_OnAssetTileSettingsChanged;
-            assetTileSettingsWindow.ShowDialog();
-            this.FireOnAppDataChanged();
+            assetTileSettingsWindow.ShowDialog();            
         }
 
         /// <summary>
@@ -288,6 +295,8 @@ namespace AssetWatch
 
                 this.RefreshTileDataTextblocks();
             });
+
+            this.FireOnAppDataChanged();
         }
 
         /// <summary>
@@ -302,7 +311,7 @@ namespace AssetWatch
 
             if (result == MessageBoxResult.OK)
             {
-                this.FireOnAssetTileCLosed();
+                this.FireOnTileCLosed();
                 this.Close();
             }
         }
@@ -365,16 +374,16 @@ namespace AssetWatch
         /// <summary>
         /// The FireOnAssetTileCLosed
         /// </summary>
-        private void FireOnAssetTileCLosed()
+        private void FireOnTileCLosed()
         {
-            this.OnAssetTileClosed?.Invoke(this, null);
+            this.OnTileClosed?.Invoke(this, null);
         }
 
         /// <summary>
         /// Gets the AssetTileData
         /// Gets or sets the AssetTileData
         /// </summary>
-        public AssetTileData AssetTileData { get; private set; }
+        public AssetTileData AssetTileData { get; set; }
 
         /// <summary>
         /// Defines the OnAppDataChanged
@@ -399,6 +408,6 @@ namespace AssetWatch
         /// <summary>
         /// Defines the OnAssetTileClosed
         /// </summary>
-        public event EventHandler OnAssetTileClosed;
+        public event EventHandler OnTileClosed;
     }
 }
