@@ -8,10 +8,10 @@
         Title="Kachel Einstellungen" Height="325" Width="230" ResizeMode="NoResize"
         KeyDown="Window_KeyDown">
     <Grid>
-        <ComboBox x:Name="comboBox_Apis" ItemsSource="{Binding ReadyApis}" DisplayMemberPath="Key.ApiInfo.ApiName" SelectionChanged="comboBox_Apis_SelectionChanged" Margin="10,92,9.8,0" VerticalAlignment="Top" />
+        <ComboBox x:Name="comboBox_Apis" ItemsSource="{Binding ReadyApis}" DisplayMemberPath="Key.ApiInfo.ApiName" SelectionChanged="ComboBox_Apis_SelectionChanged" Margin="10,92,9.8,0" VerticalAlignment="Top" />
         <ComboBox x:Name="comboBox_ConvertCurrencies" IsEditable="True" Margin="95,144,9.8,0" VerticalAlignment="Top" Height="23"/>
         <ComboBox x:Name="comboBox_Assets" DisplayMemberPath="SymbolName" IsEditable="True" Margin="95,199,9.8,0" VerticalAlignment="Top" Height="23"/>
-        <Button x:Name="button_Ok" Content="OK" Click="button_Ok_Click"  Width="75" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom" />
+        <Button x:Name="button_Ok" Content="OK" Click="Button_Ok_Click"  Width="75" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom" />
         <Label Content="API:" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top"/>
         <Label Content="Investition:" HorizontalAlignment="Left" Margin="10,119,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox_InvestedSum" HorizontalAlignment="Left" Height="23" Margin="10,144,0,0" TextAlignment="Right" TextWrapping="Wrap" Padding="2.4" VerticalAlignment="Top" Width="80"/>

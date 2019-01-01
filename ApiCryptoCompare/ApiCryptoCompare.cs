@@ -252,7 +252,7 @@ namespace ApiCryptoCompare
                                         // properties of CoinFullAggregatedData might be null
                                     }
 
-                                    this.FireOnSingleAssetUpdated(ass);
+                                    this.FireOnAssetUpdateReceived(ass);
                                 }
                             }
                             catch (KeyNotFoundException)
@@ -292,12 +292,12 @@ namespace ApiCryptoCompare
         }
 
         /// <summary>
-        /// Fires the OnSingleAssetUpdated event.
+        /// Fires the OnAssetUpdatedReceived event.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        private void FireOnSingleAssetUpdated(Asset asset)
+        private void FireOnAssetUpdateReceived(Asset asset)
         {
-            this.OnSingleAssetUpdated?.Invoke(this, asset);
+            this.OnAssetUpdateReceived?.Invoke(this, asset);
         }
 
         /// <summary>
@@ -362,9 +362,9 @@ namespace ApiCryptoCompare
         public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
 
         /// <summary>
-        /// Defines the OnSingleAssetUpdated event.
+        /// Defines the OnAssetUpdateReceived event.
         /// </summary>
-        public event EventHandler<Asset> OnSingleAssetUpdated;
+        public event EventHandler<Asset> OnAssetUpdateReceived;
 
         /// <summary>
         /// Defines the OnApiError event.

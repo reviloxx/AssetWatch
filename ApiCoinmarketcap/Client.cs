@@ -289,7 +289,7 @@ namespace ApiCoinmarketcap
                                 // properties of response data might be null
                             }
                             
-                            this.FireOnSingleAssetUpdated(ass);
+                            this.FireOnAssetUpdateReceived(ass);
                         });
                     }
 
@@ -363,12 +363,12 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Fires the OnSingleAssetUpdated event.
+        /// Fires the OnAssetUpdateReceived event.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        private void FireOnSingleAssetUpdated(Asset asset)
+        private void FireOnAssetUpdateReceived(Asset asset)
         {
-            OnSingleAssetUpdated?.Invoke(this, asset);
+            OnAssetUpdateReceived?.Invoke(this, asset);
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// Defines the OnSingleAssetUpdated event.
         /// </summary>
-        public event EventHandler<Asset> OnSingleAssetUpdated;
+        public event EventHandler<Asset> OnAssetUpdateReceived;
 
         /// <summary>
         /// Defines the OnApiError event.

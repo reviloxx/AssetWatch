@@ -6,14 +6,14 @@ using System.Xml.Serialization;
 namespace AssetWatch
 {
     /// <summary>
-    /// Defines the <see cref="StandardFileHandler" />
+    /// Defines the <see cref="XmlFileHandler" />
     /// </summary>
-    public class StandardFileHandler : IFileHandler
+    public class XmlFileHandler : IFileHandler
     {
         /// <summary>
         /// Defines the path to load and save the file.
         /// </summary>
-        private static string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AssetWatchData.xml");
+        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AssetWatchData.xml");
 
         /// <summary>
         /// Loads the app data.

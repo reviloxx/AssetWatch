@@ -152,7 +152,7 @@
     </Compile>
     <Compile Include="System IO\AppData.cs" />
     <Compile Include="System IO\IFileHandler.cs" />
-    <Compile Include="System IO\StandardFileHandler.cs" />
+    <Compile Include="System IO\XmlFileHandler.cs" />
     <Compile Include="Tile components\WpfTileHandler.cs" />
     <Compile Include="Tile components\Interfaces\ITileHandler.cs" />
     <Compile Include="Windows\MainSettingsWindow.xaml.cs">

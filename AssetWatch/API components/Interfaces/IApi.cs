@@ -16,7 +16,7 @@ namespace AssetWatch
         /// <summary>
         /// Must be fired after the API has received new data for a single asset.
         /// </summary>
-        event EventHandler<Asset> OnSingleAssetUpdated;
+        event EventHandler<Asset> OnAssetUpdateReceived;
 
         /// <summary>
         /// Should be fired after something went wrong.

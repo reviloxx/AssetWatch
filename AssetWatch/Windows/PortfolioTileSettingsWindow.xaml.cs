@@ -14,12 +14,12 @@ namespace AssetWatch
     public partial class PortfolioTileSettingsWindow : Window
     {
         /// <summary>
-        /// Defines the portfolioTileData.
+        /// Defines the portfolioTileData
         /// </summary>
         private PortfolioTileData portfolioTileData;
 
         /// <summary>
-        /// Defines the appData.
+        /// Defines the appData
         /// </summary>
         private AppData appData;
 
@@ -82,7 +82,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_OK_Click(object sender, RoutedEventArgs e)
+        private void Button_OK_Click(object sender, RoutedEventArgs e)
         {
             if (this.listView_availableAssets.SelectedItems.Count < 1)
             {
@@ -116,11 +116,16 @@ namespace AssetWatch
             this.Close();
         }
 
+        /// <summary>
+        /// The Window_KeyDown
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="KeyEventArgs"/></param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                this.button_OK_Click(null, null);
+                this.Button_OK_Click(null, null);
             }
         }
 
@@ -135,6 +140,6 @@ namespace AssetWatch
         /// <summary>
         /// Defines the OnPortfolioTileDataChanged event.
         /// </summary>
-        public event EventHandler OnPortfolioTileDataChanged;        
+        public event EventHandler OnPortfolioTileDataChanged;
     }
 }

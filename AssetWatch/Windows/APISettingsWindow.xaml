@@ -8,11 +8,11 @@
         Title="API Einstellungen" Height="345.067" Width="275" ResizeMode="NoResize">
     <Grid Background="WhiteSmoke">
         <TextBox x:Name="textbox_API_key" Margin="10,50,9.8,0" TextWrapping="Wrap" Height="23" VerticalAlignment="Top" Padding="2.4" />
-        <Button x:Name="button_SaveExit" Content="OK" Click="button_SaveExit_Click" HorizontalAlignment="Left"  Margin="10,0,0,6.4" VerticalAlignment="Bottom" Width="75"/>
+        <Button x:Name="button_OK" Content="OK" Click="Button_OK_Click" HorizontalAlignment="Left"  Margin="10,0,0,6.4" VerticalAlignment="Bottom" Width="75"/>
         <TextBlock Text="API Key:" HorizontalAlignment="Left" Margin="10,29,0,0" VerticalAlignment="Top"/>
         <TextBlock x:Name="textBlock_getAPIKEy" Visibility="Hidden" HorizontalAlignment="Left" Margin="10,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="250">
-            <Hyperlink x:Name="hyperlink_getAPIKey" RequestNavigate="hyperlink_getAPIKey_RequestNavigate">
-                API Key anfordern
+            <Hyperlink x:Name="hyperlink_getAPIKey" RequestNavigate="Hyperlink_getAPIKey_RequestNavigate">
+                Registrieren...
             </Hyperlink>
         </TextBlock>
         <TextBlock Text="Update Intervall (in Minuten):" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.913,6.462"/>

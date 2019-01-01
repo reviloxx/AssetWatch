@@ -63,11 +63,11 @@
                    Grid.ColumnSpan="4" TextAlignment="Center" VerticalAlignment="Top" FontSize="14"/>
 
         <Button x:Name="button_Settings" BorderThickness="0" 
-                Click="button_Settings_Click" Grid.Row="12" Grid.Column="2"  FontSize="16" Background="#00000000" Margin="5,1.8,4.6,0"  >
+                Click="Button_Settings_Click" Grid.Row="12" Grid.Column="2"  FontSize="16" Background="#00000000" Margin="5,1.8,4.6,0"  >
             <Image x:Name="settings_Image" Source="..\Icons\settings_white.png" Width="20"/>
         </Button>
         <Button x:Name="button_Close" BorderThickness="0" 
-                Click="button_Close_Click" Grid.Row="12" Grid.Column="3"  FontSize="16" Background="#00000000" Margin="5.4,1.8,5,0"  >
+                Click="Button_Close_Click" Grid.Row="12" Grid.Column="3"  FontSize="16" Background="#00000000" Margin="5.4,1.8,5,0"  >
             <Image x:Name="close_Image" Source="..\Icons\remove-icon-white.png" Height="20" Width="20"/>
         </Button>
     </Grid>

@@ -10,9 +10,6 @@ namespace AssetWatch
     /// </summary>
     public partial class MainWindow
     {
-        // TODO: FINISH: headers, comments, code clean-up
-        // TODO: ADD english UI localization
-
         /// <summary>
         /// Defines the apiHandler
         /// </summary>
@@ -21,13 +18,16 @@ namespace AssetWatch
         /// <summary>
         /// Defines the fileHandler
         /// </summary>
-        private static IFileHandler fileHandler = new StandardFileHandler();
+        private static IFileHandler fileHandler = new XmlFileHandler();
 
         /// <summary>
         /// Defines the tileHandler
         /// </summary>
         private ITileHandler tileHandler;
 
+        /// <summary>
+        /// Defines the mainSettingsWindow
+        /// </summary>
         private MainSettingsWindow mainSettingsWindow;
 
         /// <summary>
@@ -51,12 +51,17 @@ namespace AssetWatch
             this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;
             this.menuItem_HideAssetTiles.IsChecked = this.appData.TileHandlerData.GlobalTileStyle.Hidden;
             this.menuItem_LockTilePositions.IsChecked = this.appData.TileHandlerData.PositionsLocked;
-            this.apiHandler.OnAppDataChanged += this.OnAppDataChanged;            
+            this.apiHandler.OnAppDataChanged += this.OnAppDataChanged;
         }
 
+        /// <summary>
+        /// Shows an error message if something went wrong inside the file handler.
+        /// </summary>
+        /// <param name="sender">The sender<see cref="object"/></param>
+        /// <param name="e">The e<see cref="string"/></param>
         private void FileHandler_OnFileHandlerError(object sender, string e)
         {
-            MessageBox.Show(e, "Fehler beim Laden der Daten!", MessageBoxButton.OK, MessageBoxImage.Error);            
+            MessageBox.Show(e, "Fehler beim Laden der Daten!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
@@ -68,8 +73,11 @@ namespace AssetWatch
             this.appData.TileHandlerData.GlobalTileStyle.Hidden = hide;
             fileHandler.SaveAppData(this.appData);
             this.tileHandler.RefreshTileStyles();
-        }                     
+        }
 
+        /// <summary>
+        /// The CheckRunningProcesses
+        /// </summary>
         private void CheckRunningProcesses()
         {
             if (Process.GetProcessesByName("Cryptowatch").Count() > 0)
@@ -90,7 +98,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_AddAssetTile_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_AddAssetTile_Click(object sender, RoutedEventArgs e)
         {
             this.menuItem_LockTilePositions.IsChecked = false;
             this.tileHandler.OpenNewAssetTile();
@@ -101,18 +109,18 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_AddPortfolioTile_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_AddPortfolioTile_Click(object sender, RoutedEventArgs e)
         {
             this.menuItem_LockTilePositions.IsChecked = false;
             this.tileHandler.OpenNewPortfolioTile();
-        }        
+        }
 
         /// <summary>
         /// The menuItem_HideAssetTiles_Checked calls the HideTiles function to hide the tiles.
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_HideAssetTiles_Checked(object sender, RoutedEventArgs e)
+        private void MenuItem_HideAssetTiles_Checked(object sender, RoutedEventArgs e)
         {
             this.HideTiles(true);
         }
@@ -122,17 +130,17 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_HideAssetTiles_Unchecked(object sender, RoutedEventArgs e)
+        private void MenuItem_HideAssetTiles_Unchecked(object sender, RoutedEventArgs e)
         {
             this.HideTiles(false);
-        }        
+        }
 
         /// <summary>
         /// The menuItem_LockTilePositions_Checked calls the tile handler to lock the tile positions.
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_LockTilePositions_Checked(object sender, RoutedEventArgs e)
+        private void MenuItem_LockTilePositions_Checked(object sender, RoutedEventArgs e)
         {
             this.tileHandler.LockTilePositions(true);
         }
@@ -142,7 +150,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_LockTilePositions_Unchecked(object sender, RoutedEventArgs e)
+        private void MenuItem_LockTilePositions_Unchecked(object sender, RoutedEventArgs e)
         {
             this.tileHandler.LockTilePositions(false);
         }
@@ -152,7 +160,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_Settings_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Settings_Click(object sender, RoutedEventArgs e)
         {
             if (this.mainSettingsWindow.IsVisible)
             {
@@ -163,7 +171,7 @@ namespace AssetWatch
             this.mainSettingsWindow.OnAppDataChanged += this.OnAppDataChanged;
             this.mainSettingsWindow.OnGlobalTileStyleChanged += this.MainSettingsWindow_OnGlobalTileStyleChanged;
 
-            mainSettingsWindow.ShowDialog();
+            this.mainSettingsWindow.ShowDialog();
         }
 
         /// <summary>
@@ -171,7 +179,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void menuItem_Exit_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
         }

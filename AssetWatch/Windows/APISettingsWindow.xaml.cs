@@ -45,7 +45,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_SaveExit_Click(object sender, RoutedEventArgs e)
+        private void Button_OK_Click(object sender, RoutedEventArgs e)
         {
             this.api.ApiData.ApiKey = this.textbox_API_key.Text;
             this.api.ApiData.UpdateInterval = (int)(this.UpdateInterval * 60);
@@ -57,7 +57,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="System.Windows.Navigation.RequestNavigateEventArgs"/></param>
-        private void hyperlink_getAPIKey_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        private void Hyperlink_getAPIKey_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;

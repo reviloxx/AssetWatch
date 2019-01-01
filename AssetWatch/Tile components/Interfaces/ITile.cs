@@ -25,7 +25,7 @@ namespace AssetWatch
         void LockPosition(bool locked);
 
         /// <summary>
-        /// Defines the OnAppDataChanged
+        /// Defines the OnAppDataChanged.
         /// </summary>
         event EventHandler OnAppDataChanged;
 

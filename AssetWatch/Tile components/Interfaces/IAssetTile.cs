@@ -10,8 +10,8 @@ namespace AssetWatch
         /// <summary>
         /// Is called by the API handler after it has received an asset update for this asset tile.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> which has received the update.</param>
-        void Update(Asset asset);
+        /// <param name="updatedAsset">The asset<see cref="Asset"/> which has received the update.</param>
+        void Update(Asset updatedAsset);
 
         /// <summary>
         /// Gets or sets the AssetTileData.

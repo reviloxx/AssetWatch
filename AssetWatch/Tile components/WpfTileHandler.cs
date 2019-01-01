@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Windows;
 namespace AssetWatch
 {
     /// <summary>
@@ -44,6 +44,11 @@ namespace AssetWatch
         private readonly Random random;
 
         /// <summary>
+        /// Contains 'true' if there is an open portfolio tile settings window.
+        /// </summary>
+        private bool portfolioTileSettingsWindowActive;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="WpfTileHandler"/> class.
         /// </summary>
         /// <param name="apiHandler">The apiHandler<see cref="IApiHandler"/></param>
@@ -56,6 +61,7 @@ namespace AssetWatch
             this.unattachedAssetTiles = new List<IAssetTile>();
             this.appData = appData;
             this.random = new Random();
+            this.portfolioTileSettingsWindowActive = false;
 
             this.OpenLoadedAssetTiles();
             this.OpenLoadedPortfolioTiles();
@@ -93,6 +99,11 @@ namespace AssetWatch
         /// </summary>
         public void OpenNewAssetTile()
         {
+            if (this.portfolioTileSettingsWindowActive)
+            {
+                return;
+            }
+
             IAssetTile assetTile = new WpfAssetTile(new AssetTileData(this.random), this.appData, this.apiHandler.ReadyApis);
             assetTile.OnTileClosed += this.AssetTile_OnTileClosed;
             assetTile.OnAssetSelected += this.AssetTile_OnAssetSelected;
@@ -112,9 +123,16 @@ namespace AssetWatch
         /// </summary>
         public void OpenNewPortfolioTile()
         {
+            if (this.portfolioTileSettingsWindowActive)
+            {
+                return;
+            }
+
             IPortfolioTile portfolioTile = new WpfPortfolioTile(new PortfolioTileData(), this.appData);
             portfolioTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
             portfolioTile.OnTileClosed += this.PortfolioTile_OnTileClosed;
+            portfolioTile.OnPortfolioSettingsWindowOpened += this.PortfolioTile_OnPortfolioSettingsWindowOpened;
+            portfolioTile.OnPortfolioSettingsWindowClosed += this.PortfolioTile_OnPortfolioSettingsWindowClosed;
             this.activePortfolioTiles.Add(portfolioTile);
             this.appData.PortfolioTileDataSet.Add(portfolioTile.PortfolioTileData);
             this.FireOnAppDataChanged();
@@ -161,6 +179,8 @@ namespace AssetWatch
                 WpfPortfolioTile portfolioTile = new WpfPortfolioTile(portfoliotiledata, this.appData);
                 portfolioTile.OnAppDataChanged += this.Tile_OnAppDataChanged;
                 portfolioTile.OnTileClosed += this.PortfolioTile_OnTileClosed;
+                portfolioTile.OnPortfolioSettingsWindowOpened += this.PortfolioTile_OnPortfolioSettingsWindowOpened;
+                portfolioTile.OnPortfolioSettingsWindowClosed += this.PortfolioTile_OnPortfolioSettingsWindowClosed;
                 this.activePortfolioTiles.Add(portfolioTile);
 
                 if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
@@ -271,6 +291,22 @@ namespace AssetWatch
             this.appData.PortfolioTileDataSet.Remove(closedPortfolioTile.PortfolioTileData);
 
             this.FireOnAppDataChanged();
+        }
+
+        /// <summary>
+        /// Blocks the functions to open new tiles while a portfolio settings window is open.
+        /// </summary>
+        private void PortfolioTile_OnPortfolioSettingsWindowOpened(object sender, EventArgs e)
+        {
+            this.portfolioTileSettingsWindowActive = true;
+        }
+
+        /// <summary>
+        /// Allows to open new tiles while after a portfolio settings window was closed.
+        /// </summary>
+        private void PortfolioTile_OnPortfolioSettingsWindowClosed(object sender, EventArgs e)
+        {
+            this.portfolioTileSettingsWindowActive = false;
         }
 
         /// <summary>

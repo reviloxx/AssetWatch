@@ -11,7 +11,7 @@ namespace AssetWatch
     /// </summary>
     public class MultiApiHandler : IApiHandler
     {
-        private AppData appData;
+        private readonly AppData appData;
 
         /// <summary>
         /// Contains the currently asset tiles which are attached to the api handler.
@@ -65,7 +65,7 @@ namespace AssetWatch
 
                 // subscribe to events
                 api.OnAvailableAssetsReceived += this.Api_OnAvailableAssetsReceived;
-                api.OnSingleAssetUpdated += this.Api_OnSingleAssetUpdated;
+                api.OnAssetUpdateReceived += this.Api_OnAssetUpdateReceived;
                 api.OnApiError += this.Api_OnApiError;
                 api.OnAppDataChanged += this.Api_OnAppDataChanged;
 
@@ -197,7 +197,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/> contains the API which has received an asset update.</param>
         /// <param name="updatedAsset">The updatedAsset<see cref="Asset"/> contains the updated asset.</param>
-        private void Api_OnSingleAssetUpdated(object sender, Asset updatedAsset)
+        private void Api_OnAssetUpdateReceived(object sender, Asset updatedAsset)
         {
             IApi api = (IApi)sender;
             List<IAssetTile> toNotify = this.attachedAssetTiles.FindAll(at => at.AssetTileData.ApiName == api.ApiInfo.ApiName &&

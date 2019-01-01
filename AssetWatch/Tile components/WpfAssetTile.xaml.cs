@@ -56,7 +56,7 @@ namespace AssetWatch
             this.readyApis = readyApis;
             this.globalTileStyle = appData.TileHandlerData.GlobalTileStyle;
             this.AssetTileData = assetTileData;
-            this.Loaded += this.assetTile_Loaded;
+            this.Loaded += this.AssetTile_Loaded;
             this.InitializeComponent();
             this.Left = this.AssetTileData.TilePosition.FromLeft;
             this.Top = this.AssetTileData.TilePosition.FromTop;
@@ -224,7 +224,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void assetTile_Loaded(object sender, RoutedEventArgs e)
+        private void AssetTile_Loaded(object sender, RoutedEventArgs e)
         {
             this.stickyWindow = new StickyWindow(this);
             this.stickyWindow.StickToScreen = true;
@@ -239,7 +239,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_Info_Click(object sender, RoutedEventArgs e)
+        private void Button_Info_Click(object sender, RoutedEventArgs e)
         {
             IApi api = this.readyApis.First(r => r.Key.ApiInfo.ApiName == this.AssetTileData.ApiName).Key;
             InfoWindow infWin = new InfoWindow(api.ApiInfo, this.AssetTileData.Asset);
@@ -251,10 +251,10 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_Settings_Click(object sender, RoutedEventArgs e)
+        private void Button_Settings_Click(object sender, RoutedEventArgs e)
         {
             AssetTileSettingsWindow assetTileSettingsWindow = new AssetTileSettingsWindow(this.readyApis, this.AssetTileData);
-            assetTileSettingsWindow.OnAssetTileSettingsChanged += this.assetTileSettingsWindow_OnAssetTileSettingsChanged;
+            assetTileSettingsWindow.OnAssetTileSettingsChanged += this.AssetTileSettingsWindow_OnAssetTileSettingsChanged;
             assetTileSettingsWindow.ShowDialog();            
         }
 
@@ -263,7 +263,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="Asset"/></param>
-        private void assetTileSettingsWindow_OnAssetTileSettingsChanged(object sender, OnAssetTileSettingsChangedEventArgs e)
+        private void AssetTileSettingsWindow_OnAssetTileSettingsChanged(object sender, OnAssetTileSettingsChangedEventArgs e)
         {
             if (e.NewApiName != this.AssetTileData.ApiName ||
                 e.NewAsset.AssetId != this.AssetTileData.Asset.AssetId ||
@@ -304,7 +304,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_Close_Click(object sender, RoutedEventArgs e)
+        private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Asset löschen?", this.AssetTileData.AssetTileName == null ? string.Empty : this.AssetTileData.AssetTileName,
                 MessageBoxButton.OKCancel, MessageBoxImage.Question);
@@ -321,7 +321,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_Calc_Click(object sender, RoutedEventArgs e)
+        private void Button_Calc_Click(object sender, RoutedEventArgs e)
         {
             CalculatorWindow calc = new CalculatorWindow(this.AssetTileData.Asset);
             calc.ShowDialog();
@@ -332,7 +332,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="MouseButtonEventArgs"/></param>
-        private void window_MouseUp(object sender, MouseButtonEventArgs e)
+        private void Window_MouseUp(object sender, MouseButtonEventArgs e)
         {
             this.AssetTileData.TilePosition.FromLeft = this.Left;
             this.AssetTileData.TilePosition.FromTop = this.Top;

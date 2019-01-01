@@ -24,6 +24,6 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="button_OK" Content="OK" Click="button_OK_Click" Width="75" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom"/>
+        <Button x:Name="button_OK" Content="OK" Click="Button_OK_Click" Width="75" HorizontalAlignment="Left" Margin="10,0,0,6.4" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

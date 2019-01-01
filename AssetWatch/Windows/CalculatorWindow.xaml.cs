@@ -32,7 +32,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="TextChangedEventArgs"/></param>
-        private void textBox_Convert_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBox_Convert_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!this.textBox_Convert.IsKeyboardFocused)
             {
@@ -52,7 +52,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="TextChangedEventArgs"/></param>
-        private void textBox_Asset_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBox_Asset_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (!this.textBox_Asset.IsKeyboardFocused)
             {

@@ -98,11 +98,11 @@ namespace AssetWatch
         }
 
         /// <summary>
-        /// The comboBox_Apis_SelectionChanged
+        /// The ComboBox_Apis_SelectionChanged
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="SelectionChangedEventArgs"/></param>
-        private void comboBox_Apis_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBox_Apis_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.comboBox_Apis.SelectedIndex < 0)
             {
@@ -133,19 +133,14 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_Ok_Click(object sender, RoutedEventArgs e)
+        private void Button_Ok_Click(object sender, RoutedEventArgs e)
         {
-            double investedSum;
-            double holdingsCount;
             Asset selectedAsset = (Asset)this.comboBox_Assets.SelectedValue;
 
-            if (double.TryParse(this.textBox_InvestedSum.Text.Replace('.', ','), out investedSum) &&
-                double.TryParse(this.textBox_HoldingsCount.Text.Replace('.', ','), out holdingsCount) &&
+            if (double.TryParse(this.textBox_InvestedSum.Text.Replace('.', ','), out double investedSum) &&
+                double.TryParse(this.textBox_HoldingsCount.Text.Replace('.', ','), out double holdingsCount) &&
                 selectedAsset != null && this.comboBox_ConvertCurrencies.SelectedValue != null)
             {
-
-                
-
                 this.assetTileData.AssetTileName = this.textBox_TileName.Text;
                 this.assetTileData.InvestedSum = investedSum;
                 this.assetTileData.HoldingsCount = holdingsCount;
@@ -180,7 +175,7 @@ namespace AssetWatch
         {
             if (e.Key == Key.Enter)
             {
-                this.button_Ok_Click(null, null);
+                this.Button_Ok_Click(null, null);
             }
         }
 

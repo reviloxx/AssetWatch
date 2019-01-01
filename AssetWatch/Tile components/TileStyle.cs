@@ -32,7 +32,7 @@ namespace AssetWatch
         /// </summary>
         public string BackgroundColorLoss { get; set; }
 
-        // TODO: ADD FEATURE: adjustable tile sizes
+        // TODO: ADD FEATURE: adjustable tile size
         /// <summary>
         /// Gets or sets the Size of the tile.
         /// </summary>

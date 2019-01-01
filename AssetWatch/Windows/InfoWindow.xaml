@@ -22,7 +22,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="10,177,0,0" TextWrapping="Wrap" Text="24h Change:" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,52,0,0" TextWrapping="Wrap" Text="Rank:" VerticalAlignment="Top"/>
         <TextBlock Margin="10,0,10,10" TextWrapping="Wrap" Height="16" VerticalAlignment="Bottom">
-            <Hyperlink x:Name="hyperlink_Asset" Click="hyperlink_Asset_Click" RequestNavigate="hyperlink_Asset_RequestNavigate"></Hyperlink>
+            <Hyperlink x:Name="hyperlink_Asset" Click="Hyperlink_Asset_Click" RequestNavigate="Hyperlink_Asset_RequestNavigate"></Hyperlink>
         </TextBlock>
     </Grid>
 </Window>

@@ -84,7 +84,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_EnableApi_Click(object sender, RoutedEventArgs e)
+        private void Button_EnableApi_Click(object sender, RoutedEventArgs e)
         {
             int selectedIndex = this.listView_loadedApis.SelectedIndex;
 
@@ -112,7 +112,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_disableApi_Click(object sender, RoutedEventArgs e)
+        private void Button_disableApi_Click(object sender, RoutedEventArgs e)
         {
             int selectedIndex = this.listView_loadedApis.SelectedIndex;
 
@@ -133,7 +133,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_ApiSettings_Click(object sender, RoutedEventArgs e)
+        private void Button_ApiSettings_Click(object sender, RoutedEventArgs e)
         {
             APISettingsWindow asw = new APISettingsWindow((IApi)this.listView_loadedApis.SelectedItem);
             int selectedIndex = this.listView_loadedApis.SelectedIndex;
@@ -147,7 +147,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void button_OK_Click(object sender, RoutedEventArgs e)
+        private void Button_OK_Click(object sender, RoutedEventArgs e)
         {
             this.FireOnAppDataChanged();
             this.Close();
@@ -158,7 +158,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="SelectionChangedEventArgs"/></param>
-        private void listView_loadedApis_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListView_loadedApis_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count < 1)
             {
@@ -179,7 +179,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void checkBox_Autostart_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_Autostart_Checked(object sender, RoutedEventArgs e)
         {
             // The path to the key where Windows looks for startup applications
             RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
@@ -196,7 +196,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void checkBox_Autostart_Unchecked(object sender, RoutedEventArgs e)
+        private void CheckBox_Autostart_Unchecked(object sender, RoutedEventArgs e)
         {
             // The path to the key where Windows looks for startup applications
             RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
@@ -214,7 +214,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedPropertyChangedEventArgs{Color?}"/></param>
-        private void clrPcker_BackgroundProfit_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ClrPcker_BackgroundProfit_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             this.globalTileStyle.BackgroundColorProfit = e.NewValue.ToString();
             this.FireOnGlobalTileStyleChanged();
@@ -226,7 +226,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedPropertyChangedEventArgs{Color?}"/></param>
-        private void clrPcker_BackgroundLoss_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ClrPcker_BackgroundLoss_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             this.globalTileStyle.BackgroundColorLoss = e.NewValue.ToString();
             this.FireOnGlobalTileStyleChanged();
@@ -238,7 +238,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedPropertyChangedEventArgs{Color?}"/></param>
-        private void clrPcker_FontLoss_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ClrPcker_FontLoss_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             this.globalTileStyle.FontColorLoss = e.NewValue.ToString();
             this.FireOnGlobalTileStyleChanged();
@@ -250,7 +250,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedPropertyChangedEventArgs{Color?}"/></param>
-        private void clrPcker_FontProfit_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ClrPcker_FontProfit_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             this.globalTileStyle.FontColorProfit = e.NewValue.ToString();
             this.FireOnGlobalTileStyleChanged();

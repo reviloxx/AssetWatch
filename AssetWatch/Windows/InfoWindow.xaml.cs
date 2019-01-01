@@ -49,7 +49,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="System.Windows.Navigation.RequestNavigateEventArgs"/></param>
-        private void hyperlink_Asset_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        private void Hyperlink_Asset_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
@@ -60,7 +60,7 @@ namespace AssetWatch
         /// </summary>
         /// <param name="sender">The sender<see cref="object"/></param>
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
-        private void hyperlink_Asset_Click(object sender, RoutedEventArgs e)
+        private void Hyperlink_Asset_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

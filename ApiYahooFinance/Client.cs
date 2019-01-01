@@ -211,7 +211,7 @@ namespace ApiYahooFinance
                                 throw new Exception("Die API antwortete mit einem ungültigen Tradingpaar: " + assetResponse.Currency + "/" + assetResponse.Symbol);
                             }
 
-                            this.FireOnSingleAssetUpdated(updatedAsset);
+                            this.FireOnAssetUpdateReceived(updatedAsset);
 
                         }
                         catch (KeyNotFoundException)
@@ -250,12 +250,12 @@ namespace ApiYahooFinance
         }
 
         /// <summary>
-        /// Fires the OnSingleAssetUpdated event.
+        /// Fires the OnAssetUpdateReceived event.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        private void FireOnSingleAssetUpdated(Asset asset)
+        private void FireOnAssetUpdateReceived(Asset asset)
         {
-            this.OnSingleAssetUpdated?.Invoke(this, asset);
+            this.OnAssetUpdateReceived?.Invoke(this, asset);
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace ApiYahooFinance
         /// <summary>
         /// Defines the OnSingleAssetUpdated
         /// </summary>
-        public event EventHandler<Asset> OnSingleAssetUpdated;
+        public event EventHandler<Asset> OnAssetUpdateReceived;
 
         /// <summary>
         /// Defines the OnApiError

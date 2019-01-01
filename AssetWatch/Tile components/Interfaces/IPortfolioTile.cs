@@ -10,8 +10,8 @@ namespace AssetWatch
         /// <summary>
         /// Updates the portfolio tile after any of it's asset tiles has received an update.
         /// </summary>
-        /// <param name="updatedAsset">The updatedAsset<see cref="IAssetTile"/></param>
-        void Update(IAssetTile updatedAsset);
+        /// <param name="updatedAssetTile">The updatedAsset<see cref="IAssetTile"/></param>
+        void Update(IAssetTile updatedAssetTile);
 
         /// <summary>
         /// Removes an asset tile from the portfolio tile.
@@ -20,9 +20,19 @@ namespace AssetWatch
         void RemoveAssetTile(int assetTileId);
 
         /// <summary>
-        /// Gets or sets the PortfolioTileData
-        /// Gets the PortfolioTileData
+        /// Gets or sets the PortfolioTileData.
         /// </summary>
         PortfolioTileData PortfolioTileData { get; set; }
+
+        /// <summary>
+        /// Is fired after a portfolio settings window was opened.
+        /// The client then does not allow the user to open a new tile because this would cause a crash.
+        /// </summary>
+        event EventHandler OnPortfolioSettingsWindowOpened;
+
+        /// <summary>
+        /// Is fired after a portfolio settings window was closed.
+        /// </summary>
+        event EventHandler OnPortfolioSettingsWindowClosed;
     }
 }
