@@ -39,7 +39,9 @@ namespace AssetWatch
             {
                 this.hyperlink_Asset.NavigateUri = new Uri(apiInfo.AssetUrl
                     .Replace("#NAME#", asset.Name)
-                    .Replace("#SYMBOL#", asset.Symbol));
+                    .Replace("#SYMBOL#", asset.Symbol)
+                    .Replace("#ID#", asset.AssetId));
+                
                 this.hyperlink_Asset.Inlines.Add(apiInfo.AssetUrlName);
             }            
         }

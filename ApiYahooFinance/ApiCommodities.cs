@@ -61,14 +61,14 @@ namespace ApiYahooFinance
                     ApiClientVersion = "1.0",
                     Market = Market.Rohstoffe,
                     AssetUrl = "https://finance.yahoo.com/quote/#SYMBOL#",
-                    AssetUrlName = "Auf finance.yahoo.com anzeigen...",
+                    AssetUrlName = "auf finance.yahoo.com anzeigen...",
                     GetApiKeyUrl = "",
                     StdUpdateInterval = 1800,
                     MaxUpdateInterval = 7200,
                     MinUpdateInterval = 600,
                     UpdateIntervalStepSize = 900,
                     SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
-                    UpdateIntervalInfoText = "Diese API erlaubt Update Intervalle ab 15 Minuten."
+                    UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall ab 15 Minuten."
                 };
             }
         }

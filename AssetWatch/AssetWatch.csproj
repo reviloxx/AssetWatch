@@ -53,6 +53,9 @@
     <ApplicationIcon>aw.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CoinGecko, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoinGeckoAsyncApi.1.0.1\lib\netstandard2.0\CoinGecko.dll</HintPath>
+    </Reference>
     <Reference Include="CoinMarketCapPro, Version=1.0.3.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CoinMarketCapPro.1.0.3.4\lib\netstandard2.0\CoinMarketCapPro.dll</HintPath>
       <Private>True</Private>

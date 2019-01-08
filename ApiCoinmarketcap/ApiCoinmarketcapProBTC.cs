@@ -39,14 +39,14 @@ namespace ApiCoinmarketcap
                     ApiClientVersion = "1.0",
                     Market = Market.Kryptowährungen,
                     AssetUrl = "https://coinmarketcap.com/currencies/#NAME#/",
-                    AssetUrlName = "Auf Coinmarketcap.com anzeigen...",
+                    AssetUrlName = "auf coinmarketcap.com anzeigen...",
                     GetApiKeyUrl = "https://pro.coinmarketcap.com/signup",
                     StdUpdateInterval = 180,
                     MaxUpdateInterval = 1800,
                     MinUpdateInterval = 60,
                     UpdateIntervalStepSize = 30,
                     SupportedConvertCurrencies = new List<string>() { "BTC" },
-                    UpdateIntervalInfoText = "Diese API erlaubt Update Intervalle ab 1 Minute." 
+                    UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall ab 1 Minute." 
                 };
             }
         }

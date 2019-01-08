@@ -1,18 +1,17 @@
 ﻿using AssetWatch;
-using CryptoCompare;
+using CoinGecko.Clients;
+using CoinGecko.Entities.Response.Coins;
+using CoinGecko.Entities.Response.Simple;
+using CoinGecko.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 
-namespace ApiCryptoCompare
+namespace ApiCoinGecko
 {
-    /// <summary>
-    /// Defines the <see cref="ApiCryptoCompare" />
-    /// </summary>
-    public class ApiCryptoCompare : IApi
+    public class ApiCoinGecko : IApi
     {
         /// <summary>
         /// Defines the delay to try again in case there is no connection.
@@ -20,9 +19,9 @@ namespace ApiCryptoCompare
         private static readonly int retryDelay = 1000;
 
         /// <summary>
-        /// Defines the CryptoCompare client.
+        /// Defines the CoinGecko client.
         /// </summary>
-        private CryptoCompareClient client;
+        private ICoinGeckoClient client;
 
         /// <summary>
         /// Defines the list of attached assets.
@@ -42,7 +41,7 @@ namespace ApiCryptoCompare
         /// <summary>
         /// Defines the assetRequestDelegate.
         /// </summary>
-        private readonly AssetRequestDelegate assetRequestDelegate;        
+        private readonly AssetRequestDelegate assetRequestDelegate;
 
         /// <summary>
         /// Defines the assetUpdateWorker thread.
@@ -50,9 +49,9 @@ namespace ApiCryptoCompare
         private Thread assetUpdateWorker;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ApiCryptoCompare"/> class.
+        /// Initializes a new instance of the <see cref="ApiCoinGecko"/> class.
         /// </summary>
-        public ApiCryptoCompare()
+        public ApiCoinGecko()
         {
             this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
             this.assetRequestDelegate = new AssetRequestDelegate(this.GetAvailableAssets);
@@ -65,7 +64,7 @@ namespace ApiCryptoCompare
         /// </summary>
         public void Enable()
         {
-            this.client = new CryptoCompareClient();
+            this.client = new CoinGeckoClient();
 
             if (this.assetUpdateWorker.IsAlive)
             {
@@ -86,7 +85,7 @@ namespace ApiCryptoCompare
                 this.assetUpdateWorker.Abort();
             }
             catch (Exception) { }
-        }        
+        }
 
         /// <summary>
         /// Requests the available assets of this API.
@@ -107,8 +106,10 @@ namespace ApiCryptoCompare
                 return;
             }
 
-            List<Asset> assets = new List<Asset>();
-            assets.Add(asset);
+            List<Asset> assets = new List<Asset>
+            {
+                asset
+            };
             this.GetAssetUpdates(assets);
         }
 
@@ -153,18 +154,18 @@ namespace ApiCryptoCompare
 
                 try
                 {
-                    CoinListResponse response = await this.client.Coins.ListAsync();
+                    IReadOnlyList<CoinList> response = await this.client.CoinsClient.GetCoinList();
                     this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
 
-                    foreach (KeyValuePair<string, CoinInfo> coin in response.Coins)
+                    foreach (CoinList coin in response)
                     {
                         availableAssets.Add(
                             new Asset
                             {
-                                AssetId = coin.Value.Id,
-                                Name = coin.Value.Name,
-                                Symbol = coin.Value.Symbol
+                                AssetId = coin.Id,
+                                Name = coin.Name,
+                                Symbol = coin.Symbol
                             });
                     }
 
@@ -205,8 +206,8 @@ namespace ApiCryptoCompare
                 return;
             }
 
-            List<string> fromSymbols = new List<string>();
-            assets.ForEach(ass => fromSymbols.Add(ass.Symbol));
+            List<string> fromIds = new List<string>();
+            assets.ForEach(ass => fromIds.Add(ass.AssetId));
 
             bool callFailed = false;
             int timeout = this.ApiData.UpdateInterval * 1000;
@@ -217,49 +218,29 @@ namespace ApiCryptoCompare
 
                 try
                 {
-                    PriceMultiFullResponse response = await this.client.Prices.MultipleSymbolFullDataAsync(fromSymbols, this.attachedConvertCurrencies);
+                    Price response = await this.client.SimpleClient.GetSimplePrice(fromIds.ToArray(), this.attachedConvertCurrencies.ToArray());
                     this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
+                    
 
-                    var res = response.Raw;
-
-                    if (res == null)
-                    {
-                        return;
-                    }
 
                     assets.ForEach(ass =>
                     {
-                        this.attachedConvertCurrencies.ForEach(con =>
+                        try
                         {
-                            try
+                            var assres = response[ass.AssetId];
+
+                            if (assres.ContainsKey(ass.ConvertCurrency.ToLower()))
                             {
-                                CoinFullAggregatedData data = res[ass.Symbol][con];
-
-                                if (ass.ConvertCurrency == con)
-                                {
-                                    ass.LastUpdated = DateTime.Now;
-                                    ass.Price = (double)data.Price;
-                                    ass.PercentChange24h = (double)data.ChangePCT24Hour;
-
-                                    try
-                                    {                                        
-                                        ass.MarketCap = (double)data.MarketCap;
-                                        ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
-                                    }
-                                    catch (InvalidOperationException)
-                                    {
-                                        // properties of CoinFullAggregatedData might be null
-                                    }
-
-                                    this.FireOnAssetUpdateReceived(ass);
-                                }
-                            }
-                            catch (KeyNotFoundException)
-                            {
-                                // ignore
+                                ass.LastUpdated = DateTime.Now;
+                                ass.Price = (double)assres[ass.ConvertCurrency.ToLower()];
+                                this.FireOnAssetUpdateReceived(ass);
                             }                            
-                        });
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            // ignore
+                        }
                     });
                 }
                 catch (HttpRequestException)
@@ -281,7 +262,7 @@ namespace ApiCryptoCompare
                 }
             }
             while (callFailed && timeout >= 0);
-        }        
+        }
 
         /// <summary>
         /// Fires the OnAvailableAssetsReceived event.
@@ -333,26 +314,26 @@ namespace ApiCryptoCompare
                 {
                     ApiInfoText = "\n" +
                     " - Min. Update Intervall:\n" +
-                    "     15 Sekunden\n\n" +
+                    "     1 Minute\n\n" +
                     " - Prozentuale Preisänderung:\n" +
-                    "     24h\n\n" +
+                    "     nicht unterstützt\n\n" +
                     " - API Key nötig:\n" +
                     "     nein\n\n" +
                     " - Basiswährungen:\n" +
                     "     USD, EUR, BTC",
                     ApiKeyRequired = false,
-                    ApiName = "CryptoCompare",
+                    ApiName = "CoinGecko",
                     ApiClientVersion = "1.0",
                     Market = Market.Kryptowährungen,
-                    AssetUrl = "https://www.cryptocompare.com/coins/#SYMBOL#/overview",
-                    AssetUrlName = "auf cryptocompare.com anzeigen...",
+                    AssetUrl = "https://www.coingecko.com/en/coins/#ID#",
+                    AssetUrlName = "auf coingecko.com anzeigen...",
                     GetApiKeyUrl = "",
-                    StdUpdateInterval = 15,
-                    MaxUpdateInterval = 300,
-                    MinUpdateInterval = 15,
-                    UpdateIntervalStepSize = 15,
+                    StdUpdateInterval = 180,
+                    MaxUpdateInterval = 1800,
+                    MinUpdateInterval = 60,
+                    UpdateIntervalStepSize = 30,
                     SupportedConvertCurrencies = new List<string>() { "EUR", "USD", "BTC" },
-                    UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall ab 15 Sekunden."
+                    UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall ab 1 Minute."
                 };
             }
         }
