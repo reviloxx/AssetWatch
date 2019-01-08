@@ -331,14 +331,15 @@ namespace ApiCryptoCompare
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu Kryptowährungen.\n\n" +
-                    "+ unterstützt kurze Update\n" +
-                    "  Intervalle (ab 15 Sekunden)\n\n" +
-                    "+ unterstützt prozentuale\n" +
-                    "  24h Preisänderung\n\n" +
-                    "- unterstützt keine prozentuale\n" +
-                    "  7-Tage Preisänderung\n\n" +
-                    "Basiswährungen: USD, EUR, BTC",
+                    ApiInfoText = "\n" +
+                    " - Min. Update Intervall:\n" +
+                    "     15 Sekunden\n\n" +
+                    " - Prozentuale Preisänderung:\n" +
+                    "     24h\n\n" +
+                    " - API Key nötig:\n" +
+                    "     nein\n\n" +
+                    " - Basiswährungen:\n" +
+                    "     USD, EUR, BTC",
                     ApiKeyRequired = false,
                     ApiName = "CryptoCompare",
                     ApiClientVersion = "1.0",

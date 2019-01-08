@@ -29,7 +29,7 @@
                     </ListView>
                     <Button x:Name="button_ApiSettings" Click="Button_ApiSettings_Click" IsEnabled="False" 
                 Margin="0,0,9.4,22.2" VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Right" Width="27">
-                        <Image Source="..\Icons\settings_black.png" Width="14"/>
+                        <Image x:Name="image_button_ApiSettings" Source="..\Icons\settings_gray.png" Width="14"/>
                     </Button>
                     <Button x:Name="button_EnableApi" Content="Aktivieren" FontWeight="DemiBold" Click="Button_EnableApi_Click" IsEnabled="False" 
                 Margin="0,0,126.4,22.2" Background="#9ff799" HorizontalAlignment="Right" Width="80" Height="20" VerticalAlignment="Bottom"/>

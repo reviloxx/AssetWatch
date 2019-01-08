@@ -20,7 +20,7 @@
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=AssetTileName}" Width="125"/>
                     <GridViewColumn Header="Asset" DisplayMemberBinding="{Binding Path=Asset.Symbol}" Width="70"/>
                     <GridViewColumn Header="Währung" DisplayMemberBinding="{Binding Path=Asset.ConvertCurrency}" Width="70"/>
-                    <GridViewColumn Header="Anzahl" DisplayMemberBinding="{Binding Path=HoldingsCount}" Width="66"/>
+                    <GridViewColumn Header="Anteile" DisplayMemberBinding="{Binding Path=HoldingsCount}" Width="66"/>
                 </GridView>
             </ListView.View>
         </ListView>

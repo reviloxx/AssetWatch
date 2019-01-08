@@ -330,13 +330,15 @@ namespace ApiYahooFinance
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu Aktien.\n\n" +
-                    "+ Update Intervall ab 15 Minuten\n\n" +
-                    "- unterstützt keine prozentuale\n" +
-                    "  24h Preisentwicklung\n\n" +
-                    "- unterstützt keine prozentuale\n" +
-                    "  7-Tage Preisentwicklung\n\n" +
-                    "Basiswährungen: USD, EUR",
+                    ApiInfoText = "\n" +
+                    " - Min. Update Intervall:\n" +
+                    "     15 Minuten\n\n" +
+                    " - Prozentuale Preisänderung:\n" +
+                    "     nicht unterstützt\n\n" +
+                    " - API Key nötig:\n" +
+                    "     nein\n\n" +
+                    " - Basiswährungen:\n" +
+                    "     USD, EUR",
                     ApiKeyRequired = false,
                     ApiName = "Yahoo! Finance - Top Stocks",
                     ApiClientVersion = "1.0",

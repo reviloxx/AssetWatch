@@ -12,8 +12,8 @@
         <tb:TaskbarIcon IconSource="Icons/aw.ico" ToolTipText="AssetWatch" MenuActivation="RightClick" TrayLeftMouseDown="MenuItem_Settings_Click">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
-                    <MenuItem x:Name="menuItem_AddAssetTile" Header="neue Asset Kachel" Click="MenuItem_AddAssetTile_Click" />
-                    <MenuItem x:Name="menuItem_AddPortfolioTile" Header="neue Portfolio Kachel" Click="MenuItem_AddPortfolioTile_Click" />
+                    <MenuItem x:Name="menuItem_AddAssetTile" Header="Neue Asset Kachel" Click="MenuItem_AddAssetTile_Click" />
+                    <MenuItem x:Name="menuItem_AddPortfolioTile" Header="Neue Portfolio Kachel" Click="MenuItem_AddPortfolioTile_Click" />
                     <MenuItem x:Name="menuItem_HideAssetTiles" Header="Kacheln ausblenden" IsCheckable="True" 
                               Checked="MenuItem_HideAssetTiles_Checked" Unchecked="MenuItem_HideAssetTiles_Unchecked" />
                     <MenuItem x:Name="menuItem_LockTilePositions" IsCheckable="True" Checked="MenuItem_LockTilePositions_Checked" 

@@ -47,13 +47,15 @@ namespace ApiYahooFinance
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu Rohstoffen.\n\n" +
-                    "+ Update Intervall ab 15 Minuten\n\n" +
-                    "- unterstützt keine prozentuale\n" +
-                    "  24h Preisentwicklung\n\n" +
-                    "- unterstützt keine prozentuale\n" +
-                    "  7-Tage Preisentwicklung\n\n" +
-                    "Basiswährungen: USD, EUR",
+                    ApiInfoText = "\n" +
+                    " - Min. Update Intervall:\n" +
+                    "     15 Minuten\n\n" +
+                    " - Prozentuale Preisänderung:\n" +
+                    "     nicht unterstützt\n\n" +
+                    " - API Key nötig:\n" +
+                    "     nein\n\n" +
+                    " - Basiswährungen:\n" +
+                    "     USD, EUR",
                     ApiKeyRequired = false,
                     ApiName = "Yahoo! Finance - Commodities",
                     ApiClientVersion = "1.0",
@@ -63,7 +65,7 @@ namespace ApiYahooFinance
                     GetApiKeyUrl = "",
                     StdUpdateInterval = 1800,
                     MaxUpdateInterval = 7200,
-                    MinUpdateInterval = 900,
+                    MinUpdateInterval = 600,
                     UpdateIntervalStepSize = 900,
                     SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
                     UpdateIntervalInfoText = "Diese API erlaubt Update Intervalle ab 15 Minuten."

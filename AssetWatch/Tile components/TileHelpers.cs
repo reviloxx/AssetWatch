@@ -19,18 +19,22 @@ namespace AssetWatch
             string sign = value > 0 ? "+" : string.Empty;
             string valueString;
 
-            if (Math.Abs(value) < 10)
-            {
-                valueString = string.Format("{0:F4}", value);
-            }
-            else if (Math.Abs(value) < 1)
-            {
-                valueString = string.Format("{0:F5}", value);
-            }
-            else if (Math.Abs(value) < 0.1)
+            if (Math.Abs(value) < 0.01)
             {
                 valueString = string.Format("{0:F6}", value);
             }
+            else if (Math.Abs(value) < 0.1)
+            {
+                valueString = string.Format("{0:F5}", value);
+            }
+            else if (Math.Abs(value) < 1)
+            {
+                valueString = string.Format("{0:F4}", value);
+            }
+            else if (Math.Abs(value) < 10)
+            {
+                valueString = string.Format("{0:F3}", value);
+            }            
             else
             {
                 valueString = string.Format("{0:N}", value);

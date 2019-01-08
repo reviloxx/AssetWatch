@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Xceed.Wpf.Toolkit;
 
 namespace AssetWatch
@@ -170,6 +171,7 @@ namespace AssetWatch
 
             this.textBlock_API_Info.Text = selectedApi.ApiInfo.ApiInfoText;
             this.button_ApiSettings.IsEnabled = true;
+            this.image_button_ApiSettings.Source = new BitmapImage(new Uri(@"../Icons/settings_black.png", UriKind.Relative));
             this.button_disableApi.IsEnabled = selectedApi.ApiData.IsEnabled;
             this.button_EnableApi.IsEnabled = !selectedApi.ApiData.IsEnabled;
         }

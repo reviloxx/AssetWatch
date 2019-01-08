@@ -56,6 +56,7 @@ namespace AssetWatch
         /// <param name="appData">The appData<see cref="AppData"/></param>
         public WpfPortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
+            // TODO: ADD FEATURE: checkboxes to hide/unhide percent change areas + tile scaling
             this.InitializeComponent();
             this.availableAssets = new List<Asset>();
             this.PortfolioTileData = portfolioTileData;

@@ -23,13 +23,15 @@ namespace ApiCoinmarketcap
             {
                 return new ApiInfo
                 {
-                    ApiInfoText = "Liefert aktuelle Daten zu Kryptowährungen.\n\n" +
-                    "+ unterstützt kurze Update\n" +
-                    "  Intervalle (ab 1 Minute)\n\n" +
-                    "+ unterstützt prozentuale 24h\n" +
-                    "  und 7-Tage Preisänderung\n\n" +
-                    "- Registrierung und API Key nötig\n\n" +
-                    "Basiswährung: EUR",
+                    ApiInfoText = "\n" +
+                    " - Min. Update Intervall:\n" +
+                    "     1 Minute\n\n" +
+                    " - Prozentuale Preisänderung:\n" +
+                    "     24h, 7d\n\n" +
+                    " - API Key nötig:\n" +
+                    "     ja\n\n" +
+                    " - Basiswährungen:\n" +
+                    "     EUR",
                     ApiKeyRequired = true,
                     ApiName = "Coinmarketcap Pro - EUR",
                     ApiClientVersion = "1.0",

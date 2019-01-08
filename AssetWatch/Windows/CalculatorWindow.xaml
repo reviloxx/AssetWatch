@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssetWatch"
         mc:Ignorable="d"
-        Title="Umrechner" Height="136.534" Width="300" ResizeMode="NoResize">
+        Title="Rechner" Height="136.534" Width="300" ResizeMode="NoResize">
     <Grid Background="#FFE5E5E5">
         <TextBox x:Name="textBox_Asset" TextChanged="TextBox_Asset_TextChanged" Margin="10,51,164.6,26.2" TextWrapping="Wrap" MaxLines="1" MaxLength="15" TextAlignment="Right"/>
         <Label x:Name="label_Asset" Margin="10,26,165.6,0" FontWeight="Bold" Height="25" VerticalAlignment="Top"/>
