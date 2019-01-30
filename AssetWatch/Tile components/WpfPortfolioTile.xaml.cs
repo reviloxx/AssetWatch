@@ -56,7 +56,6 @@ namespace AssetWatch
         /// <param name="appData">The appData<see cref="AppData"/></param>
         public WpfPortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
-            // TODO: ADD FEATURE: checkboxes to hide/unhide percent change areas + tile scaling
             this.InitializeComponent();
             this.availableAssets = new List<Asset>();
             this.PortfolioTileData = portfolioTileData;
@@ -134,9 +133,6 @@ namespace AssetWatch
         {
             this.Dispatcher.Invoke(() =>
             {
-                Brush posBackgroundColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorProfit);
-                Brush negBackgroundColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorLoss);
-
                 if (this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
                     this.Visibility = Visibility.Hidden;
@@ -145,28 +141,31 @@ namespace AssetWatch
 
                 this.Visibility = Visibility.Visible;
 
-                if (this.PortfolioTileData.HasCustomTileStyle)
-                {
-                    // TODO: ADD FEATURE: custom tile styles
-                }
-                else
-                {
-                    this.rectangle_Head.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
-                    this.rectangle_between.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
-                    this.rectangle_foot.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
-
-                    this.rectangle_24h.Fill = this.percentage24h >= 0 ? posBackgroundColor : negBackgroundColor;
-                    this.rectangle_7d.Fill = this.percentage7d >= 0 ? posBackgroundColor : negBackgroundColor;
-
-                    this.ChangeFontColor();
-                }
+                this.SetBackgroundColor();
+                this.SetFontColor();
             });
         }
 
         /// <summary>
-        /// The ChangeFontColor
+        /// Sets the background color.
         /// </summary>
-        private void ChangeFontColor()
+        private void SetBackgroundColor()
+        {
+            Brush posBackgroundColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorProfit);
+            Brush negBackgroundColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.BackgroundColorLoss);
+            
+            this.rectangle_Head.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
+            this.rectangle_between.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
+            this.rectangle_foot.Fill = this.winTotal >= 0 ? posBackgroundColor : negBackgroundColor;
+
+            this.rectangle_24h.Fill = this.percentage24h >= 0 ? posBackgroundColor : negBackgroundColor;
+            this.rectangle_7d.Fill = this.percentage7d >= 0 ? posBackgroundColor : negBackgroundColor;
+        }
+
+        /// <summary>
+        /// Sets the font color.
+        /// </summary>
+        private void SetFontColor()
         {
             Brush posFontColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorProfit);
             Brush negFontColor = (Brush)new BrushConverter().ConvertFromString(this.appData.TileHandlerData.GlobalTileStyle.FontColorLoss);
@@ -205,7 +204,7 @@ namespace AssetWatch
             {
                 Uri uri = new Uri(@"../Icons/remove-icon-" + color + ".png", UriKind.Relative);
                 this.close_Image.Source = new BitmapImage(uri);
-            }
+            }            
         }
 
         /// <summary>
@@ -247,6 +246,8 @@ namespace AssetWatch
                 this.textBlock_Invest.Text = TileHelpers.GetValueString(investTotal, false) + convertCurrency;
                 this.textBlock_Worth.Text = TileHelpers.GetValueString(worthTotal, false) + convertCurrency;
 
+                this.AdjustPercentageAreas(percentage24hValid, percentage7dValid);
+
                 this.textBlock_24hPercentage.Text = percentage24hValid ? TileHelpers.GetValueString(Math.Round(this.percentage24h, 2), true) + " %" : "-";
                 this.textBlock_24hWin.Text = percentage24hValid ? TileHelpers.GetValueString(win24h, true) + convertCurrency : "-";
 
@@ -255,6 +256,47 @@ namespace AssetWatch
 
                 this.textBlock_ATWin.Text = TileHelpers.GetValueString(this.winTotal, true) + convertCurrency;
             });
+        }
+
+        private void AdjustPercentageAreas(bool percentage24hValid, bool percentage7dValid)
+        {
+            double sizeChange = 0;
+
+            if (!percentage24hValid && Row24h1.Height.Value != 0)
+            {
+                sizeChange = Row24h1.Height.Value + Row24h2.Height.Value + Row24h3.Height.Value;
+                Row24h1.Height = new GridLength(0);
+                Row24h2.Height = new GridLength(0);
+                Row24h3.Height = new GridLength(0);
+                this.Height -= sizeChange;
+            }
+
+            if (percentage24hValid && Row24h1.Height.Value == 0)
+            {
+                Row24h1.Height = new GridLength(33.6);
+                Row24h2.Height = new GridLength(33.6);
+                Row24h3.Height = new GridLength(32.8);
+                sizeChange = Row24h1.Height.Value + Row24h2.Height.Value + Row24h3.Height.Value;
+                this.Height += sizeChange;
+            }
+
+            if (!percentage7dValid && Row7d1.Height.Value != 0)
+            {
+                sizeChange = Row7d1.Height.Value + Row7d2.Height.Value + Row7d3.Height.Value;
+                Row7d1.Height = new GridLength(0);
+                Row7d2.Height = new GridLength(0);
+                Row7d3.Height = new GridLength(0);
+                this.Height -= sizeChange;
+            }
+
+            if (percentage7dValid && Row7d1.Height.Value == 0)
+            {
+                Row7d1.Height = new GridLength(33.6);
+                Row7d2.Height = new GridLength(33.6);
+                Row7d3.Height = new GridLength(32.8);
+                sizeChange = Row7d1.Height.Value + Row7d2.Height.Value + Row7d3.Height.Value;
+                this.Height += sizeChange;
+            }
         }
 
         /// <summary>

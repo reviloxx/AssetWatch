@@ -131,12 +131,20 @@ namespace ApiCoinGecko
         }
 
         /// <summary>
-        /// Detaches an asset from the updater.
-        /// Not implemented because at this API the number of calls is not dependent on the number of attached assets.
+        /// Detaches an asset/convert currency from the updater.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
-        public void DetachAsset(Asset asset)
+        /// <param name="asset">The <see cref="DetachAssetArgs"/></param>
+        public void DetachAsset(DetachAssetArgs args)
         {
+            if (args.DetachAsset)
+            {
+                this.attachedAssets.RemoveAll(a => a.AssetId == args.Asset.AssetId);
+            }
+
+            if (args.DetachConvertCurrency)
+            {
+                this.attachedConvertCurrencies.Remove(args.Asset.ConvertCurrency);
+            }
         }
 
         /// <summary>
@@ -234,6 +242,7 @@ namespace ApiCoinGecko
                             {
                                 ass.LastUpdated = DateTime.Now;
                                 ass.Price = (double)assres[ass.ConvertCurrency.ToLower()];
+                                //ass.PercentChange24h = (double)assres[ass.ConvertCurrency.ToLower() + "_24h_change"];
                                 this.FireOnAssetUpdateReceived(ass);
                             }                            
                         }
@@ -320,7 +329,7 @@ namespace ApiCoinGecko
                     " - API Key nötig:\n" +
                     "     nein\n\n" +
                     " - Basiswährungen:\n" +
-                    "     USD, EUR, BTC",
+                    "     USD, EUR, BTC, ETH, EOS",
                     ApiKeyRequired = false,
                     ApiName = "CoinGecko",
                     ApiClientVersion = "1.0",
@@ -332,7 +341,7 @@ namespace ApiCoinGecko
                     MaxUpdateInterval = 1800,
                     MinUpdateInterval = 60,
                     UpdateIntervalStepSize = 30,
-                    SupportedConvertCurrencies = new List<string>() { "EUR", "USD", "BTC" },
+                    SupportedConvertCurrencies = new List<string>() { "EUR", "USD", "BTC", "ETH", "EOS" },
                     UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall ab 1 Minute."
                 };
             }

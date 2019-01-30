@@ -48,7 +48,7 @@ namespace AssetWatch
         /// Detaches an asset from the API which then will be no longer updated.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/></param>
-        void DetachAsset(Asset asset);
+        void DetachAsset(DetachAssetArgs args);
 
         /// <summary>
         /// Requests the available assets of the API.

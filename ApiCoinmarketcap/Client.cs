@@ -24,7 +24,7 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// Defines the apiSchema.
         /// </summary>
-        private ApiSchema apiSchema;
+        private readonly ApiSchema apiSchema;
 
         /// <summary>
         /// Defines the availableAssets.
@@ -34,12 +34,12 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// Gets the SubscribedAssets.
         /// </summary>
-        private List<Asset> attachedAssets;
+        private readonly List<Asset> attachedAssets;
 
         /// <summary>
         /// Defines the subscribedConvertCurrencies.
         /// </summary>
-        private List<string> attachedConvertCurrencies;
+        private readonly List<string> attachedConvertCurrencies;
 
         /// <summary>
         /// The AssetRequestDelegate.
@@ -49,7 +49,7 @@ namespace ApiCoinmarketcap
         /// <summary>
         /// Defines the assetRequestDelegate.
         /// </summary>
-        private AssetRequestDelegate assetRequestDelegate;
+        private readonly AssetRequestDelegate assetRequestDelegate;
 
         /// <summary>
         /// Defines the client.
@@ -155,12 +155,15 @@ namespace ApiCoinmarketcap
         }
 
         /// <summary>
-        /// Detaches an asset from the asset updater.
-        /// Not implemented because at this API the number of calls is not dependent on the number of attached assets.
+        /// Detaches an asset from the updater.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to detach.</param>
-        public void DetachAsset(Asset asset)
+        /// <param name="asset">The <see cref="DetachAssetArgs"/></param>
+        public void DetachAsset(DetachAssetArgs args)
         {
+            if (args.DetachAsset)
+            {
+                this.attachedAssets.RemoveAll(a => a.AssetId == args.Asset.AssetId);
+            }
         }
 
         /// <summary>

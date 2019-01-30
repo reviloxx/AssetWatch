@@ -134,6 +134,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="API components\DetachAssetArgs.cs" />
     <Compile Include="EventArgs\OnApiErrorEventArgs.cs" />
     <Compile Include="EventArgs\OnAssetTileSettingsChangedEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiHandler.cs" />

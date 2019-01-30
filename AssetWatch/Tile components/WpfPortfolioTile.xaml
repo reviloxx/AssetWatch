@@ -10,19 +10,19 @@
         SnapsToDevicePixels="True" Background="#00090909">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="8*"/>
+            <RowDefinition Height="12.8"/>
+            <RowDefinition Height="33.6"/>
+            <RowDefinition Height="33.6"/>
+            <RowDefinition Height="33.6"/>
+            <RowDefinition Name="Row24h1" Height="33.6"/>
+            <RowDefinition Name="Row24h2" Height="33.6"/>
+            <RowDefinition Name="Row24h3" Height="32.8"/>
+            <RowDefinition Name="Row7d1" Height="33.6"/>
+            <RowDefinition Name="Row7d2" Height="33.6"/>
+            <RowDefinition Name="Row7d3" Height="32.8"/>
+            <RowDefinition Height="33.6"/>
+            <RowDefinition Height="20.8"/>
+            <RowDefinition Height="32.8"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>

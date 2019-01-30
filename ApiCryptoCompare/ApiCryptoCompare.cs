@@ -130,12 +130,20 @@ namespace ApiCryptoCompare
         }
 
         /// <summary>
-        /// Detaches an asset from the updater.
-        /// Not implemented because at this API the number of calls is not dependent on the number of attached assets.
+        /// Detaches an asset/convert currency from the updater.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to unsubscribe.</param>
-        public void DetachAsset(Asset asset)
+        /// <param name="asset">The <see cref="DetachAssetArgs"/></param>
+        public void DetachAsset(DetachAssetArgs args)
         {
+            if (args.DetachAsset)
+            {
+                this.attachedAssets.RemoveAll(a => a.Symbol == args.Asset.Symbol);
+            }
+
+            if (args.DetachConvertCurrency)
+            {
+                this.attachedConvertCurrencies.Remove(args.Asset.ConvertCurrency);
+            }
         }
 
         /// <summary>

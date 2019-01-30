@@ -110,14 +110,22 @@ namespace AssetWatch
             {
                 return;
             }
+            
+            // detach asset if there is no other asset tile with the same asset subscribed to this api
+            bool detachAsset = !this.attachedAssetTiles.Exists(att => att.AssetTileData.ApiName == api.ApiInfo.ApiName &&
+                                                                      att.AssetTileData.Asset.AssetId == assetTile.AssetTileData.Asset.AssetId);
 
-            if (!this.attachedAssetTiles.Exists(att => att.AssetTileData.ApiName == api.ApiInfo.ApiName &&
-                                                         att.AssetTileData.Asset.AssetId == assetTile.AssetTileData.Asset.AssetId &&
-                                                         att.AssetTileData.Asset.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency))
+            // detach convert currency if there is no other asset tile with the same convert currency subscribed to this api
+            bool detachConvertCurrency = !this.attachedAssetTiles.Exists(att => att.AssetTileData.ApiName == api.ApiInfo.ApiName &&
+                                                                                att.AssetTileData.Asset.ConvertCurrency == assetTile.AssetTileData.Asset.ConvertCurrency);
+            
+            api.DetachAsset(new DetachAssetArgs()
             {
-                // unsunscribe asset from API if it is not needed anymore
-                api.DetachAsset(assetTile.AssetTileData.Asset);
-            }
+                Asset = assetTile.AssetTileData.Asset,
+                DetachAsset = detachAsset,
+                DetachConvertCurrency = detachConvertCurrency
+            });
+            
         }        
 
         /// <summary>

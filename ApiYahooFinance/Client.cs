@@ -112,11 +112,15 @@ namespace ApiYahooFinance
         }
 
         /// <summary>
-        /// Detaches an asset from the asset updater.
+        /// Detaches an asset from the updater.
         /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to detach.</param>
-        public void DetachAsset(Asset asset)
+        /// <param name="asset">The <see cref="DetachAssetArgs"/></param>
+        public void DetachAsset(DetachAssetArgs args)
         {
+            if (args.DetachAsset)
+            {
+                this.attachedAssets.RemoveAll(a => a.Symbol == args.Asset.Symbol);
+            }
         }
 
         /// <summary>
