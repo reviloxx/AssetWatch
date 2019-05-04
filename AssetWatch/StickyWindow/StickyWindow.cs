@@ -136,7 +136,7 @@ namespace Blue.Windows
 		/// <summary>
 		/// Global List of registered StickyWindows
 		/// </summary>
-		private static ArrayList	GlobalStickyWindows = new ArrayList();
+		private static readonly ArrayList	GlobalStickyWindows = new ArrayList();
 
 		#region ResizeDir
 		private enum ResizeDir
@@ -154,9 +154,9 @@ namespace Blue.Windows
 		private ProcessMessage	MessageProcessor;
 
 		// Messages processors based on type
-		private ProcessMessage	DefaultMessageProcessor;
-		private ProcessMessage	MoveMessageProcessor;
-		private ProcessMessage	ResizeMessageProcessor;
+		private readonly ProcessMessage	DefaultMessageProcessor;
+		private readonly ProcessMessage	MoveMessageProcessor;
+		private readonly ProcessMessage	ResizeMessageProcessor;
 		#endregion
 
 		#region Internal properties
@@ -172,7 +172,7 @@ namespace Blue.Windows
 		private Point		mousePoint;			// mouse position
 
 		// General Stuff
-        private IFormAdapter originalForm;		// the form
+        private readonly IFormAdapter originalForm;		// the form
 		private Rectangle	formRect;			// form bounds
 		private Rectangle	formOriginalRect;	// bounds before last operation started
 		#endregion
@@ -405,7 +405,6 @@ namespace Blue.Windows
 		/// <returns></returns>
 		private bool OnNCLButtonDown ( int iHitTest, Point point )
 		{
-			Rectangle rParent	= originalForm.Bounds;
 			offsetPoint			= point;
 
 			switch ( iHitTest )

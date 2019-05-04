@@ -37,12 +37,12 @@ namespace AssetWatch
         /// <summary>
         /// Defines the globalTileStyle.
         /// </summary>
-        private TileStyle globalTileStyle;
+        private readonly TileStyle globalTileStyle;
 
         /// <summary>
         /// Defines the readyApis.
         /// </summary>
-        private Dictionary<IApi, List<Asset>> readyApis;
+        private readonly Dictionary<IApi, List<Asset>> readyApis;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfAssetTile"/> class.
@@ -130,8 +130,8 @@ namespace AssetWatch
 
             this.Visibility = Visibility.Visible;
 
-            Brush backgroundColor = Brushes.Black;
-            Brush fontColor = Brushes.Black;
+            Brush backgroundColor;
+            Brush fontColor;
 
             if (this.AssetTileData.HasCustomTileStyle)
             {
@@ -226,12 +226,14 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void AssetTile_Loaded(object sender, RoutedEventArgs e)
         {
-            this.stickyWindow = new StickyWindow(this);
-            this.stickyWindow.StickToScreen = true;
-            this.stickyWindow.StickToOther = true;
-            this.stickyWindow.StickOnResize = true;
-            this.stickyWindow.StickOnMove = true;
-            this.stickyWindow.IsEnabled = !this.positionLocked;
+            this.stickyWindow = new StickyWindow(this)
+            {
+                StickToScreen = true,
+                StickToOther = true,
+                StickOnResize = true,
+                StickOnMove = true,
+                IsEnabled = !this.positionLocked
+            };
         }
 
         /// <summary>
@@ -306,7 +308,7 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Asset löschen?", this.AssetTileData.AssetTileName == null ? string.Empty : this.AssetTileData.AssetTileName,
+            MessageBoxResult result = MessageBox.Show("Asset löschen?", this.AssetTileData.AssetTileName ?? string.Empty,
                 MessageBoxButton.OKCancel, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.OK)

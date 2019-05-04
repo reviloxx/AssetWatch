@@ -42,6 +42,6 @@
             <Image x:Name="close_Image" Source="..\Icons\remove-icon-white.png" Height="20" Width="20"/>
         </Button>
         <TextBlock x:Name="label_WalletName" Grid.Row="1" FontSize="16" FontWeight="Bold" Margin="10,0.2,66,3.4" Grid.ColumnSpan="4" Foreground="White"  />
-        <TextBlock x:Name="textBlock_Win" Foreground="White" Margin="0,0.6,0,0" Grid.Row="5" TextWrapping="Wrap" Grid.ColumnSpan="4" TextAlignment="Center" VerticalAlignment="Top" FontSize="14"/>
+        <TextBlock x:Name="textBlock_Win" Foreground="White" Margin="0,0.6,0,0" Grid.Row="5" TextWrapping="Wrap" Grid.ColumnSpan="4" TextAlignment="Center" VerticalAlignment="Top" FontSize="14"/>        
     </Grid>
 </Window>

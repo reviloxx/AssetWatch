@@ -20,19 +20,9 @@ namespace AssetWatch
         private StickyWindow stickyWindow;
 
         /// <summary>
-        /// Defines the positionLocked
-        /// </summary>
-        private bool positionLocked;
-
-        /// <summary>
-        /// Defines the availableAssets
-        /// </summary>
-        private List<Asset> availableAssets;
-
-        /// <summary>
         /// Defines the appData
         /// </summary>
-        private AppData appData;
+        private readonly AppData appData;
 
         /// <summary>
         /// Defines the winTotal
@@ -57,7 +47,6 @@ namespace AssetWatch
         public WpfPortfolioTile(PortfolioTileData portfolioTileData, AppData appData)
         {
             this.InitializeComponent();
-            this.availableAssets = new List<Asset>();
             this.PortfolioTileData = portfolioTileData;
             this.appData = appData;
             this.UpdateTextBlocks(null);
@@ -109,7 +98,6 @@ namespace AssetWatch
             {
                 this.stickyWindow.IsEnabled = !locked;
             }
-            this.positionLocked = locked;
         }
 
         /// <summary>
@@ -260,7 +248,7 @@ namespace AssetWatch
 
         private void AdjustPercentageAreas(bool percentage24hValid, bool percentage7dValid)
         {
-            double sizeChange = 0;
+            double sizeChange;
 
             if (!percentage24hValid && Row24h1.Height.Value != 0)
             {
@@ -332,7 +320,7 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void Button_Close_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult result = MessageBox.Show("Portfolio löschen?", this.PortfolioTileData.PortfolioTileName == null ? string.Empty : this.PortfolioTileData.PortfolioTileName,
+            MessageBoxResult result = MessageBox.Show("Portfolio löschen?", this.PortfolioTileData.PortfolioTileName ?? string.Empty,
                 MessageBoxButton.OKCancel, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.OK)
@@ -361,12 +349,14 @@ namespace AssetWatch
         /// <param name="e">The e<see cref="RoutedEventArgs"/></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.stickyWindow = new StickyWindow(this);
-            this.stickyWindow.StickToScreen = true;
-            this.stickyWindow.StickToOther = true;
-            this.stickyWindow.StickOnResize = true;
-            this.stickyWindow.StickOnMove = true;
-            this.stickyWindow.IsEnabled = true;
+            this.stickyWindow = new StickyWindow(this)
+            {
+                StickToScreen = true,
+                StickToOther = true,
+                StickOnResize = true,
+                StickOnMove = true,
+                IsEnabled = true
+            };
         }
 
         /// <summary>

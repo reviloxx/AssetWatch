@@ -54,7 +54,6 @@
         <TextBlock x:Name="label_7d" Text="7d + / -" Grid.Row="8" Grid.ColumnSpan="2" FontSize="16" Margin="10,5.4,0,5.4" Foreground="White"/>
         <TextBlock x:Name="textBlock_7dPercentage" Grid.Column="2" TextWrapping="Wrap"  Grid.Row="8" TextAlignment="Right" 
                    FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="2" Foreground="White"/>
-        <!--<TextBlock Text="1W +/-" Grid.Row="9" Grid.ColumnSpan="3" FontSize="16" Margin="10,5.4,37.6,5.4" Foreground="White"/>-->
         <TextBlock x:Name="textBlock_7dWin" Grid.Column="1" TextWrapping="Wrap"  Grid.Row="9" TextAlignment="Right" 
                    FontSize="16" Margin="0,5,10,4.6" Grid.ColumnSpan="3" Foreground="White"/>
 

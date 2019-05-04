@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -183,19 +184,19 @@ namespace AssetWatch
             if (e.ErrorType == ErrorType.TooManyRequests)
             {
                 this.DisableApi(api);
-                MessageBox.Show("Die erlaubte Anzahl an Aufrufen dieser API wurde überschritten, API deaktiviert.", api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Die erlaubte Anzahl an Aufrufen dieser API wurde überschritten! \nAPI deaktiviert.", api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             if (e.ErrorType == ErrorType.Unauthorized)
             {
                 this.DisableApi(api);
-                MessageBox.Show("API Key ungültig!", api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("API Key ungültig! \nAPI deaktiviert.", api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             if (e.ErrorType == ErrorType.BadRequest || e.ErrorType == ErrorType.General)
             {
                 this.DisableApi(api);
-                MessageBox.Show(e.ErrorMessage, api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Fehler: " + e.ErrorMessage + "\nAPI deaktiviert.", api.ApiInfo.ApiName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

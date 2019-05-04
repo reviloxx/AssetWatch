@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using YahooFinanceApi;
 
 namespace ApiYahooFinance
@@ -52,7 +53,7 @@ namespace ApiYahooFinance
         public void Enable()
         {
             // get EUR convert price
-            this.GetAssetUpdates(new List<Asset> { new Asset { Symbol = "EUR=X" } });
+            Task.Run(() => this.GetAssetUpdatesAsync(new List<Asset> { new Asset { Symbol = "EUR=X" } }));
 
             if (this.assetUpdateWorker.IsAlive)
             {
@@ -94,9 +95,11 @@ namespace ApiYahooFinance
                 return;
             }
 
-            List<Asset> assets = new List<Asset>();
-            assets.Add(asset);
-            this.GetAssetUpdates(assets);
+            List<Asset> assets = new List<Asset>
+            {
+                asset
+            };
+            Task.Run(() => this.GetAssetUpdatesAsync(assets));
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace ApiYahooFinance
         {
             while (this.ApiData.IsEnabled)
             {
-                this.GetAssetUpdates(this.attachedAssets);
+                Task.Run(() => this.GetAssetUpdatesAsync(this.attachedAssets));
                 Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
         }
@@ -141,7 +144,7 @@ namespace ApiYahooFinance
         /// Fires the OnApiError event if something has gone wrong.
         /// </summary>
         /// <param name="assets">The assets<see cref="List{Asset}"/> to update.</param>
-        private async void GetAssetUpdates(List<Asset> assets)
+        private async Task GetAssetUpdatesAsync(List<Asset> assets)
         {
             if (assets.Count < 1)
             {
@@ -149,7 +152,6 @@ namespace ApiYahooFinance
             }
 
             string[] symbols = new string[assets.Count];
-            bool callFailed = false;
             int timeout = this.ApiData.UpdateInterval * 1000;
 
             for (int i = 0; i < assets.Count; i++)
@@ -157,6 +159,7 @@ namespace ApiYahooFinance
                 symbols[i] = assets[i].Symbol;
             }
 
+            bool callFailed;
             do
             {
                 callFailed = false;
@@ -165,6 +168,7 @@ namespace ApiYahooFinance
                 {
                     var response = await Yahoo.Symbols(symbols).Fields(Field.Symbol, Field.RegularMarketPrice, Field.Currency).QueryAsync();
                     this.ApiData.IncreaseCounter(1);
+                    this.FireOnAppDataChanged();
 
                     foreach (Asset asset in assets)
                     {

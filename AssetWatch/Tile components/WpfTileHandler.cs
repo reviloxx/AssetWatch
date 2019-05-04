@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 namespace AssetWatch
 {
@@ -160,7 +162,6 @@ namespace AssetWatch
                 {
                     this.unattachedAssetTiles.Add(assetTile);
                 }
-
                 if (!this.appData.TileHandlerData.GlobalTileStyle.Hidden)
                 {
                     assetTile.Show();

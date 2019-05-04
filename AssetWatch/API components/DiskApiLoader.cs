@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace AssetWatch
 {
@@ -32,12 +34,14 @@ namespace AssetWatch
                 files.AddRange((Directory.GetFiles(folder, "*.dll")).ToList());
             }
 
-            for (int i = 0; i < files.Count; i++)
+            Parallel.ForEach(files, file =>
             {
                 try
                 {
-                    ass = Assembly.LoadFile(files[i]);
-                    ass.GetExportedTypes().ToList().ForEach(type =>
+                    ass = Assembly.LoadFile(file);
+                    ass.GetExportedTypes()
+                    .ToList()
+                    .ForEach(type =>
                     {
                         if (type.GetInterfaces().Contains(typeof(IApi)))
                         {
@@ -50,7 +54,7 @@ namespace AssetWatch
                 {
                     FireOnApiLoaderError(e.Message);
                 }
-            }
+            });
 
             return loadedApis;
         }

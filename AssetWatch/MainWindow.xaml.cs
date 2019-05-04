@@ -13,17 +13,17 @@ namespace AssetWatch
         /// <summary>
         /// Defines the apiHandler
         /// </summary>
-        private IApiHandler apiHandler;
+        private readonly IApiHandler apiHandler;
 
         /// <summary>
         /// Defines the fileHandler
         /// </summary>
-        private static IFileHandler fileHandler = new XmlFileHandler();
+        private static readonly IFileHandler fileHandler = new XmlFileHandler();
 
         /// <summary>
         /// Defines the tileHandler
         /// </summary>
-        private ITileHandler tileHandler;
+        private readonly ITileHandler tileHandler;
 
         /// <summary>
         /// Defines the mainSettingsWindow
@@ -33,7 +33,7 @@ namespace AssetWatch
         /// <summary>
         /// Defines the appData to store on the hard disk.
         /// </summary>
-        private AppData appData;
+        private readonly AppData appData;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
