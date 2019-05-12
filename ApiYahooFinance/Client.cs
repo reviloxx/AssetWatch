@@ -10,42 +10,12 @@ namespace ApiYahooFinance
     /// <summary>
     /// Defines the <see cref="Client" />
     /// </summary>
-    public abstract class Client
+    public abstract class Client : AssetWatch.Api
     {
-        /// <summary>
-        /// Defines the delay to try again in case there is no connection.
-        /// </summary>
-        private static readonly int retryDelay = 1000;        
-
-        /// <summary>
-        /// Defines the availableAssets
-        /// </summary>
-        protected List<Asset> availableAssets;
-
-        /// <summary>
-        /// Defines the attachedAssets
-        /// </summary>
-        private readonly List<Asset> attachedAssets;
-
         /// <summary>
         /// Defines the eur/usd exchange rate
         /// </summary>
         private double eurExchangeRate;
-
-        /// <summary>
-        /// Defines the assetUpdateWorker
-        /// </summary>
-        private Thread assetUpdateWorker;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Client"/> class.
-        /// </summary>
-        public Client()
-        {
-            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.availableAssets = new List<Asset>();
-            this.attachedAssets = new List<Asset>();
-        }
 
         /// <summary>
         /// Enables the API.
@@ -65,18 +35,6 @@ namespace ApiYahooFinance
         }
 
         /// <summary>
-        /// Disables the API.
-        /// </summary>
-        public void Disable()
-        {
-            try
-            {
-                this.assetUpdateWorker.Abort();
-            }
-            catch (Exception) { }
-        }
-
-        /// <summary>
         /// Requests the available assets of the API.
         /// </summary>
         public void RequestAvailableAssetsAsync()
@@ -85,56 +43,14 @@ namespace ApiYahooFinance
         }
 
         /// <summary>
-        /// Requests a single asset update.
-        /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/></param>
-        public void RequestSingleAssetUpdateAsync(Asset asset)
-        {
-            if (!this.assetUpdateWorker.IsAlive)
-            {
-                return;
-            }
-
-            List<Asset> assets = new List<Asset>
-            {
-                asset
-            };
-            Task.Run(() => this.GetAssetUpdatesAsync(assets));
-        }
-
-        /// <summary>
         /// Attaches an asset to the asset updater.
         /// </summary>
         /// <param name="asset">The asset<see cref="Asset"/> to attach.</param>
-        public void AttachAsset(Asset asset)
+        public override void AttachAsset(Asset asset)
         {
             if (!this.attachedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
             {
                 this.attachedAssets.Add(asset);
-            }
-        }
-
-        /// <summary>
-        /// Detaches an asset from the updater.
-        /// </summary>
-        /// <param name="asset">The <see cref="DetachAssetArgs"/></param>
-        public void DetachAsset(DetachAssetArgs args)
-        {
-            if (args.DetachAsset)
-            {
-                this.attachedAssets.RemoveAll(a => a.Symbol == args.Asset.Symbol);
-            }
-        }
-
-        /// <summary>
-        /// Requests updates of the subscribed assets while this API is enabled.
-        /// </summary>
-        private void AssetUpdateWorker()
-        {
-            while (this.ApiData.IsEnabled)
-            {
-                Task.Run(() => this.GetAssetUpdatesAsync(this.attachedAssets));
-                Thread.Sleep(this.ApiData.UpdateInterval * 1000);
             }
         }
 
@@ -144,7 +60,7 @@ namespace ApiYahooFinance
         /// Fires the OnApiError event if something has gone wrong.
         /// </summary>
         /// <param name="assets">The assets<see cref="List{Asset}"/> to update.</param>
-        private async Task GetAssetUpdatesAsync(List<Asset> assets)
+        protected override async Task GetAssetUpdatesAsync(List<Asset> assets)
         {
             if (assets.Count < 1)
             {
@@ -248,64 +164,5 @@ namespace ApiYahooFinance
             }
             while (callFailed && timeout >= 0);
         }        
-
-        /// <summary>
-        /// Fires the OnAvailableAssetsReceived event.
-        /// </summary>
-        private void FireOnAvailableAssetsReceived()
-        {
-            this.OnAvailableAssetsReceived?.Invoke(this, this.availableAssets);
-        }
-
-        /// <summary>
-        /// Fires the OnAssetUpdateReceived event.
-        /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/></param>
-        private void FireOnAssetUpdateReceived(Asset asset)
-        {
-            this.OnAssetUpdateReceived?.Invoke(this, asset);
-        }
-
-        /// <summary>
-        /// Fires the OnApiError event.
-        /// </summary>
-        /// <param name="onApiErrorEventArgs">The onApiErrorEventArgs<see cref="OnApiErrorEventArgs"/></param>
-        private void FireOnApiError(OnApiErrorEventArgs onApiErrorEventArgs)
-        {
-            this.OnApiError?.Invoke(this, onApiErrorEventArgs);
-        }
-
-        /// <summary>
-        /// Fires the OnAppDataChanged event.
-        /// </summary>
-        private void FireOnAppDataChanged()
-        {
-            this.OnAppDataChanged?.Invoke(this, null);
-        }
-
-        /// <summary>
-        /// Gets or sets the ApiData
-        /// </summary>
-        public ApiData ApiData { get; set; }
-
-        /// <summary>
-        /// Defines the OnAvailableAssetsReceived
-        /// </summary>
-        public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
-
-        /// <summary>
-        /// Defines the OnSingleAssetUpdated
-        /// </summary>
-        public event EventHandler<Asset> OnAssetUpdateReceived;
-
-        /// <summary>
-        /// Defines the OnApiError
-        /// </summary>
-        public event EventHandler<OnApiErrorEventArgs> OnApiError;
-
-        /// <summary>
-        /// Defines the OnAppDataChanged
-        /// </summary>
-        public event EventHandler OnAppDataChanged;
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -18,12 +19,12 @@ namespace AssetWatch
         /// <summary>
         /// Defines the apiHandler
         /// </summary>
-        private IApiHandler apiHandler;
+        private readonly IApiHandler apiHandler;
 
         /// <summary>
         /// Defines the globalTileStyle
         /// </summary>
-        private TileStyle globalTileStyle;
+        private readonly TileStyle globalTileStyle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainSettingsWindow"/> class.
@@ -52,9 +53,11 @@ namespace AssetWatch
             this.clrPcker_FontProfit.SelectedColor = (Color)ColorConverter.ConvertFromString(this.globalTileStyle.FontColorProfit);
             this.clrPcker_FontLoss.SelectedColor = (Color)ColorConverter.ConvertFromString(this.globalTileStyle.FontColorLoss);
 
-            ObservableCollection<ColorItem> availableFontColors = new ObservableCollection<ColorItem>();
-            availableFontColors.Add(new ColorItem(Colors.Black, "black"));
-            availableFontColors.Add(new ColorItem(Colors.White, "white"));
+            ObservableCollection<ColorItem> availableFontColors = new ObservableCollection<ColorItem>
+            {
+                new ColorItem(Colors.Black, "black"),
+                new ColorItem(Colors.White, "white")
+            };
 
             this.clrPcker_FontProfit.AvailableColors = availableFontColors;
             this.clrPcker_FontLoss.AvailableColors = availableFontColors;
@@ -290,7 +293,9 @@ namespace AssetWatch
         /// <param name="loadedApis">The loadedApis<see cref="List{IApi}"/></param>
         public MainSettingsWindowViewModel(List<IApi> loadedApis)
         {
-            this.LoadedApis = loadedApis;
+            this.LoadedApis = loadedApis
+                .OrderBy(a => a.ApiInfo.ApiName)
+                .ToList();
         }
 
         /// <summary>

@@ -43,7 +43,7 @@ namespace AssetWatch
                     .ToList()
                     .ForEach(type =>
                     {
-                        if (type.GetInterfaces().Contains(typeof(IApi)))
+                        if (type.GetInterfaces().Contains(typeof(IApi)) && !type.IsAbstract)
                         {
                             IApi api = (IApi)Activator.CreateInstance(type);
                             loadedApis.Add(api);

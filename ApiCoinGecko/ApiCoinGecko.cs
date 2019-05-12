@@ -12,42 +12,12 @@ using System.Threading.Tasks;
 
 namespace ApiCoinGecko
 {
-    public class ApiCoinGecko : IApi
+    public class ApiCoinGecko : AssetWatch.Api, IApi
     {
-        /// <summary>
-        /// Defines the delay to try again in case there is no connection.
-        /// </summary>
-        private static readonly int retryDelay = 1000;
-
         /// <summary>
         /// Defines the CoinGecko client.
         /// </summary>
         private ICoinGeckoClient client;
-
-        /// <summary>
-        /// Defines the list of attached assets.
-        /// </summary>
-        private readonly List<Asset> attachedAssets;
-
-        /// <summary>
-        /// Defines the list of attached convert currencies.
-        /// </summary>
-        private readonly List<string> attachedConvertCurrencies;
-
-        /// <summary>
-        /// Defines the assetUpdateWorker thread.
-        /// </summary>
-        private Thread assetUpdateWorker;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiCoinGecko"/> class.
-        /// </summary>
-        public ApiCoinGecko()
-        {
-            this.assetUpdateWorker = new Thread(this.AssetUpdateWorker);
-            this.attachedAssets = new List<Asset>();
-            this.attachedConvertCurrencies = new List<string>();
-        }
 
         /// <summary>
         /// Enables the API.
@@ -66,70 +36,11 @@ namespace ApiCoinGecko
         }
 
         /// <summary>
-        /// Disables the API.
-        /// </summary>
-        public void Disable()
-        {
-            try
-            {
-                this.assetUpdateWorker.Abort();
-            }
-            catch (Exception) { }
-        }
-
-        /// <summary>
         /// Requests the available assets of this API.
         /// </summary>
         public void RequestAvailableAssetsAsync()
         {
             Task.Run(() => this.GetAvailableAssetsAsync());
-        }
-
-        /// <summary>
-        /// Requests a single asset update.
-        /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to update.</param>
-        public void RequestSingleAssetUpdateAsync(Asset asset)
-        {
-            List<Asset> assets = new List<Asset>
-            {
-                asset
-            };
-            Task.Run(() => this.GetAssetUpdatesAsync(assets));
-        }
-
-        /// <summary>
-        /// Attaches an asset to the updater.
-        /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/> to attach.</param>
-        public void AttachAsset(Asset asset)
-        {
-            if (!this.attachedAssets.Exists(sub => sub.Symbol == asset.Symbol && sub.ConvertCurrency == asset.ConvertCurrency))
-            {
-                this.attachedAssets.Add(asset);
-            }
-
-            if (!this.attachedConvertCurrencies.Exists(sub => sub == asset.ConvertCurrency))
-            {
-                this.attachedConvertCurrencies.Add(asset.ConvertCurrency);
-            }
-        }
-
-        /// <summary>
-        /// Detaches an asset/convert currency from the updater.
-        /// </summary>
-        /// <param name="asset">The <see cref="DetachAssetArgs"/></param>
-        public void DetachAsset(DetachAssetArgs args)
-        {
-            if (args.DetachAsset)
-            {
-                this.attachedAssets.RemoveAll(a => a.AssetId == args.Asset.AssetId);
-            }
-
-            if (args.DetachConvertCurrency)
-            {
-                this.attachedConvertCurrencies.Remove(args.Asset.ConvertCurrency);
-            }
         }
 
         /// <summary>
@@ -162,8 +73,8 @@ namespace ApiCoinGecko
                             });
                     }
 
-                    availableAssets = availableAssets.OrderBy(ass => ass.SymbolName).ToList();
-                    this.FireOnAvailableAssetsReceived(availableAssets);
+                    this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
+                    this.FireOnAvailableAssetsReceived();
                 }
                 catch (HttpRequestException)
                 {
@@ -175,24 +86,12 @@ namespace ApiCoinGecko
         }
 
         /// <summary>
-        /// Requests updates of the subscribed assets while this API is enabled.
-        /// </summary>
-        private void AssetUpdateWorker()
-        {
-            while (this.ApiData.IsEnabled)
-            {
-                Task.Run(() => this.GetAssetUpdatesAsync(this.attachedAssets));
-                Thread.Sleep(this.ApiData.UpdateInterval * 1000);
-            }
-        }
-
-        /// <summary>
         /// Gets updates for a list of assets.
         /// Fires the OnSingleAssetUpdated event for each updated asset from the list.
         /// Fires the OnApiError event if something has gone wrong.
         /// </summary>
         /// <param name="assets">The assets<see cref="List{Asset}"/> to update.</param>
-        private async Task GetAssetUpdatesAsync(List<Asset> assets)
+        protected override async Task GetAssetUpdatesAsync(List<Asset> assets)
         {
             if (assets.Count < 1)
             {
@@ -259,45 +158,6 @@ namespace ApiCoinGecko
         }
 
         /// <summary>
-        /// Fires the OnAvailableAssetsReceived event.
-        /// </summary>
-        private void FireOnAvailableAssetsReceived(List<Asset> availableAssets)
-        {
-            this.OnAvailableAssetsReceived?.Invoke(this, availableAssets);
-        }
-
-        /// <summary>
-        /// Fires the OnAssetUpdatedReceived event.
-        /// </summary>
-        /// <param name="asset">The asset<see cref="Asset"/></param>
-        private void FireOnAssetUpdateReceived(Asset asset)
-        {
-            this.OnAssetUpdateReceived?.Invoke(this, asset);
-        }
-
-        /// <summary>
-        /// Fires the OnApiError event.
-        /// </summary>
-        /// <param name="eventArgs">The eventArgs<see cref="OnApiErrorEventArgs"/></param>
-        private void FireOnApiError(OnApiErrorEventArgs onApiErrorEventArgs)
-        {
-            this.OnApiError?.Invoke(this, onApiErrorEventArgs);
-        }
-
-        /// <summary>
-        /// Fires the OnAppDataChanged event.
-        /// </summary>
-        private void FireOnAppDataChanged()
-        {
-            this.OnAppDataChanged?.Invoke(this, null);
-        }
-
-        /// <summary>
-        /// Gets or sets the ApiData.
-        /// </summary>
-        public ApiData ApiData { get; set; }
-
-        /// <summary>
         /// Gets the ApiInfo.
         /// </summary>
         public ApiInfo ApiInfo
@@ -331,25 +191,5 @@ namespace ApiCoinGecko
                 };
             }
         }
-
-        /// <summary>
-        /// Defines the OnAvailableAssetsReceived event.
-        /// </summary>
-        public event EventHandler<List<Asset>> OnAvailableAssetsReceived;
-
-        /// <summary>
-        /// Defines the OnAssetUpdateReceived event.
-        /// </summary>
-        public event EventHandler<Asset> OnAssetUpdateReceived;
-
-        /// <summary>
-        /// Defines the OnApiError event.
-        /// </summary>
-        public event EventHandler<OnApiErrorEventArgs> OnApiError;
-
-        /// <summary>
-        /// Defines the OnAppDataChanged event.
-        /// </summary>
-        public event EventHandler OnAppDataChanged;
     }
 }

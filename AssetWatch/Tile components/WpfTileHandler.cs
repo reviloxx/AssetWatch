@@ -18,7 +18,7 @@ namespace AssetWatch
         /// <summary>
         /// Defines the apiLoader
         /// </summary>
-        private static IApiLoader apiLoader = new DiskApiLoader();
+        private static readonly IApiLoader apiLoader = new DiskApiLoader();
 
         /// <summary>
         /// Defines the activeAssetTiles
@@ -68,8 +68,14 @@ namespace AssetWatch
             this.OpenLoadedAssetTiles();
             this.OpenLoadedPortfolioTiles();
 
+            apiLoader.OnApiLoaderError += this.ApiLoader_OnApiLoaderError;
             apiHandler.OnApiLoaded += this.ApiHandler_OnApiLoaded;
             apiHandler.LoadApis(apiLoader);
+        }
+
+        private void ApiLoader_OnApiLoaderError(object sender, string e)
+        {
+            MessageBox.Show(e, "Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         /// <summary>
