@@ -73,7 +73,7 @@ namespace ApiCoinGecko
                             });
                     }
 
-                    this.availableAssets = this.availableAssets.OrderBy(ass => ass.SymbolName).ToList();
+                    this.availableAssets = availableAssets.OrderBy(ass => ass.SymbolName).ToList();
                     this.FireOnAvailableAssetsReceived();
                 }
                 catch (HttpRequestException)
@@ -110,7 +110,7 @@ namespace ApiCoinGecko
 
                 try
                 {
-                    Price response = await this.client.SimpleClient.GetSimplePrice(fromIds.ToArray(), this.attachedConvertCurrencies.ToArray());
+                    Price response = await this.client.SimpleClient.GetSimplePrice(fromIds.ToArray(), this.attachedConvertCurrencies.ToArray(), true, true, true, false);
                     this.ApiData.IncreaseCounter(1);
                     this.FireOnAppDataChanged();
                     
@@ -121,12 +121,19 @@ namespace ApiCoinGecko
                         try
                         {
                             var assres = response[ass.AssetId];
+                            var convert = ass.ConvertCurrency.ToLower();
 
                             if (assres.ContainsKey(ass.ConvertCurrency.ToLower()))
                             {
+                                ass.Price = (double)assres[convert];
                                 ass.LastUpdated = DateTime.Now;
-                                ass.Price = (double)assres[ass.ConvertCurrency.ToLower()];
-                                //ass.PercentChange24h = (double)assres[ass.ConvertCurrency.ToLower() + "_24h_change"];
+                                ass.PercentChange24h = (double)assres[convert + "_24h_change"];
+                                ass.PercentChange7d = -101;
+                                ass.PercentChange1h = -101;
+                                ass.MarketCap = (double)assres[convert + "_market_cap"];
+                                ass.Volume24hConvert = assres[convert + "_24h_vol"].ToString();
+                                ass.SupplyAvailable = -1;
+                                ass.SupplyTotal = -1;
                                 this.FireOnAssetUpdateReceived(ass);
                             }                            
                         }
@@ -170,7 +177,7 @@ namespace ApiCoinGecko
                     " - Min. Update Intervall:\n" +
                     "     1 Minute\n\n" +
                     " - Prozentuale Preisänderung:\n" +
-                    "     nicht unterstützt\n\n" +
+                    "     24h\n\n" +
                     " - API Key nötig:\n" +
                     "     nein\n\n" +
                     " - Basiswährungen:\n" +

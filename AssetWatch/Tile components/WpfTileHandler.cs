@@ -70,7 +70,7 @@ namespace AssetWatch
 
             apiLoader.OnApiLoaderError += this.ApiLoader_OnApiLoaderError;
             apiHandler.OnApiLoaded += this.ApiHandler_OnApiLoaded;
-            apiHandler.LoadApis(apiLoader);
+            apiHandler.LoadApis();
         }
 
         private void ApiLoader_OnApiLoaderError(object sender, string e)

@@ -20,11 +20,17 @@ namespace AssetWatch
         private readonly List<IAssetTile> attachedAssetTiles;
 
         /// <summary>
+        /// Defines the apiHandler
+        /// </summary>
+        private readonly IApiLoader apiLoader;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MultiApiHandler"/> class.
         /// </summary>
-        public MultiApiHandler(AppData appData)
+        public MultiApiHandler(AppData appData, IApiLoader apiLoader)
         {
             this.appData = appData;
+            this.apiLoader = apiLoader;
             this.attachedAssetTiles = new List<IAssetTile>();
             this.ReadyApis = new Dictionary<IApi, List<Asset>>();
         }
@@ -33,7 +39,7 @@ namespace AssetWatch
         /// Loads all available APIs by using an IApiLoader, sobscribes to it's events and requests it's available assets.
         /// </summary>
         /// <param name="apiLoader">The apiLoader<see cref="IApiLoader"/></param>
-        public void LoadApis(IApiLoader apiLoader)
+        public void LoadApis()
         {
             // look for valid API librarys, load them from the disk and remove duplicates
             this.LoadedApis = apiLoader.LoadApis()

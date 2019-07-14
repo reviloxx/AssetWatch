@@ -54,34 +54,8 @@
     <ApplicationIcon>aw.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CoinGecko, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoinGeckoAsyncApi.1.0.1\lib\netstandard2.0\CoinGecko.dll</HintPath>
-    </Reference>
-    <Reference Include="CoinMarketCapPro, Version=1.0.3.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CoinMarketCapPro.1.0.3.4\lib\netstandard2.0\CoinMarketCapPro.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CryptoCompare, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CryptoCompare.1.3.2\lib\net45\CryptoCompare.dll</HintPath>
-    </Reference>
     <Reference Include="CsvHelper, Version=7.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.7.1.1\lib\net45\CsvHelper.dll</HintPath>
-    </Reference>
-    <Reference Include="Flurl, Version=2.7.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.2.7.1\lib\net40\Flurl.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Flurl.Http, Version=2.3.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Flurl.Http.2.3.2\lib\net46\Flurl.Http.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FubarCoder.RestSharp.Portable.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=be81bb0f53eab22f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarCoder.RestSharp.Portable.Core.4.0.8\lib\net45\FubarCoder.RestSharp.Portable.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FubarCoder.RestSharp.Portable.HttpClient, Version=4.0.0.0, Culture=neutral, PublicKeyToken=be81bb0f53eab22f, processorArchitecture=MSIL">
-      <HintPath>..\packages\FubarCoder.RestSharp.Portable.HttpClient.4.0.8\lib\net45\FubarCoder.RestSharp.Portable.HttpClient.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
@@ -110,23 +84,29 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="Xceed.Wpf.AvalonDock, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Xceed.Wpf.DataGrid, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Xceed.Wpf.Toolkit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="YahooFinanceApi, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="YahooFinanceApi">
       <HintPath>..\packages\YahooFinanceApi.2.1.1\lib\netstandard2.0\YahooFinanceApi.dll</HintPath>
     </Reference>
   </ItemGroup>
@@ -135,14 +115,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="API components\Api.cs" />
-    <Compile Include="API components\DetachAssetArgs.cs" />
-    <Compile Include="EventArgs\OnApiErrorEventArgs.cs" />
+    <Compile Include="API components\ApiLoader.cs" />
     <Compile Include="EventArgs\OnAssetTileSettingsChangedEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiHandler.cs" />
     <Compile Include="EventArgs\OnApiReadyEventArgs.cs" />
     <Compile Include="API components\Interfaces\IApiLoader.cs" />
-    <Compile Include="API components\ApiData.cs" />
     <Compile Include="Tile components\Interfaces\IAssetTile.cs" />
     <Compile Include="Tile components\Interfaces\IPortfolioTile.cs" />
     <Compile Include="Tile components\Interfaces\ITile.cs" />
@@ -209,14 +186,11 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="API components\MultiApiHandler.cs" />
-    <Compile Include="API components\ApiInfo.cs" />
     <Compile Include="API components\DiskApiLoader.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Asset.cs" />
-    <Compile Include="API components\Interfaces\IApi.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -294,6 +268,31 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\settings_gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApiCoinGecko\ApiCoinGecko.csproj">
+      <Project>{D8731BF6-EBF4-4636-8675-9343920C492E}</Project>
+      <Name>ApiCoinGecko</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ApiCoinmarketcap\ApiCoinmarketcap.csproj">
+      <Project>{dbccbc27-887f-42d6-a3ba-1dafca05a74c}</Project>
+      <Name>ApiCoinmarketcap</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\ApiYahooFinance\ApiYahooFinance.csproj">
+      <Project>{e6f4bbe0-9b45-4b55-8e9e-f7eb4e1bc5ff}</Project>
+      <Name>ApiYahooFinance</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{c05cdaf1-a647-43ab-b480-9fadeb36e9d1}</Project>
+      <Name>Common</Name>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

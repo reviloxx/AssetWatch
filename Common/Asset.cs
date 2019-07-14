@@ -26,7 +26,7 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets the MarketCapConvert.
         /// </summary>
-        public double MarketCap { get; set; }
+        public double MarketCap { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the Name.
@@ -36,17 +36,17 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets the PercentChange1h.
         /// </summary>
-        public double PercentChange1h { get; set; }
+        public double PercentChange1h { get; set; } = -101;
 
         /// <summary>
         /// Gets or sets the PercentChange24h.
         /// </summary>
-        public double PercentChange24h { get; set; }
+        public double PercentChange24h { get; set; } = -101;
 
         /// <summary>
         /// Gets or sets the PercentChange7d.
         /// </summary>
-        public double PercentChange7d { get; set; }
+        public double PercentChange7d { get; set; } = -101;
 
         /// <summary>
         /// Gets or sets the PriceConvert.
@@ -68,12 +68,12 @@ namespace AssetWatch
         /// <summary>
         /// Gets or sets the SupplyAvailable.
         /// </summary>
-        public double SupplyAvailable { get; set; }
+        public double SupplyAvailable { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the SupplyTotal.
         /// </summary>
-        public double SupplyTotal { get; set; }
+        public double SupplyTotal { get; set; } = -1;
 
         /// <summary>
         /// Gets or sets the Volume24hConvert.
@@ -84,12 +84,5 @@ namespace AssetWatch
         /// Gets or sets the Volume24hUsd.
         /// </summary>
         public string Volume24hUsd { get; set; }
-
-        public Asset()
-        {
-            this.PercentChange1h = -101;
-            this.PercentChange24h = -101;
-            this.PercentChange7d = -101;
-        }
     }
 }

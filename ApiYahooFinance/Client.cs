@@ -114,7 +114,13 @@ namespace ApiYahooFinance
                                     Name = asset.Name,
                                     ConvertCurrency = asset.ConvertCurrency,
                                     LastUpdated = DateTime.Now,
-                                    Price = asset.ConvertCurrency == "USD" ? assetResponse.RegularMarketPrice : assetResponse.RegularMarketPrice * this.eurExchangeRate
+                                    Price = asset.ConvertCurrency == "USD" ? assetResponse.RegularMarketPrice : assetResponse.RegularMarketPrice * this.eurExchangeRate,
+                                    PercentChange1h = -101,
+                                    PercentChange24h = -101,
+                                    PercentChange7d = -101,
+                                    MarketCap = -1,
+                                    SupplyAvailable = -1,
+                                    SupplyTotal = -1
                                 };
                             }
                             else if (assetResponse.Currency == "EUR")
@@ -127,7 +133,13 @@ namespace ApiYahooFinance
                                     Name = asset.Name,
                                     ConvertCurrency = asset.ConvertCurrency,
                                     LastUpdated = DateTime.Now,
-                                    Price = asset.ConvertCurrency == "EUR" ? assetResponse.RegularMarketPrice : assetResponse.RegularMarketPrice / this.eurExchangeRate
+                                    Price = asset.ConvertCurrency == "EUR" ? assetResponse.RegularMarketPrice : assetResponse.RegularMarketPrice / this.eurExchangeRate,
+                                    PercentChange1h = -101,
+                                    PercentChange24h = -101,
+                                    PercentChange7d = -101,
+                                    MarketCap = -1,
+                                    SupplyAvailable = -1,
+                                    SupplyTotal = -1
                                 };
                             }
                             else

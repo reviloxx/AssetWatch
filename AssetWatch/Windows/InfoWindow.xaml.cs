@@ -26,14 +26,11 @@ namespace AssetWatch
             this.textblock_Price.Text = TileHelpers.GetValueString(asset.Price, false);
 
             this.label_MarketCap.Text = asset.ConvertCurrency + " Market Cap:";
-            this.textblock_MarketCap.Text = TileHelpers.GetValueString(asset.MarketCap, false);
-            this.textblock_AvailableSupply.Text = TileHelpers.GetValueString(asset.SupplyAvailable, false);
-            this.textblock_TotalSupply.Text = TileHelpers.GetValueString(asset.SupplyTotal, false);
+            this.textblock_MarketCap.Text = asset.MarketCap >= 0 ? TileHelpers.GetValueString(asset.MarketCap, false) : "-";
+            this.textblock_AvailableSupply.Text = asset.SupplyAvailable >= 0 ?  TileHelpers.GetValueString(asset.SupplyAvailable, false) : "-";
+            this.textblock_TotalSupply.Text = asset.SupplyTotal >= 0 ? TileHelpers.GetValueString(asset.SupplyTotal, false) : "-";
 
-            if (asset.PercentChange24h > -101)
-            {
-                this.textblock_PercentChange24h.Text = TileHelpers.GetValueString(asset.PercentChange24h, true) + "%";
-            }            
+            this.textblock_PercentChange24h.Text = asset.PercentChange24h > -101 ? TileHelpers.GetValueString(asset.PercentChange24h, true) + "%" : "-";
 
             if (apiInfo.AssetUrl != string.Empty)
             {

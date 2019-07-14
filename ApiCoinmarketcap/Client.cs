@@ -202,21 +202,13 @@ namespace ApiCoinmarketcap
                             var assetUpdate = response.Data.FirstOrDefault(d => d.Key == ass.AssetId).Value;
                             ass.Price = (double)assetUpdate.Quote[ass.ConvertCurrency].Price;
                             ass.LastUpdated = DateTime.Now;                            
-                            ass.PercentChange24h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
-                            ass.PercentChange7d = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
-
-                            try
-                            {
-                                ass.PercentChange1h = (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
-                                ass.Rank = assetUpdate.CmcRank;
-                                ass.MarketCap = (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
-                                ass.SupplyAvailable = (double)assetUpdate.CirculatingSupply;
-                                ass.SupplyTotal = (double)assetUpdate.TotalSupply;
-                            }
-                            catch(InvalidOperationException)
-                            {
-                                // properties of response data might be null
-                            }
+                            ass.PercentChange24h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h == null ? -101 : (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange24h;
+                            ass.PercentChange7d = assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d == null ? -101 : (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange7d;
+                            ass.PercentChange1h = assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h == null ? -101 : (double)assetUpdate.Quote[ass.ConvertCurrency].PercentChange1h;
+                            ass.Rank = assetUpdate.CmcRank;
+                            ass.MarketCap = assetUpdate.Quote[ass.ConvertCurrency].MarketCap == null? -1 : (double)assetUpdate.Quote[ass.ConvertCurrency].MarketCap;
+                            ass.SupplyAvailable = assetUpdate.CirculatingSupply == null ? -1 : (double)assetUpdate.CirculatingSupply;
+                            ass.SupplyTotal = assetUpdate.TotalSupply == null ? -1 : (double)assetUpdate.TotalSupply;
                             
                             this.FireOnAssetUpdateReceived(ass);
                         });

@@ -16,6 +16,11 @@ namespace AssetWatch
         private readonly IApiHandler apiHandler;
 
         /// <summary>
+        /// Defines the apiLoader
+        /// </summary>
+        private static readonly IApiLoader apiLoader = new ApiLoader();
+
+        /// <summary>
         /// Defines the fileHandler
         /// </summary>
         private static readonly IFileHandler fileHandler = new XmlFileHandler();
@@ -45,7 +50,7 @@ namespace AssetWatch
 
             fileHandler.OnFileHandlerError += this.FileHandler_OnFileHandlerError;
             this.appData = fileHandler.LoadAppData();
-            this.apiHandler = new MultiApiHandler(this.appData);
+            this.apiHandler = new MultiApiHandler(this.appData, apiLoader);
             this.tileHandler = new WpfTileHandler(this.apiHandler, this.appData);
             this.mainSettingsWindow = new MainSettingsWindow(this.apiHandler, this.appData.TileHandlerData.GlobalTileStyle);
             this.tileHandler.OnAppDataChanged += this.OnAppDataChanged;

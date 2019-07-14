@@ -134,19 +134,15 @@ namespace ApiCryptoCompare
 
                                 if (ass.ConvertCurrency == con)
                                 {
-                                    ass.LastUpdated = DateTime.Now;
                                     ass.Price = (double)data.Price;
-                                    ass.PercentChange24h = (double)data.ChangePCT24Hour;
-
-                                    try
-                                    {                                        
-                                        ass.MarketCap = (double)data.MarketCap;
-                                        ass.Volume24hConvert = data.TotalVolume24HTo.ToString();
-                                    }
-                                    catch (InvalidOperationException)
-                                    {
-                                        // properties of CoinFullAggregatedData might be null
-                                    }
+                                    ass.LastUpdated = DateTime.Now;
+                                    ass.PercentChange24h = data.ChangePCT24Hour != null? (double)data.ChangePCT24Hour : -101;
+                                    ass.PercentChange24h = -101;
+                                    ass.PercentChange1h = -101;
+                                    ass.MarketCap = data.MarketCap != null? (double)data.MarketCap : -1;
+                                    ass.SupplyAvailable = -1;
+                                    ass.SupplyTotal = -1;
+                                    ass.Volume24hConvert = data.TotalVolume24HTo != null? data.TotalVolume24HTo.ToString() : "-";
 
                                     this.FireOnAssetUpdateReceived(ass);
                                 }

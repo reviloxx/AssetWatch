@@ -21,8 +21,7 @@ namespace AssetWatch
         /// <summary>
         /// Loads IApi objects by using an IApiLoader instance.
         /// </summary>
-        /// <param name="apiLoader">The apiLoader<see cref="IApiLoader"/></param>
-        void LoadApis(IApiLoader apiLoader);
+        void LoadApis();
 
         /// <summary>
         /// Enables the API.
