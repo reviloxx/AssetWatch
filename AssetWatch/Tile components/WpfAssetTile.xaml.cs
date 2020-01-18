@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace AssetWatch
@@ -188,25 +190,25 @@ namespace AssetWatch
             if (!this.button_Calc.IsMouseOver)
             {
                 Uri uri = new Uri(@"../Icons/calculator_" + color + ".png", UriKind.Relative);
-                this.calculator_Image.Source = new BitmapImage(uri);
+                this.button_Calc_Image.Source = new BitmapImage(uri);
             }
 
             if (!this.button_Settings.IsMouseOver)
             {
                 Uri uri = new Uri(@"../Icons/settings_" + color + ".png", UriKind.Relative);
-                this.settings_Image.Source = new BitmapImage(uri);
+                this.button_Settings_Image.Source = new BitmapImage(uri);
             }
 
             if (!this.button_Close.IsMouseOver)
             {
                 Uri uri = new Uri(@"../Icons/remove-icon-" + color + ".png", UriKind.Relative);
-                this.close_Image.Source = new BitmapImage(uri);
+                this.button_Close_Image.Source = new BitmapImage(uri);
             }
 
             if (!this.button_Info.IsMouseOver)
             {
                 Uri uri = new Uri(@"../Icons/info_" + color + ".png", UriKind.Relative);
-                this.info_Image.Source = new BitmapImage(uri);
+                this.button_Info_Image.Source = new BitmapImage(uri);
             }
         }
 
@@ -339,6 +341,34 @@ namespace AssetWatch
             this.AssetTileData.TilePosition.FromLeft = this.Left;
             this.AssetTileData.TilePosition.FromTop = this.Top;
             this.FireOnAppDataChanged();
+        }
+
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var animation = new DoubleAnimation
+            {
+                To = 1,
+                Duration = TimeSpan.FromSeconds(0.25)
+            };
+
+            button_Info_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            button_Settings_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            button_Calc_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            button_Close_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
+        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var animation = new DoubleAnimation
+            {
+                To = 0.25,
+                Duration = TimeSpan.FromSeconds(0.25)
+            };
+
+            button_Info_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            button_Settings_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            button_Calc_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            button_Close_Image.BeginAnimation(UIElement.OpacityProperty, animation);
         }
 
         /// <summary>

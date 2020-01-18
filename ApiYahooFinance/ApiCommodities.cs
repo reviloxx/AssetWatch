@@ -14,11 +14,15 @@ namespace ApiYahooFinance
             // TODO: ADD more commodities
             this.availableAssets = new List<Asset>()
             {
+                new Asset
+                {
+
+                },
                 new Asset()
                 {
-                    AssetId = "GC=F",
-                    Symbol = "GC=F",
-                    Name = "Gold"
+                    AssetId = "EWG2.SG",
+                    Symbol = "EWG2.SG",
+                    Name = "EUWAX Gold II"
                 },
                 new Asset()
                 {
@@ -65,7 +69,7 @@ namespace ApiYahooFinance
                     GetApiKeyUrl = "",
                     StdUpdateInterval = 1800,
                     MaxUpdateInterval = 7200,
-                    MinUpdateInterval = 600,
+                    MinUpdateInterval = 900,
                     UpdateIntervalStepSize = 900,
                     SupportedConvertCurrencies = new List<string>() { "USD", "EUR" },
                     UpdateIntervalInfoText = "Diese API unterstützt ein Update Intervall ab 15 Minuten."

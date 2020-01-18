@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace AssetWatch
@@ -342,6 +343,30 @@ namespace AssetWatch
             this.FireOnAppDataChanged();
         }
 
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
+        {
+            var animation = new DoubleAnimation
+            {
+                To = 1,
+                Duration = TimeSpan.FromSeconds(0.25)
+            };
+
+            settings_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            close_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
+        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var animation = new DoubleAnimation
+            {
+                To = 0.25,
+                Duration = TimeSpan.FromSeconds(0.25)
+            };
+
+            settings_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+            close_Image.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
         /// <summary>
         /// The Window_Loaded
         /// </summary>
@@ -417,5 +442,6 @@ namespace AssetWatch
         /// Defines the OnPortfolioSettingsWindowClosed
         /// </summary>
         public event EventHandler OnPortfolioSettingsWindowClosed;
+
     }
 }

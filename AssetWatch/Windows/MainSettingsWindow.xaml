@@ -26,6 +26,38 @@
                                 <GridViewColumn Header="Monat" DisplayMemberBinding="{Binding Path=ApiData.CallCountMonth}" Width="70"/>
                             </GridView>
                         </ListView.View>
+                        <!--<ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <Border CornerRadius="0" SnapsToDevicePixels="True"
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        Background="{TemplateBinding Background}">
+                                                <Border Name="InnerBorder" CornerRadius="1"   BorderThickness="1">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition MaxHeight="11" />
+                                                            <RowDefinition />
+                                                        </Grid.RowDefinitions>
+                                                        <Rectangle Name="UpperHighlight" Visibility="Collapsed" Fill="#75FFFFFF" />
+                                                        <GridViewRowPresenter Grid.RowSpan="2" 
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                    </Grid>
+                                                </Border>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="LightBlue"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>-->
                     </ListView>
                     <Button x:Name="button_ApiSettings" Click="Button_ApiSettings_Click" IsEnabled="False" 
                 Margin="0,0,9.4,22.2" VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Right" Width="27">

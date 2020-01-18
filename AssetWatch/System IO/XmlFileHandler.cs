@@ -16,12 +16,18 @@ namespace AssetWatch
         private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AssetWatchData.xml");
 
         /// <summary>
+        /// Defines the path to load and save the file.
+        /// </summary>
+        private static readonly string tempPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AssetWatchDataTemp.xml");
+
+        /// <summary>
         /// Loads the app data.
         /// </summary>
         /// <returns>The <see cref="AppData"/></returns>
         public AppData LoadAppData()
         {
             AppData loadedAppData = new AppData();
+            var dataLoaded = false;
 
             try
             {
@@ -32,14 +38,40 @@ namespace AssetWatch
                         XmlSerializer xs = new XmlSerializer(typeof(AppData));
                         loadedAppData = (AppData)xs.Deserialize(fs);
                     }
-                }
 
-                loadedAppData.AssetTileDataSet = loadedAppData.AssetTileDataSet.OrderBy(atds => atds.AssetTileName).ToList();
+                    dataLoaded = true;
+                }
             }
             catch (Exception e)
             {
-                this.FireOnFileHandlerError(e.Message);
+                
             }
+
+            // try to load from temp file
+            if (!dataLoaded)
+            {
+                try
+                {
+                    if (File.Exists(tempPath))
+                    {
+                        using (FileStream fs = new FileStream(tempPath, FileMode.Open))
+                        {
+                            XmlSerializer xs = new XmlSerializer(typeof(AppData));
+                            loadedAppData = (AppData)xs.Deserialize(fs);
+                        }
+
+                        dataLoaded = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.FireOnFileHandlerError(ex.Message);
+                }
+            }
+
+            loadedAppData.AssetTileDataSet = loadedAppData.AssetTileDataSet?
+                    .OrderBy(atds => atds.AssetTileName)
+                    .ToList();
 
             return loadedAppData;
         }
@@ -52,6 +84,16 @@ namespace AssetWatch
         {
             try
             {
+                using (FileStream fs = new FileStream(tempPath, FileMode.Create))
+                {
+                    XmlSerializer xs = new XmlSerializer(typeof(AppData));
+
+                    if (fs.CanWrite)
+                    {
+                        xs.Serialize(fs, appData);
+                    }
+                }
+
                 using (FileStream fs = new FileStream(path, FileMode.Create))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(AppData));
